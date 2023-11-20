@@ -1,10 +1,10 @@
 # letterbookd 📖
 
-Bringing you, your books, and readers together.
+Bringing you, your books, and readers together. Now on mobile.
 
-*Tugas Kelompok Proyek Tengah Semester kelompok A09 untuk mata kuliah Pemrograman Berbasis Platform Semester Ganjil 2023/2024.*
+*Tugas Kelompok Proyek Akhir Semester kelompok A09 untuk mata kuliah Pemrograman Berbasis Platform Semester Ganjil 2023/2024.*
 
-## Anggota Kelompok A09
+## 👥 Anggota Kelompok A09
 
 > Wahyu Hidayat - `2206081894`  
 > Muhammad Milian Alkindi - `2206081856`  
@@ -12,14 +12,14 @@ Bringing you, your books, and readers together.
 > Rana Koesumastuti `2206083496`  
 > Muhammad Syahrul Khaliq `2206083092`  
 
-## Cerita aplikasi yang diajukan serta manfaatnya
+## ✍️ Cerita aplikasi yang diajukan serta manfaatnya
 
 ***Letterbookd*** adalah aplikasi yang bertujuan untuk menyatukan pembaca dengan buku dan pembaca buku lainnya.
 Dengan menggunakan aplikasi ini, pembaca dapat menyimpan buku dari katalog ke *Library* personal mereka, memberikan ulasan
 untuk buku yang sudah dibaca, dan juga melihat ulasan buku oleh pembaca lainnya.
 Buku-buku yang ada di dalam *library* personal dapat diatur status *tracking*nya untuk memudahkan pengguna melacak status buku mereka.
 
-## Daftar modul yang akan diimplementasikan
+## 🏷️ Daftar modul yang akan diimplementasikan
 
 ### Guest `[developer: semua]`
 
@@ -76,16 +76,16 @@ Forum diskusi untuk para pembaca
 - `READ` Menampilkan hasil searching untuk suatu reader
 - `READ` Mengembalikan data akun Reader untuk digunakan
 
-## Role atau peran pengguna beserta deskripsinya
+## 👤 Role atau peran pengguna beserta deskripsinya
 
 - `Guest`: Dapat mengakses landing page, *sign in* (login) dan *sign up* (register)
 - `Reader`: Dapat menambahkan buku dari katalog ke *Library* personal. Buku yang sudah ada bisa diganti status *tracking*nya. Juga dapat memposting ulasan/review buku yang sudah ada di *library*, serta berdiskusi dengan Reader lainnya di forum.
 - `Librarian`: Mengelola katalog buku. Dapat menambah, mengedit, dan menghapus buku dari katalog
 
-## Alur pengintegrasian dengan web service untuk terhubung dengan aplikasi web yang sudah dibuat saat Proyek Tengah Semester
+## 🔗 Alur pengintegrasian dengan web service untuk terhubung dengan aplikasi web yang sudah dibuat saat Proyek Tengah Semester
 
 ...
 
-## Notes
+## 📝 Notes
 
 [Tautan berita acara](https://docs.google.com/spreadsheets/d/1UNGaPaQ8nQ7zmio4M-HZPhDgXyd9DHPIPtkiBV2v9Vc/view/)
