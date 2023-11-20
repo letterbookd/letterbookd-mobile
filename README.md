@@ -82,10 +82,15 @@ Forum diskusi untuk para pembaca
 - `Reader`: Dapat menambahkan buku dari katalog ke *Library* personal. Buku yang sudah ada bisa diganti status *tracking*nya. Juga dapat memposting ulasan/review buku yang sudah ada di *library*, serta berdiskusi dengan Reader lainnya di forum.
 - `Librarian`: Mengelola katalog buku. Dapat menambah, mengedit, dan menghapus buku dari katalog
 
-## 🔗 Alur pengintegrasian dengan web service untuk terhubung dengan aplikasi web yang sudah dibuat saat Proyek Tengah Semester
+## 🔗 Alur integrasi dengan *web service* aplikasi web
 
-...
+Berikut adalah langkah-langkah yang akan dilakukan untuk mengintegrasikan aplikasi dengan server web:
+
+1. Mengimplementasikan sebuah wrapper class dengan menggunakan library `http` dan `map` untuk mendukung penggunaan cookie-based authentication pada aplikasi.
+2. Mengimplementasikan `REST` API pada Django (`views.py`) dengan menggunakan `JsonResponse` atau Django JSON Serializer.
+3. Mengimplementasikan desain front-end untuk aplikasi berdasarkan desain website yang sudah ada sebelumnya.
+4. Melakukan integrasi antara front-end dengan back-end dengan menggunakan konsep *asynchronous* HTTP.
 
 ## 📝 Notes
 
-[Tautan berita acara](https://docs.google.com/spreadsheets/d/1UNGaPaQ8nQ7zmio4M-HZPhDgXyd9DHPIPtkiBV2v9Vc/view/)
+[Tautan berita acara ↗](https://docs.google.com/spreadsheets/d/1UNGaPaQ8nQ7zmio4M-HZPhDgXyd9DHPIPtkiBV2v9Vc/view?usp=sharing)
