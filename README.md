@@ -1,6 +1,8 @@
 # letterbookd 📖
 
-> SOON: pipeline status
+[![Develop](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/develop.yml/badge.svg)](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/develop.yml)
+[![Pre-Release](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/pre-release.yml/badge.svg)](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/pre-release.yml)
+[![Release](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/release.yml/badge.svg)](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/release.yml)
 
 Bringing you, your books, and readers together. Now on mobile.
 
