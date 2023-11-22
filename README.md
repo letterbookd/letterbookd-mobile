@@ -3,6 +3,7 @@
 [![Develop](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/develop.yml/badge.svg)](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/develop.yml)
 [![Pre-Release](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/pre-release.yml/badge.svg)](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/pre-release.yml)
 [![Release](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/release.yml/badge.svg)](https://github.com/letterbookd/letterbookd-mobile/actions/workflows/release.yml)
+[![Build status](https://build.appcenter.ms/v0.1/apps/c458ebb8-218a-4fa7-93b2-5d27c6dd9dea/branches/main/badge)](https://appcenter.ms)
 
 Bringing you, your books, and readers together. Now on mobile.
 
@@ -10,7 +11,7 @@ Bringing you, your books, and readers together. Now on mobile.
 
 ## 📦 Aplikasi
 
-📱 File APK dapat diunduh di halaman *[releases](https://github.com/letterbookd/letterbookd-mobile/releases)* repositori atau melalui [Microsoft Visual Studio App Center](...).
+📱 File APK dapat diunduh di halaman *[releases](https://github.com/letterbookd/letterbookd-mobile/releases)* repositori atau melalui [Microsoft Visual Studio App Center](https://install.appcenter.ms/orgs/letterbookd/apps/letterbookd/distribution_groups/public).
 Untuk saat ini, *letterbookd* hanya tersedia di platform Android.  
 🌐 Untuk versi web, kunjungi website kami [disini](https://letterbookd-a09-tk.pbp.cs.ui.ac.id).
 
@@ -101,4 +102,4 @@ Berikut adalah langkah-langkah yang akan dilakukan untuk mengintegrasikan aplika
 
 ## 📝 Notes
 
-[Tautan berita acara 🔗](https://docs.google.com/spreadsheets/d/1UNGaPaQ8nQ7zmio4M-HZPhDgXyd9DHPIPtkiBV2v9Vc/view?usp=sharing)
+[Tautan berita acara 📆](https://docs.google.com/spreadsheets/d/1UNGaPaQ8nQ7zmio4M-HZPhDgXyd9DHPIPtkiBV2v9Vc/view?usp=sharing)
