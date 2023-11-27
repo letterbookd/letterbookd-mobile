@@ -7,6 +7,12 @@ void main() {
   runApp(const MyApp());
 }
 
+/// Data konstanta untuk aplikasi
+class AppData {
+  final seedColor = Colors.blue;
+  final url = "https://letterbookd-a09-tk.pbp.cs.ui.ac.id/";
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,14 +25,21 @@ class MyApp extends StatelessWidget {
         return request;
       },
       child: MaterialApp(
-          title: 'Flutter App',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-            useMaterial3: true,
-          ),
-          home: const MyHomePage(
-            title: 'LetterBookd',
-          )),
+        title: 'letterbookd',
+        theme: ThemeData(
+          brightness: Brightness.light,
+          colorScheme: ColorScheme.fromSeed(seedColor: AppData().seedColor),
+          useMaterial3: true,
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: AppData().seedColor, brightness: Brightness.dark),
+          useMaterial3: true,
+        ),
+        themeMode: ThemeMode.dark,
+        home: const MyHomePage(title: 'letterbookd (Alpha)'),
+      ),
     );
   }
 }
