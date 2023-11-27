@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:letterbookd/library/core/widgets/bottom_navbar.dart';
+import 'package:letterbookd/core/widgets/bottom_navbar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.dark,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'letterbookd (Alpha)'),
     );
   }
 }
