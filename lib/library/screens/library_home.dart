@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/library/widgets/library_tile.dart';
 
 /// ini contoh
 class LibraryHome extends StatelessWidget {
@@ -28,7 +29,19 @@ class LibraryHome extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(child: Text("Halaman utama Library")),
+      body: Container(
+        padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 4.0),
+        alignment: Alignment.topCenter,
+        child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 181 / 291,
+              crossAxisCount: 3,
+            ),
+            itemCount: 18,
+            itemBuilder: (context, index) {
+              return const LibraryTile();
+            }),
+      ),
       // TODO: add elevated button to add new
     );
   }
