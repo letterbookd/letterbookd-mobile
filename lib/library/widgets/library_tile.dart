@@ -15,8 +15,11 @@ class LibraryTile extends StatelessWidget {
         alignment: AlignmentDirectional.bottomCenter,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         children: [
+          /// TODO: replace with proper book cover
           Image.network(
-              "http://books.google.com/books/content?id=m9cZAAAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"),
+            "http://books.google.com/books/content?id=m9cZAAAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+            scale: 1.0,
+          ),
           Container(
             padding: const EdgeInsets.all(10.0),
             alignment: Alignment.bottomCenter,
@@ -32,6 +35,8 @@ class LibraryTile extends StatelessWidget {
                 ],
               ),
             ),
+
+            /// TODO: replace with proper book title
             child: const Text("book_title"),
           ),
         ],

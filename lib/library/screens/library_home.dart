@@ -5,6 +5,8 @@ import 'package:letterbookd/library/widgets/library_tile.dart';
 class LibraryHome extends StatelessWidget {
   const LibraryHome({super.key});
 
+  void _openFilterModal() {}
+
   @override
   Widget build(BuildContext context) {
     final ButtonStyle style = TextButton.styleFrom(
@@ -16,11 +18,33 @@ class LibraryHome extends StatelessWidget {
         title: const Text("Library"),
         actions: <Widget>[
           IconButton(
-            style: style,
-            tooltip: "Filter",
-            onPressed: () {},
-            icon: const Icon(Icons.filter_list_rounded),
-          ),
+              style: style,
+              tooltip: "Filter",
+              icon: const Icon(Icons.filter_list_rounded),
+              onPressed: () {
+                showModalBottomSheet<void>(
+                  showDragHandle: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                      height: 500,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Text('Modal BottomSheet'),
+                            ElevatedButton(
+                              child: const Text('Close BottomSheet'),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
           IconButton(
             style: style,
             tooltip: "Refresh",
@@ -42,7 +66,16 @@ class LibraryHome extends StatelessWidget {
               return const LibraryTile();
             }),
       ),
-      // TODO: add elevated button to add new
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        // foregroundColor: ,
+        // backgroundColor: customizations[index].$2,
+        icon: const Icon(
+          Icons.book,
+          weight: 5.0,
+        ),
+        label: const Text("Add book"),
+      ),
     );
   }
 }
