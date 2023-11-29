@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:letterbookd/catalog/screens/catalog_all.dart';
+import 'package:letterbookd/catalog/screens/catalog_home.dart';
 import 'package:letterbookd/forum/screens/forum_home.dart';
 import 'package:letterbookd/library/screens/library_home.dart';
 import 'package:letterbookd/reader/screens/reader_home.dart';
