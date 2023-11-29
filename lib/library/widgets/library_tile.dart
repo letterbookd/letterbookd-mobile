@@ -6,19 +6,21 @@ class LibraryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Theme.of(context).colorScheme.surfaceVariant,
       ),
       child: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
+        alignment: AlignmentDirectional.center,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         children: [
           /// TODO: replace with proper book cover
-          Image.network(
-            "http://books.google.com/books/content?id=m9cZAAAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-            scale: 1.0,
+          const Image(
+            image: NetworkImage(
+                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+            fit: BoxFit.fill,
           ),
           Container(
             padding: const EdgeInsets.all(10.0),
@@ -30,7 +32,7 @@ class LibraryTile extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: <Color>[
                   Colors.black.withAlpha(0),
-                  Colors.black12,
+                  Colors.black.withAlpha(0),
                   Colors.black45
                 ],
               ),

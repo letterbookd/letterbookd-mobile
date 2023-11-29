@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/library/widgets/library_filter_modal.dart';
 import 'package:letterbookd/library/widgets/library_tile.dart';
 
 /// ini contoh
 class LibraryHome extends StatelessWidget {
   const LibraryHome({super.key});
 
-  void _openFilterModal() {}
+  void _openFilterModal(BuildContext context) {
+    showModalBottomSheet<void>(
+      useRootNavigator: true,
+      showDragHandle: true,
+      enableDrag: true,
+      context: context,
+      builder: (BuildContext context) {
+        return const LibraryFilterModal();
+      },
+    );
+  }
+
+  void _refreshLibrary(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text('Refreshing library'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,34 +42,15 @@ class LibraryHome extends StatelessWidget {
               tooltip: "Filter",
               icon: const Icon(Icons.filter_list_rounded),
               onPressed: () {
-                showModalBottomSheet<void>(
-                  showDragHandle: true,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SizedBox(
-                      height: 500,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            const Text('Modal BottomSheet'),
-                            ElevatedButton(
-                              child: const Text('Close BottomSheet'),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
+                _openFilterModal(context);
               }),
           IconButton(
             style: style,
             tooltip: "Refresh",
-            onPressed: () {},
             icon: const Icon(Icons.refresh),
+            onPressed: () {
+              _refreshLibrary(context);
+            },
           ),
         ],
       ),
@@ -68,11 +69,8 @@ class LibraryHome extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
-        // foregroundColor: ,
-        // backgroundColor: customizations[index].$2,
         icon: const Icon(
           Icons.book,
-          weight: 5.0,
         ),
         label: const Text("Add book"),
       ),
