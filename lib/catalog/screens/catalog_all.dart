@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 /// ini contoh
-class CatalogHomepage extends StatelessWidget {
-  const CatalogHomepage({super.key});
+class CatalogHome extends StatelessWidget {
+  const CatalogHome({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Catalog"),
-        ),
-        body: const Text("Catalog!"));
+      appBar: AppBar(
+        title: const Text("Catalog"),
+      ),
+      body: const Center(child: Text("Halaman utama Catalog")),
+    );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:letterbookd/core/widgets/bottom_navbar.dart';
 import 'package:letterbookd/core/screens/homepage.dart';
 
 void main() {
@@ -38,7 +37,7 @@ class App extends StatelessWidget {
               seedColor: AppData().seedColor, brightness: Brightness.dark),
           useMaterial3: true,
         ),
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.system,
         home: const HomePage(),
       ),
     );

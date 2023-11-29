@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/screens/catalog_all.dart';
 import 'package:letterbookd/forum/screens/forum_home.dart';
-import 'package:letterbookd/library/screens/library_display.dart';
-import 'package:letterbookd/reader/screens/reader_page.dart';
+import 'package:letterbookd/library/screens/library_home.dart';
+import 'package:letterbookd/reader/screens/reader_home.dart';
 import 'package:letterbookd/review/screens/review_home.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:letterbookd/core/widgets/bottom_navbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,18 +15,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentPageIndex = 0;
   final List<Widget> _pages = [
-    const LibraryDisplay(),
-    const CatalogHomepage(),
-    const ForumHomepage(),
-    const ReviewHomepage(),
-    const ReaderPage(),
+    const LibraryHome(),
+    const CatalogHome(),
+    const ForumHome(),
+    const ReviewHome(),
+    const ReaderHome(),
   ];
-
-  void _incrementCounter() {
-    setState(() {
-      currentPageIndex++;
-    });
-  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -39,13 +30,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle getLabelStyle(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.selected,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return const TextStyle(fontWeight: FontWeight.bold);
+      }
+      return const TextStyle(fontWeight: FontWeight.normal);
+    }
+
     return Scaffold(
-      body: _pages[currentPageIndex], // TODO
+      body: _pages[currentPageIndex],
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          labelTextStyle: MaterialStateProperty.all(
-              Theme.of(context).textTheme.labelMedium),
-        ),
+            labelTextStyle: MaterialStateProperty.resolveWith(getLabelStyle),
+            indicatorColor: Theme.of(context).colorScheme.onPrimaryContainer),
         child: NavigationBar(
           destinations: const <Widget>[
             NavigationDestination(
@@ -54,7 +54,8 @@ class _HomePageState extends State<HomePage> {
               label: 'Library',
             ),
             NavigationDestination(
-              icon: Icon(Icons.shelves),
+              selectedIcon: Icon(Icons.explore),
+              icon: Icon(Icons.explore_outlined),
               label: 'Catalog',
             ),
             NavigationDestination(
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
             NavigationDestination(
               selectedIcon: Icon(Icons.reviews),
               icon: Icon(Icons.reviews_outlined),
-              label: 'Review',
+              label: 'Reviews',
             ),
             NavigationDestination(
               selectedIcon: Icon(Icons.account_circle),
