@@ -29,12 +29,17 @@ class App extends StatelessWidget {
         theme: ThemeData(
           brightness: Brightness.light,
           colorScheme: ColorScheme.fromSeed(seedColor: AppData().seedColor),
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(fontWeight: FontWeight.w500)),
           useMaterial3: true,
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
           colorScheme: ColorScheme.fromSeed(
               seedColor: AppData().seedColor, brightness: Brightness.dark),
+          appBarTheme: const AppBarTheme(
+              titleTextStyle:
+                  TextStyle(fontWeight: FontWeight.w500, fontSize: 22)),
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,

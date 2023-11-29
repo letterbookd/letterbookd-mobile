@@ -36,6 +36,13 @@ class LibraryHome extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Library"),
+        bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(4.0),
+            child: Divider(
+              height: 1,
+              indent: 10,
+              endIndent: 10,
+            )),
         actions: <Widget>[
           IconButton(
               style: style,
@@ -55,7 +62,7 @@ class LibraryHome extends StatelessWidget {
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 4.0),
+        padding: const EdgeInsets.all(8.0),
         alignment: Alignment.topCenter,
         child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
