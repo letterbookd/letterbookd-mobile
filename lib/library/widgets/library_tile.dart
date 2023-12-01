@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/library/screens/library_detail.dart';
 
+/// Grid tile for library homepage
 class LibraryTile extends StatelessWidget {
   const LibraryTile({super.key});
 
@@ -34,27 +35,31 @@ class LibraryTile extends StatelessWidget {
               fit: BoxFit.fitHeight,
             ),
             Container(
-              padding: const EdgeInsets.all(10.0),
-              alignment: Alignment.bottomCenter,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Colors.black.withAlpha(0),
-                    Colors.black.withAlpha(0),
-                    Colors.black45
-                  ],
+                padding: const EdgeInsets.all(10.0),
+                alignment: Alignment.bottomCenter,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                      Colors.black.withAlpha(0),
+                      Colors.black.withAlpha(0),
+                      Colors.black45
+                    ],
+                  ),
                 ),
-              ),
 
-              /// TODO: replace with proper book title
-              child: const Text(
-                "book_title",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+                /// TODO: replace with proper book title
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    "book_title",
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
+                )),
           ],
         ),
       ),
