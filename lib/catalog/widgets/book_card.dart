@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 
-class BookTile extends StatelessWidget {
+class BookCard extends StatelessWidget {
   final Book book;
 
-  const BookTile({Key? key, required this.book}) : super(key: key); // Constructor
+  const BookCard({Key? key, required this.book}) : super(key: key); // Constructor
 
   // const BookTile(this.book, {super.key}); // Constructor
 
@@ -13,20 +13,18 @@ class BookTile extends StatelessWidget {
     return Material(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-        padding: const EdgeInsets.all(15.0),
-        child: Row(children: [
+        //padding: const EdgeInsets.all(15.0),
+        child: Column(children: [
           Container(
-            width: 70,
+            height: 150,
             child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
           ),
 
-          Flexible(
-            child: Container(
-                padding: const EdgeInsets.only(left: 22, right:15),
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+          Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Column(
                 children: [
+                    const SizedBox(height: 10),
                     Text(
                       "${book.title}",
                       style: const TextStyle(
@@ -36,21 +34,15 @@ class BookTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       softWrap: true,
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Text(
                       "by ${book.authors.split(';').map((author) => "$author").join(', ')}",
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "${book.categories}",
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                      overflow: TextOverflow.ellipsis,),
                 ],
-                ),
+              ),
             )
-          )
         ],
         ),
       )
