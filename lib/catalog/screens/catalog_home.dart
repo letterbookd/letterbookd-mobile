@@ -4,20 +4,11 @@ import 'package:letterbookd/catalog/screens/detail_book.dart';
 import 'package:letterbookd/catalog/widgets/book_card.dart';
 import 'package:letterbookd/catalog/widgets/book_tile.dart';
 
-/// ini contoh
-// class CatalogHome extends StatelessWidget {
-//   const CatalogHome({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("Catalog"),
-//       ),
-//       body: const Center(child: Text("Halaman utama Catalog")),
-//     );
-//   }
-// }
+// declare view types
+enum ViewType {
+  tile,
+  grid,
+}
 
 class CatalogHome extends StatefulWidget {
   const CatalogHome({Key? key}) : super(key: key);
@@ -27,6 +18,10 @@ class CatalogHome extends StatefulWidget {
 }
 
 class _CatalogHomeState extends State<CatalogHome> {
+
+  // ignore: prefer_final_fields
+  ViewType _viewType = ViewType.grid;
+
   Future<List<Book>> fetchBook() async {
     // sementara dulu, karena belum integrasi dgn django
     List<Book> books = [
@@ -124,9 +119,35 @@ class _CatalogHomeState extends State<CatalogHome> {
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle style = TextButton.styleFrom(
+      foregroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+    
     return Scaffold(
         appBar: AppBar(
           title: const Text('Catalog'),
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(4.0),
+            child: Divider(
+              height: 1,
+              indent: 10,
+              endIndent: 10,
+            )),
+          actions: <Widget>[
+            IconButton(
+                style: style,
+                tooltip: "Filter",
+                icon: Icon(_viewType == ViewType.tile ? Icons.grid_view : Icons.view_agenda),
+                onPressed: () {
+                  setState(() {
+                    if (_viewType == ViewType.tile) {
+                      _viewType = ViewType.grid;
+                    } else {
+                      _viewType = ViewType.tile;
+                    }
+                  });
+                }),
+          ],
         ),
         // drawer: const LeftDrawer(),
         body: FutureBuilder(
@@ -147,42 +168,50 @@ class _CatalogHomeState extends State<CatalogHome> {
                     ],
                   );
                 } else {
-                    return GridView.builder(
-                          shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: ((MediaQuery.of(context).size.width / 2) / (MediaQuery.of(context).size.height / 3.5)),
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 5.0,
-                            mainAxisSpacing: 30.0,
-                          ),
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (_, index) => InkWell(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return DetailBookPage(
-                                    book: snapshot.data![index]);
-                              }));
-                            },
-                            child: BookCard(book: snapshot.data![index]),
-                            )    
-                          );
-                      }
 
-                    // return ListView.builder(
-                    //     itemCount: snapshot.data!.length,
-                    //     itemBuilder: (_, index) => InkWell(
-                    //       onTap: () {
-                    //         Navigator.push(context,
-                    //             MaterialPageRoute(builder: (context) {
-                    //           return DetailBookPage(
-                    //               book: snapshot.data![index]);
-                    //         }));
-                    //       },
-                    //       child: BookTile(book: snapshot.data![index]),
-                    //       )    
-                    //     );
-                    // }
+                  // build tile view
+                  if (_viewType == ViewType.tile) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (_, index) => InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return DetailBookPage(
+                                  book: snapshot.data![index]);
+                            }));
+                          },
+                          child: BookTile(book: snapshot.data![index]),
+                          )    
+                        );
+
+                  } 
+                  
+                  // build grid view
+                  else {
+                    return GridView.builder(
+                      padding: const EdgeInsets.only(top: 30, bottom: 30),
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: ((MediaQuery.of(context).size.width / 2) / (MediaQuery.of(context).size.height / 3.5)),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5.0,
+                        mainAxisSpacing: 30.0,
+                      ),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (_, index) => InkWell(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailBookPage(
+                                book: snapshot.data![index]);
+                          }));
+                        },
+                        child: BookCard(book: snapshot.data![index]),
+                        )    
+                      );
+                  }
+                }
                 }
             }));
   }

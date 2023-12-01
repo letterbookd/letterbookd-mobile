@@ -14,7 +14,6 @@ class BookCard extends StatelessWidget {
     return Material(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-        //padding: const EdgeInsets.all(15.0),
         child: Column(children: [
           SizedBox(
             height: 150,
