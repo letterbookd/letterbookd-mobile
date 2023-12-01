@@ -39,10 +39,7 @@ class ReaderHome extends StatelessWidget {
                       builder: (context) => const EditProfileScreen()),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // Background color
-                onPrimary: Colors.white, // Text color
-              ),
+              style: Theme.of(context).elevatedButtonTheme.style,
               child: const Text('Edit Profile'),
             ),
             SizedBox(height: 24),

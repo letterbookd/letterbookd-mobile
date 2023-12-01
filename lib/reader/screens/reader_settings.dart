@@ -42,10 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // Background color
-                onPrimary: Colors.white, // Text color
-              ),
+              style: Theme.of(context).elevatedButtonTheme.style,
               child: const Text('Save Changes'),
             ),
           ],
