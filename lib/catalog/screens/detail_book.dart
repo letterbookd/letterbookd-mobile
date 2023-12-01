@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
+import 'package:letterbookd/main.dart';
 
 // nanti ganti jadi book.fields.[data]
 
@@ -20,9 +21,13 @@ class DetailBookPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: Container(
+            Center(
+                child: Container(
               width: 200,
-              child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
+              child: AspectRatio(
+                aspectRatio: AppData().bookAspectRatio,
+                child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
+              ),
             )),
             const SizedBox(height: 30.0),
             Text(
