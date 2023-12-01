@@ -20,6 +20,11 @@ class DetailBookPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(child: Container(
+              width: 200,
+              child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
+            )),
+            const SizedBox(height: 30.0),
             Text(
               book.title,
               style: const TextStyle(
@@ -28,11 +33,6 @@ class DetailBookPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20.0),
-            Center(child: Container(
-              width: 200,
-              child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
-            )),
-            const SizedBox(height: 30.0),
             Text(
               'ISBN: ${book.isbn13}',
               style: const TextStyle(
@@ -90,12 +90,6 @@ class DetailBookPage extends StatelessWidget {
               style: const TextStyle(fontSize: 18.0),
             ),
             const SizedBox(height: 30.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Back to List'),
-            ),
           ],
         ),
       ),
