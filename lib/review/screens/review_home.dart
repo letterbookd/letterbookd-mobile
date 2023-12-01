@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// ini contoh
 class ReviewHome extends StatelessWidget {
-  const ReviewHome({Key? key}) : super(key: key);
+  ReviewHome({Key? key}) : super(key: key);
 
   final List<ReviewItem> items = [
     ReviewItem("Lihat Review", Icons.checklist),
