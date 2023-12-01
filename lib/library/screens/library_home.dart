@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/library/widgets/library_filter_modal.dart';
 import 'package:letterbookd/library/widgets/library_tile.dart';
+import 'package:letterbookd/main.dart';
 
 /// ini contoh
 class LibraryHome extends StatelessWidget {
@@ -65,8 +66,8 @@ class LibraryHome extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         alignment: Alignment.topCenter,
         child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 181 / 291,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: AppData().bookAspectRatio,
               crossAxisCount: 3,
             ),
             itemCount: 18,

@@ -9,8 +9,9 @@ void main() {
 
 /// Data konstanta untuk aplikasi
 class AppData {
-  final seedColor = Colors.blue;
-  final url = "https://letterbookd-a09-tk.pbp.cs.ui.ac.id/";
+  final Color seedColor = Colors.blue;
+  final String url = "https://letterbookd-a09-tk.pbp.cs.ui.ac.id/";
+  final double bookAspectRatio = 181 / 291;
 }
 
 class App extends StatelessWidget {
@@ -29,22 +30,12 @@ class App extends StatelessWidget {
         theme: ThemeData(
           brightness: Brightness.light,
           colorScheme: ColorScheme.fromSeed(seedColor: AppData().seedColor),
-          appBarTheme: AppBarTheme(
-              titleTextStyle: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(fontWeight: FontWeight.w500)),
           useMaterial3: true,
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
           colorScheme: ColorScheme.fromSeed(
               seedColor: AppData().seedColor, brightness: Brightness.dark),
-          appBarTheme: AppBarTheme(
-              titleTextStyle: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(fontWeight: FontWeight.w500)),
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,

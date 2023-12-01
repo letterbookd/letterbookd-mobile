@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/library/models/librarybook.dart';
+import 'package:letterbookd/main.dart';
 
 class LibraryBookDetailPage extends StatelessWidget {
   // TODO: final LibraryBook libBook;
@@ -65,7 +66,7 @@ class LibraryBookDetailPage extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     AspectRatio(
-                      aspectRatio: 181 / 291,
+                      aspectRatio: AppData().bookAspectRatio,
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
