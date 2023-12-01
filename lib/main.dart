@@ -9,8 +9,9 @@ void main() {
 
 /// Data konstanta untuk aplikasi
 class AppData {
-  final seedColor = Colors.blue;
-  final url = "https://letterbookd-a09-tk.pbp.cs.ui.ac.id/";
+  final Color seedColor = Colors.blue;
+  final String url = "https://letterbookd-a09-tk.pbp.cs.ui.ac.id/";
+  final double bookAspectRatio = 181 / 291;
 }
 
 class App extends StatelessWidget {
