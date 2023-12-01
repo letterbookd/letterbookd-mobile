@@ -64,6 +64,16 @@ class _CatalogHomeState extends State<CatalogHome> {
           0,
           0),
       Book(
+          9780006490456, 
+          "Witness for the Prosecution & Selected Plays", 
+          "Agatha Christie", "English drama", 
+          "http://books.google.com/books/content?id=_9u7AAAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", 
+          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.", 
+          1995, 
+          352, 
+          0, 
+          0),
+      Book(
           9780006178736,
           "Rage of angels",
           "Sidney Sheldon",

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
+import 'package:letterbookd/main.dart';
 
 class BookCard extends StatelessWidget {
   final Book book;
@@ -15,18 +16,23 @@ class BookCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         //padding: const EdgeInsets.all(15.0),
         child: Column(children: [
-          Container(
+          SizedBox(
             height: 150,
-            child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: AspectRatio(
+                aspectRatio: AppData().bookAspectRatio,
+                child: Image.network(book.thumbnail, fit: BoxFit.fitHeight),
+              ),
+            )
           ),
-
           Container(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Column(
                 children: [
                     const SizedBox(height: 10),
                     Text(
-                      "${book.title}",
+                      book.title,
                       style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -38,7 +44,7 @@ class BookCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      "by ${book.authors.split(';').map((author) => "$author").join(', ')}",
+                      "by ${book.authors.split(';').map((author) => author).join(', ')}",
                       overflow: TextOverflow.ellipsis,),
                 ],
               ),

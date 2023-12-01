@@ -13,17 +13,24 @@ class BookTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: Container(
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       padding: const EdgeInsets.all(15.0),
       child: Row(
         children: [
           SizedBox(
             width: 70,
-            child: AspectRatio(
-              aspectRatio: AppData().bookAspectRatio,
-              child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
-            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: AspectRatio(
+                aspectRatio: AppData().bookAspectRatio,
+                child: Image.network(book.thumbnail, fit: BoxFit.fitHeight),
+              ),
+            )
+            // child: AspectRatio(
+            //   aspectRatio: AppData().bookAspectRatio,
+            //   child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
+            // ),
           ),
           Flexible(
               child: Container(
