@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/catalog/screens/detail_book.dart';
+import 'package:letterbookd/catalog/widgets/book_tile.dart';
 import 'dart:ffi';
 
 /// ini contoh
@@ -78,40 +79,7 @@ Widget build(BuildContext context) {
                                   book: snapshot.data![index]);
                             }));
                           },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(children: [
-                              Container(
-                                width: 70,
-                                child: Image.network(snapshot.data![index].thumbnail, fit: BoxFit.fitWidth),
-                              ),
-
-                              Flexible(
-                                child: Container(
-                                    padding: const EdgeInsets.only(left: 22, right:15),
-                                    child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                        Text(
-                                        "${snapshot.data![index].title}",
-                                        style: const TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                        ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text("by ${snapshot.data![index].authors.split(';').map((author) => "$author").join(', ')}"),
-                                        const SizedBox(height: 10),
-                                        Text("${snapshot.data![index].categories}"),
-                                    ],
-                                    ),
-                                )
-                              )
-                            ],
-                            ),
-                          )
+                          child: BookTile(book: snapshot.data![index]),
                           )    
                         );
                     }
