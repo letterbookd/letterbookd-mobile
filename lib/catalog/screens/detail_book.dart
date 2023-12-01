@@ -22,7 +22,7 @@ class DetailBookPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-                child: Container(
+                child: SizedBox(
               width: 200,
               child: AspectRatio(
                 aspectRatio: AppData().bookAspectRatio,
@@ -46,7 +46,7 @@ class DetailBookPage extends StatelessWidget {
             ),
             const SizedBox(height: 15.0),
             Text(
-              'Authors: ${book.authors.split(';').map((author) => "$author").join(', ')}',
+              'Authors: ${book.authors.split(';').map((author) => author).join(', ')}',
               style: const TextStyle(fontSize: 18.0),
             ),
             const SizedBox(height: 15.0),
@@ -85,9 +85,9 @@ class DetailBookPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15.0),
-            Text(
+            const Text(
               'Description:',
-              style: const TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 18.0),
             ),
             const SizedBox(height: 8.0),
             Text(

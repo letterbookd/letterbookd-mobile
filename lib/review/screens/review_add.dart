@@ -1,8 +1,7 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-
 
 class ShopFormPage extends StatefulWidget {
   const ShopFormPage({super.key});
@@ -113,8 +112,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.indigo),
+                    backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {}

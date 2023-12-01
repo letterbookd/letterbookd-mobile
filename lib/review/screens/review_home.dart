@@ -66,7 +66,7 @@ class ReviewItem {
 class ReviewCard extends StatelessWidget {
   final ReviewItem item;
 
-  const ReviewCard(this.item);
+  const ReviewCard(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {

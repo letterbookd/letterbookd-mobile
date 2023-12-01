@@ -21,7 +21,7 @@ class ReaderHome extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            Center(
+            const Center(
               child: CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
@@ -30,7 +30,7 @@ class ReaderHome extends StatelessWidget {
             _buildUserInfoCard('Username', reader['username']!),
             _buildUserInfoCard('Name', reader['name']!),
             _buildUserInfoCard('Bio', reader['bio']!),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -42,13 +42,13 @@ class ReaderHome extends StatelessWidget {
               style: Theme.of(context).elevatedButtonTheme.style,
               child: const Text('Edit Profile'),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             const Text(
               'Library',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             _buildGridSection(4), // Library cards
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             const Text(
               'Review',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -62,11 +62,12 @@ class ReaderHome extends StatelessWidget {
 
   Widget _buildUserInfoCard(String title, String content) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
         title: Text(title),
         subtitle: Text(content),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       ),
     );
   }
@@ -74,8 +75,8 @@ class ReaderHome extends StatelessWidget {
   Widget _buildGridSection(int itemCount) {
     return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,

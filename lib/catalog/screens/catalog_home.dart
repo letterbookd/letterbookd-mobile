@@ -22,7 +22,7 @@ class CatalogHome extends StatefulWidget {
   const CatalogHome({Key? key}) : super(key: key);
 
   @override
-  _CatalogHomeState createState() => _CatalogHomeState();
+  State<CatalogHome> createState() => _CatalogHomeState();
 }
 
 class _CatalogHomeState extends State<CatalogHome> {

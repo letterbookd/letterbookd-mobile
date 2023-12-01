@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:letterbookd/library/models/librarybook.dart';
+// import 'package:letterbookd/library/models/librarybook.dart';
 import 'package:letterbookd/library/widgets/library_detail_actions.dart';
 import 'package:letterbookd/library/widgets/library_detail_header.dart';
 

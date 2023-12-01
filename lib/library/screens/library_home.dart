@@ -70,7 +70,7 @@ class LibraryHome extends StatelessWidget {
               childAspectRatio: AppData().bookAspectRatio,
               crossAxisCount: 3,
             ),
-            itemCount: 18,
+            itemCount: 12,
             itemBuilder: (context, index) {
               return const LibraryTile();
             }),

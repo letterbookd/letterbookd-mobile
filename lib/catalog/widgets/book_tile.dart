@@ -18,7 +18,7 @@ class BookTile extends StatelessWidget {
       padding: const EdgeInsets.all(15.0),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 70,
             child: AspectRatio(
               aspectRatio: AppData().bookAspectRatio,
@@ -33,7 +33,7 @@ class BookTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${book.title}",
+                  book.title,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -41,9 +41,9 @@ class BookTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                    "by ${book.authors.split(';').map((author) => "$author").join(', ')}"),
+                    "by ${book.authors.split(';').map((author) => author).join(', ')}"),
                 const SizedBox(height: 10),
-                Text("${book.categories}"),
+                Text(book.categories),
               ],
             ),
           ))

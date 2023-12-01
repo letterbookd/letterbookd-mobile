@@ -16,6 +16,6 @@ class _LibraryAddFormState extends State<LibraryAddForm> {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
 
-    return Scaffold();
+    return const Scaffold();
   }
 }
