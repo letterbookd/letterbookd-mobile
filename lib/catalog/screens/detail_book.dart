@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/main.dart';
 
-// nanti ganti jadi book.fields.[data]
+// TODO: nanti ganti jadi book.fields.[data]
 
 class DetailBookPage extends StatelessWidget {
   final Book book;
@@ -15,86 +15,135 @@ class DetailBookPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Book Detail'),
       ),
-      // drawer: const LeftDrawer(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-                child: SizedBox(
-              width: 200,
-              child: AspectRatio(
-                aspectRatio: AppData().bookAspectRatio,
-                child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
+            Row(children: <Widget>[
+              SizedBox(
+              width: 130,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: AspectRatio(
+                  aspectRatio: AppData().bookAspectRatio,
+                  child: Image.network(book.thumbnail, fit: BoxFit.fitHeight),
+                  ),
+                )
               ),
-            )),
-            const SizedBox(height: 30.0),
+
+              Flexible(child:
+                Container(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        book.title,
+                        style: const TextStyle(
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 5.0),
+                      Text(
+                        'by ${book.authors.split(';').map((author) => author).join(', ')}',
+                        style: const TextStyle(fontSize: 14.0),
+                      ),
+                      const SizedBox(height: 5.0),
+                      Text(
+                        '${book.published_year}',
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      const SizedBox(height: 5.0),
+                      Text(
+                        'Overall rating: ${book.overall_rating}',
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      const SizedBox(height: 5.0),
+                      Text(
+                        'Favorited by ${book.favorites_count} reader(s)',
+                        style: const TextStyle(fontSize: 14.0,),
+                      ),
+                      const SizedBox(height: 10.0),
+                      SizedBox(
+                        width: 130,
+                        height: 38,
+                        child: TextButton(
+                          onPressed: () {
+                            //TODO: add function
+                          },
+                          style: TextButton.styleFrom(
+                            side: const BorderSide(width: 1),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.reviews_outlined,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text("See reviews"),
+                            ],
+                          )
+                        ),
+                      ),
+                    ],
+                  )
+                )
+              ),
+            ],),
+
+            const SizedBox(height: 20.0),
+            const Text(
+              "Description",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
             Text(
-              book.title,
+              book.description,
+              style: const TextStyle(fontSize: 15.0),
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              "ISBN",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
+            Text(
+              '${book.isbn13}',
               style: const TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
+                fontSize: 15.0,
               ),
             ),
             const SizedBox(height: 20.0),
-            Text(
-              'ISBN: ${book.isbn13}',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            Text(
-              'Authors: ${book.authors.split(';').map((author) => author).join(', ')}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            const SizedBox(height: 15.0),
-            Text(
-              'Categories: ${book.categories}',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            Text(
-              'Publised year: ${book.published_year}',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            Text(
-              'Page count: ${book.page_count}',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            Text(
-              'Overall rating: ${book.overall_rating}',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            Text(
-              'Favorites count: ${book.favorites_count}',
-              style: const TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-            const SizedBox(height: 15.0),
             const Text(
-              'Description:',
-              style: TextStyle(fontSize: 18.0),
+              "Categories",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
             ),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 7.0),
             Text(
-              book.description,
-              style: const TextStyle(fontSize: 18.0),
+              book.categories,
+              style: const TextStyle(fontSize: 15.0,),
             ),
-            const SizedBox(height: 30.0),
+            const SizedBox(height: 20.0),
+            const Text(
+              "Page Count",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
+            Text(
+              '${book.page_count}',
+              style: const TextStyle(fontSize: 15.0,),
+            ),
           ],
         ),
       ),

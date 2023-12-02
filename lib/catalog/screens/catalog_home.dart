@@ -39,7 +39,7 @@ class _CatalogHomeState extends State<CatalogHome> {
       Book(
           9780002261982,
           "Spider's Web",
-          "Charles Osborne;Agatha Christie;",
+          "Charles Osborne;Agatha Christie",
           "Detective and mystery stories",
           "http://books.google.com/books/content?id=gA5GPgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
