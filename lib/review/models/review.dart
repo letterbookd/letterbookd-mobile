@@ -1,15 +1,15 @@
 
 class Review{
-    int stars_rating;
-    int total_rating;
-    String status_on_review;
-    String review_text;
+    int starsRating;
+    int totalRating;
+    String statusOnReview;
+    String reviewText;
 
 
     Review(
-      this.stars_rating,
-      this.total_rating,
-      this.status_on_review,
-      this.review_text,
+      this.starsRating,
+      this.totalRating,
+      this.statusOnReview,
+      this.reviewText,
     );
     }

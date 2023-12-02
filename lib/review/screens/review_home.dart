@@ -1,56 +1,125 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-/// ini contoh
 class ReviewHome extends StatelessWidget {
   const ReviewHome({Key? key}) : super(key: key);
 
-  final List<ReviewItem> items = [
-    ReviewItem("Lihat Review", Icons.checklist),
-    ReviewItem("Tambah Review", Icons.add_shopping_cart),
+  static const List<ReviewItem> items = [
+    ReviewItem("Lihat Review Saya", Icons.preview),
+    ReviewItem("Tambah Review", Icons.rate_review),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Reviews"),
+        title: Text("Reviews"),
       ),
-      body: SingleChildScrollView(
-        // Widget wrapper yang dapat discroll
-        child: Padding(
-          padding: const EdgeInsets.all(10.0), // Set padding dari halaman
-          child: Column(
-            // Widget untuk menampilkan children secara vertikal
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                // Widget Text untuk menampilkan tulisan dengan alignment center dan style yang sesuai
-                child: Text(
-                  'PBP Shop', // Text yang menandakan toko
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          Container(
+            color: Colors.blue[50],
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "4.5",
+                            style: TextStyle(fontSize: 48.0),
+                          ),
+                          TextSpan(
+                            text: "/5",
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RatingBar.builder(
+                      initialRating: 4.5,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 28.0,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.orange,
+                      ),
+                      onRatingUpdate: (rating) {
+                        // Handle rating update
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    Text(
+                      "10 Reviews", // Replace with the actual number of reviews
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: 200.0,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    reverse: true,
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Text(
+                            "${index + 1}",
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                          SizedBox(width: 4.0),
+                          Icon(Icons.star, color: Colors.orange),
+                          SizedBox(width: 8.0),
+                          LinearPercentIndicator(
+                            lineHeight: 6.0,
+                            width: MediaQuery.of(context).size.width / 2.8,
+                            animation: true,
+                            animationDuration: 2500,
+                            percent:
+                                0.7, // Replace with the actual rating percentage
+                            progressColor: Colors.orange,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
-              ),
-              // Grid layout
-              GridView.count(
-                // Container pada card kita.
-                primary: true,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                children: items.map((ReviewItem item) {
-                  // Iterasi untuk setiap item
-                  return ReviewCard(item);
-                }).toList(),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.only(bottom: 8.0, top: 8.0),
+              itemCount: 10, // Replace with the actual number of reviews
+              itemBuilder: (context, index) {
+                return ReviewCard(ReviewItem("User $index", Icons.person));
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  thickness: 2.0,
+                  color: Colors.blue[100],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -60,7 +129,7 @@ class ReviewItem {
   final String title;
   final IconData icon;
 
-  ReviewItem(this.title, this.icon);
+  const ReviewItem(this.title, this.icon);
 }
 
 class ReviewCard extends StatelessWidget {
@@ -70,13 +139,25 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        title: Text(item.title),
-        leading: Icon(item.icon),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue[100],
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: InkWell(
         onTap: () {
           // Handle item tap
         },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(item.icon),
+              SizedBox(width: 4.0),
+              Text(item.title),
+            ],
+          ),
+        ),
       ),
     );
   }
