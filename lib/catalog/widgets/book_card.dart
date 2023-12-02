@@ -11,12 +11,12 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Card(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
         child: Column(children: [
           SizedBox(
-            height: 150,
+            height: 180,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: AspectRatio(
@@ -26,28 +26,45 @@ class BookCard extends StatelessWidget {
             )
           ),
           Container(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Column(
-                children: [
-                    const SizedBox(height: 10),
-                    Text(
+            margin: const EdgeInsets.symmetric(horizontal: 7),
+            alignment: Alignment.centerLeft,
+            child: Column(
+              children: [
+                  const SizedBox(height: 10),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
                       book.title,
                       style: const TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 13.0,
                           fontWeight: FontWeight.bold,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       softWrap: true,
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.left,
                     ),
-                    const SizedBox(height: 5),
-                    Text(
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
                       "by ${book.authors.split(';').map((author) => author).join(', ')}",
-                      overflow: TextOverflow.ellipsis,),
-                ],
-              ),
-            )
+                      style: const TextStyle(
+                          fontSize: 12.0,
+                      ),  
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      softWrap: true,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+              ],
+            ),
+          )
         ],
         ),
       )

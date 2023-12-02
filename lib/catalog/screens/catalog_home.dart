@@ -39,7 +39,7 @@ class _CatalogHomeState extends State<CatalogHome> {
       Book(
           9780002261982,
           "Spider's Web",
-          "Charles Osborne;Agatha Christie",
+          "Charles Osborne;Agatha Christie;",
           "Detective and mystery stories",
           "http://books.google.com/books/content?id=gA5GPgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
@@ -172,6 +172,7 @@ class _CatalogHomeState extends State<CatalogHome> {
                   // build tile view
                   if (_viewType == ViewType.tile) {
                     return ListView.builder(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (_, index) => InkWell(
                           onTap: () {
@@ -190,13 +191,13 @@ class _CatalogHomeState extends State<CatalogHome> {
                   // build grid view
                   else {
                     return GridView.builder(
-                      padding: const EdgeInsets.only(top: 30, bottom: 30),
+                      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
                       shrinkWrap: true,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: ((MediaQuery.of(context).size.width / 2) / (MediaQuery.of(context).size.height / 3.5)),
-                        crossAxisCount: 2,
+                        childAspectRatio: ((MediaQuery.of(context).size.width / 3) / (MediaQuery.of(context).size.height / 2.88)),
+                        crossAxisCount: 3,
                         crossAxisSpacing: 5.0,
-                        mainAxisSpacing: 30.0,
+                        mainAxisSpacing: 5.0,
                       ),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) => InkWell(

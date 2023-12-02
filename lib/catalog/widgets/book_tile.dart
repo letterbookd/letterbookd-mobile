@@ -12,9 +12,9 @@ class BookTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Card(
       child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       padding: const EdgeInsets.all(15.0),
       child: Row(
         children: [
