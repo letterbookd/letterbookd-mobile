@@ -7,6 +7,8 @@ import 'package:letterbookd/main.dart';
 class LibraryHome extends StatelessWidget {
   const LibraryHome({super.key});
 
+  void _addBookForm(BuildContext context) {}
+
   void _openFilterModal(BuildContext context) {
     showModalBottomSheet<void>(
       useRootNavigator: true,
@@ -47,6 +49,13 @@ class LibraryHome extends StatelessWidget {
         actions: <Widget>[
           IconButton(
               style: style,
+              tooltip: "Add book",
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                _addBookForm(context);
+              }),
+          IconButton(
+              style: style,
               tooltip: "Filter",
               icon: const Icon(Icons.filter_list_rounded),
               onPressed: () {
@@ -62,32 +71,17 @@ class LibraryHome extends StatelessWidget {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) => Container(
-          padding: const EdgeInsets.all(8.0),
-          height: constraints.maxHeight,
-          child: SingleChildScrollView(
-              child: Container(
-            height: constraints.maxHeight * 0.8,
-            alignment: Alignment.topCenter,
-            child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: AppData().bookAspectRatio,
-                  crossAxisCount: 3,
-                ),
-                itemCount: 12,
-                itemBuilder: (context, index) {
-                  return const LibraryTile();
-                }),
-          )),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(
-          Icons.book,
-        ),
-        label: const Text("Add book"),
+      body: Container(
+        child: GridView.builder(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: AppData().bookAspectRatio,
+              crossAxisCount: 3,
+            ),
+            itemCount: 12,
+            itemBuilder: (context, index) {
+              return const LibraryTile();
+            }),
       ),
     );
   }
