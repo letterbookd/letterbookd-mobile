@@ -14,19 +14,17 @@ class LibraryDetailHeader extends StatelessWidget {
             AspectRatio(
               aspectRatio: AppData().bookAspectRatio,
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                clipBehavior: Clip.hardEdge,
-                child: const Hero(
-                  tag: "libbok-cover",
-                  child: Image(
-                    image: NetworkImage(
-                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                    fit: BoxFit.fitHeight,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-              ),
+                  clipBehavior: Clip.hardEdge,
+                  child: const InkWell(
+                    child: Image(
+                      image: NetworkImage(
+                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                      fit: BoxFit.fitHeight,
+                    ),
+                  )),
             ),
             Expanded(
                 child: Padding(
