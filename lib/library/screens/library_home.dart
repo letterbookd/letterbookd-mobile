@@ -62,18 +62,25 @@ class LibraryHome extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(8.0),
-        alignment: Alignment.topCenter,
-        child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: AppData().bookAspectRatio,
-              crossAxisCount: 3,
-            ),
-            itemCount: 12,
-            itemBuilder: (context, index) {
-              return const LibraryTile();
-            }),
+      body: LayoutBuilder(
+        builder: (context, constraints) => Container(
+          padding: const EdgeInsets.all(8.0),
+          height: constraints.maxHeight,
+          child: SingleChildScrollView(
+              child: Container(
+            height: constraints.maxHeight * 0.8,
+            alignment: Alignment.topCenter,
+            child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: AppData().bookAspectRatio,
+                  crossAxisCount: 3,
+                ),
+                itemCount: 12,
+                itemBuilder: (context, index) {
+                  return const LibraryTile();
+                }),
+          )),
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
