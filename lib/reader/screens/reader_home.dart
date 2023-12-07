@@ -1,11 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/reader/screens/reader_settings.dart';
 
-class ReaderHome extends StatelessWidget {
+class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
 
   @override
+  ReaderHomeState createState() => ReaderHomeState();
+}
+
+class ReaderHomeState extends State<ReaderHome> {
+  bool isSearchMode = false;
+
+  @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: isSearchMode ? _buildSearchAppBar() : _buildRegularAppBar(),
+      body: _buildBody(context),
+    );
+  }
+
+  AppBar _buildRegularAppBar() {
+    return AppBar(
+      title: const Text("Reader"),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            setState(() {
+              isSearchMode = true;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  AppBar _buildSearchAppBar() {
+    return AppBar(
+      leading: BackButton(
+        onPressed: () {
+          setState(() {
+            isSearchMode = false;
+          });
+        },
+      ),
+      title: TextField(
+        autofocus: true,
+        decoration: const InputDecoration(
+          hintText: "Search...",
+          border: InputBorder.none,
+        ),
+        onSubmitted: (value) {
+          // nanti search di sini
+        },
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
     // Dummy data
     final reader = {
       'username': 'letter',
@@ -13,49 +65,45 @@ class ReaderHome extends StatelessWidget {
       'bio': 'Loves reading fantasy novels',
     };
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Reader"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            const Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
-              ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView(
+        children: [
+          const SizedBox(height: 16),
+          const Center(
+            child: CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
             ),
-            _buildUserInfoCard('Username', reader['username']!),
-            _buildUserInfoCard('Name', reader['name']!),
-            _buildUserInfoCard('Bio', reader['bio']!),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EditProfileScreen()),
-                );
-              },
-              style: Theme.of(context).elevatedButtonTheme.style,
-              child: const Text('Edit Profile'),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Library',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            _buildGridSection(4), // Library cards
-            const SizedBox(height: 24),
-            const Text(
-              'Review',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            _buildGridSection(4), // Review cards
-          ],
-        ),
+          ),
+          _buildUserInfoCard('Username', reader['username']!),
+          _buildUserInfoCard('Name', reader['name']!),
+          _buildUserInfoCard('Bio', reader['bio']!),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const EditProfileScreen()),
+              );
+            },
+            style: Theme.of(context).elevatedButtonTheme.style,
+            child: const Text('Edit Profile'),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Library',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          _buildGridSection(4), // Library cards
+          const SizedBox(height: 24),
+          const Text(
+            'Review',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          _buildGridSection(4), // Review cards
+        ],
       ),
     );
   }
