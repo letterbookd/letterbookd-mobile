@@ -11,7 +11,7 @@ class Book {
   String description;
   int published_year;
   int page_count;
-  int overall_rating; //sementara int dulu, gatau kenapa kalo pake Float dia tu parameternya error
+  double overall_rating; //sementara int dulu, gatau kenapa kalo pake Float dia tu parameternya error
   int favorites_count;
 
   Book(

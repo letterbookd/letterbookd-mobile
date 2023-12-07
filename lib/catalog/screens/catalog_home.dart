@@ -4,7 +4,6 @@ import 'package:letterbookd/catalog/screens/detail_book.dart';
 import 'package:letterbookd/catalog/widgets/book_card.dart';
 import 'package:letterbookd/catalog/widgets/book_tile.dart';
 import 'package:letterbookd/catalog/widgets/sort_modal.dart';
-import 'package:letterbookd/main.dart';
 
 // declare view types
 enum ViewType {
@@ -76,8 +75,8 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
           2004,
           247,
-          0,
-          0),
+          4.23,
+          70),
       Book(
           9780002261982,
           "Spider's Web",
@@ -87,8 +86,8 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
           2000,
           241,
-          0,
-          0),
+          3.3,
+          2),
       Book(
           9780006163831,
           "The One Tree",
@@ -98,8 +97,8 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
           1982,
           479,
-          0,
-          0),
+          4.78,
+          50),
       Book(
           9780006490456, 
           "Witness for the Prosecution & Selected Plays", 
@@ -108,7 +107,7 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.", 
           1995, 
           352, 
-          0, 
+          0.0, 
           0),
       Book(
           9780006178736,
@@ -119,7 +118,7 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
           1993,
           512,
-          0,
+          0.0,
           0),
       Book(
           9780006280897,
@@ -130,7 +129,7 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
           2002,
           170,
-          0,
+          0.0,
           0),
       Book(
           9780006280934,
@@ -141,8 +140,8 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
           2002,
           176,
-          0,
-          0),
+          4.3,
+          25),
       Book(
           9780006353287,
           "An Autobiography",
@@ -152,7 +151,7 @@ class _CatalogHomeState extends State<CatalogHome> {
           "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
           1977,
           560,
-          0,
+          0.0,
           0),
     ];
 
@@ -163,10 +162,10 @@ class _CatalogHomeState extends State<CatalogHome> {
       books.sort((a, b) => a.authors.compareTo(b.authors));
     }
     else if (_sortBy == SortBy.rating){
-      books.sort((a, b) => a.overall_rating.compareTo(b.overall_rating));
+      books.sort((a, b) => b.overall_rating.compareTo(a.overall_rating));
     }
     else if (_sortBy == SortBy.favoritesCount){
-      books.sort((a, b) => a.favorites_count.compareTo(b.favorites_count));
+      books.sort((a, b) => b.favorites_count.compareTo(a.favorites_count));
     }
     
     return books;
