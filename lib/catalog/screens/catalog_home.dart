@@ -29,7 +29,7 @@ class CatalogHome extends StatefulWidget {
 class _CatalogHomeState extends State<CatalogHome> {
 
   // ignore: prefer_final_fields
-  ViewType _viewType = ViewType.grid;
+  ViewType _viewType = ViewType.tile;
   // ignore: prefer_final_fields
   SortBy _sortBy = SortBy.title;
 
@@ -198,7 +198,7 @@ class _CatalogHomeState extends State<CatalogHome> {
             IconButton(
                 style: style,
                 tooltip: "View Type",
-                icon: Icon(_viewType == ViewType.tile ? Icons.grid_view : Icons.view_agenda),
+                icon: Icon(_viewType == ViewType.tile ? Icons.grid_view_sharp : Icons.view_list),
                 onPressed: () {
                   setState(() {
                     if (_viewType == ViewType.tile) {
