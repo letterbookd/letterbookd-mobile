@@ -17,7 +17,7 @@ class BookCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: AspectRatio(
               aspectRatio: AppData().bookAspectRatio,
-              child: Image.network(book.thumbnail, fit: BoxFit.fitHeight)
+              child: Image.network(book.fields.thumbnail, fit: BoxFit.fitHeight)
             ),
           ),
           Container(
@@ -31,7 +31,7 @@ class BookCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.star),
                     Text(
-                      '${book.overall_rating}',
+                      '${book.fields.overallRating}',
                       style: const TextStyle(
                         fontSize: 14.0,
                       ),
@@ -40,7 +40,7 @@ class BookCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  book.title,
+                  book.fields.title,
                   style: const TextStyle(
                       fontSize: 13.0,
                       fontWeight: FontWeight.bold,

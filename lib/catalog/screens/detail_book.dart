@@ -27,7 +27,7 @@ class DetailBookPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: AspectRatio(
                   aspectRatio: AppData().bookAspectRatio,
-                  child: Image.network(book.thumbnail, fit: BoxFit.fitHeight),
+                  child: Image.network(book.fields.thumbnail, fit: BoxFit.fitHeight),
                   ),
                 )
               ),
@@ -39,7 +39,7 @@ class DetailBookPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        book.title,
+                        book.fields.title,
                         style: const TextStyle(
                           fontSize: 17.0,
                           fontWeight: FontWeight.bold,
@@ -47,12 +47,12 @@ class DetailBookPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 5.0),
                       Text(
-                        'by ${book.authors.split(';').map((author) => author).join(', ')}',
+                        'by ${book.fields.authors.split(';').map((author) => author).join(', ')}',
                         style: const TextStyle(fontSize: 14.0),
                       ),
                       const SizedBox(height: 5.0),
                       Text(
-                        '${book.published_year}',
+                        '${book.fields.publishedYear}',
                         style: const TextStyle(
                           fontSize: 14.0,
                         ),
@@ -62,7 +62,7 @@ class DetailBookPage extends StatelessWidget {
                         children: [
                           const Icon(Icons.star),
                           Text(
-                            '${book.overall_rating}',
+                            '${book.fields.overallRating}',
                             style: const TextStyle(
                               fontSize: 14.0,
                             ),
@@ -71,7 +71,7 @@ class DetailBookPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 5.0),
                       Text(
-                        'Favorited by ${book.favorites_count} reader(s)',
+                        'Favorited by ${book.fields.favoritesCount} reader(s)',
                         style: const TextStyle(fontSize: 14.0,),
                       ),
                       const SizedBox(height: 10.0),
@@ -113,7 +113,7 @@ class DetailBookPage extends StatelessWidget {
             ),
             const SizedBox(height: 7.0),
             Text(
-              book.description,
+              book.fields.description,
               style: const TextStyle(fontSize: 15.0),
               textAlign: TextAlign.justify,
             ),
@@ -124,7 +124,7 @@ class DetailBookPage extends StatelessWidget {
             ),
             const SizedBox(height: 7.0),
             Text(
-              '${book.isbn13}',
+              '${book.fields.isbn13}',
               style: const TextStyle(
                 fontSize: 15.0,
               ),
@@ -136,7 +136,7 @@ class DetailBookPage extends StatelessWidget {
             ),
             const SizedBox(height: 7.0),
             Text(
-              book.categories,
+              book.fields.categories,
               style: const TextStyle(fontSize: 15.0,),
             ),
             const SizedBox(height: 20.0),
@@ -146,7 +146,7 @@ class DetailBookPage extends StatelessWidget {
             ),
             const SizedBox(height: 7.0),
             Text(
-              '${book.page_count}',
+              '${book.fields.pageCount}',
               style: const TextStyle(fontSize: 15.0,),
             ),
           ],

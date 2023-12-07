@@ -24,7 +24,7 @@ class BookTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: AspectRatio(
                 aspectRatio: AppData().bookAspectRatio,
-                child: Image.network(book.thumbnail, fit: BoxFit.fitHeight),
+                child: Image.network(book.fields.thumbnail, fit: BoxFit.fitHeight),
               ),
             ),
           ),
@@ -36,7 +36,7 @@ class BookTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  book.title,
+                  book.fields.title,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -44,14 +44,14 @@ class BookTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                    "by ${book.authors.split(';').map((author) => author).join(', ')}"),
+                    "by ${book.fields.authors.split(';').map((author) => author).join(', ')}"),
                 const SizedBox(height: 10),
                 // Text(book.categories),
                 Row(
                   children: [
                     const Icon(Icons.star),
                     Text(
-                      '${book.overall_rating}',
+                      '${book.fields.overallRating}',
                       style: const TextStyle(
                         fontSize: 14.0,
                       ),

@@ -4,6 +4,8 @@ import 'package:letterbookd/catalog/screens/detail_book.dart';
 import 'package:letterbookd/catalog/widgets/book_card.dart';
 import 'package:letterbookd/catalog/widgets/book_tile.dart';
 import 'package:letterbookd/catalog/widgets/sort_modal.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // declare view types
 enum ViewType {
@@ -64,108 +66,36 @@ class _CatalogHomeState extends State<CatalogHome> {
   }
 
   Future<List<Book>> fetchBook() async {
-    // sementara dulu, karena belum integrasi dgn django
-    List<Book> books = [
-      Book(
-          9780002005883,
-          "Gilead",
-          "Marilynne Robinson",
-          "Fiction",
-          "http://books.google.com/books/content?id=KQZCPgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
-          2004,
-          247,
-          4.23,
-          70),
-      Book(
-          9780002261982,
-          "Spider's Web",
-          "Charles Osborne;Agatha Christie",
-          "Detective and mystery stories",
-          "http://books.google.com/books/content?id=gA5GPgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
-          2000,
-          241,
-          3.3,
-          2),
-      Book(
-          9780006163831,
-          "The One Tree",
-          "Stephen R. Donaldson",
-          "American fiction",
-          "http://books.google.com/books/content?id=OmQawwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
-          1982,
-          479,
-          4.78,
-          50),
-      Book(
-          9780006490456, 
-          "Witness for the Prosecution & Selected Plays", 
-          "Agatha Christie", "English drama", 
-          "http://books.google.com/books/content?id=_9u7AAAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", 
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.", 
-          1995, 
-          352, 
-          0.0, 
-          0),
-      Book(
-          9780006178736,
-          "Rage of angels",
-          "Sidney Sheldon",
-          "Fiction",
-          "http://books.google.com/books/content?id=FKo2TgANz74C&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
-          1993,
-          512,
-          0.0,
-          0),
-      Book(
-          9780006280897,
-          "The Four Loves",
-          "Clive Staples Lewis",
-          "Christian life",
-          "http://books.google.com/books/content?id=XhQ5XsFcpGIC&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
-          2002,
-          170,
-          0.0,
-          0),
-      Book(
-          9780006280934,
-          "The Problem of Pain",
-          "Clive Staples Lewis",
-          "Christian life",
-          "http://books.google.com/books/content?id=Kk-uVe5QK-gC&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
-          2002,
-          176,
-          4.3,
-          25),
-      Book(
-          9780006353287,
-          "An Autobiography",
-          "Agatha Christie",
-          "Authors, English",
-          "http://books.google.com/books/content?id=c49GQwAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-          "Lorem ipsum dolor sit amet. Sit tenetur vero ad expedita eaque ut maiores aperiam At architecto doloremque est tenetur eveniet. Vel vitae voluptatem et ipsa perferendis At odit voluptas ut reiciendis consequuntur.",
-          1977,
-          560,
-          0.0,
-          0),
-    ];
+    
+    var url = Uri.parse(
+        'https://letterbookd-a09-tk.pbp.cs.ui.ac.id/catalog/json/');
+    var response = await http.get(
+        url,
+        headers: {"Content-Type": "application/json"},
+    );
+
+    // melakukan decode response menjadi bentuk json
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    // melakukan konversi data json menjadi object Product
+    List<Book> books = [];
+    for (var d in data) {
+        if (d != null) {
+            books.add(Book.fromJson(d));
+        }
+    }
 
     if (_sortBy == SortBy.title){
-      books.sort((a, b) => a.title.compareTo(b.title));
+      books.sort((a, b) => a.fields.title.compareTo(b.fields.title));
     }
     else if (_sortBy == SortBy.authors){
-      books.sort((a, b) => a.authors.compareTo(b.authors));
+      books.sort((a, b) => a.fields.authors.compareTo(b.fields.authors));
     }
     else if (_sortBy == SortBy.rating){
-      books.sort((a, b) => b.overall_rating.compareTo(a.overall_rating));
+      books.sort((a, b) => b.fields.overallRating.compareTo(a.fields.overallRating));
     }
     else if (_sortBy == SortBy.favoritesCount){
-      books.sort((a, b) => b.favorites_count.compareTo(a.favorites_count));
+      books.sort((a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
     }
     
     return books;
