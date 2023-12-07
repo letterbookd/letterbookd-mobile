@@ -58,11 +58,16 @@ class DetailBookPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 5.0),
-                      Text(
-                        'Overall rating: ${book.overall_rating}',
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                        ),
+                      Row(
+                        children: [
+                          const Icon(Icons.star),
+                          Text(
+                            '${book.overall_rating}',
+                            style: const TextStyle(
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 5.0),
                       Text(

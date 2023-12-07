@@ -3,11 +3,21 @@ import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/catalog/screens/detail_book.dart';
 import 'package:letterbookd/catalog/widgets/book_card.dart';
 import 'package:letterbookd/catalog/widgets/book_tile.dart';
+import 'package:letterbookd/catalog/widgets/sort_modal.dart';
+import 'package:letterbookd/main.dart';
 
 // declare view types
 enum ViewType {
   tile,
   grid,
+}
+
+// declare sort by
+enum SortBy {
+  title,
+  authors,
+  rating,
+  favoritesCount,
 }
 
 class CatalogHome extends StatefulWidget {
@@ -21,6 +31,38 @@ class _CatalogHomeState extends State<CatalogHome> {
 
   // ignore: prefer_final_fields
   ViewType _viewType = ViewType.grid;
+  // ignore: prefer_final_fields
+  SortBy _sortBy = SortBy.title;
+
+  // method for opening sort modal
+  void _openSortModal(BuildContext context) {
+    showModalBottomSheet(
+      useRootNavigator: true,
+      showDragHandle: true,
+      enableDrag: true,
+      context: context,
+      builder: (BuildContext context) {
+        return const BookSortModal();
+      },
+    ).then((value) {
+      if (value == 'title') {
+        _sortBy = SortBy.title;
+      }
+      else if (value == 'authors') {
+        _sortBy = SortBy.authors;
+      }
+      else if (value == 'rating') {
+        _sortBy = SortBy.rating;
+      }
+      else if (value == 'favoritesCount') {
+        _sortBy = SortBy.favoritesCount;
+      }
+
+      fetchBook().then((_) {
+        setState(() {}); // Trigger rebuild after fetching books
+      });
+    });
+  }
 
   Future<List<Book>> fetchBook() async {
     // sementara dulu, karena belum integrasi dgn django
@@ -114,6 +156,19 @@ class _CatalogHomeState extends State<CatalogHome> {
           0),
     ];
 
+    if (_sortBy == SortBy.title){
+      books.sort((a, b) => a.title.compareTo(b.title));
+    }
+    else if (_sortBy == SortBy.authors){
+      books.sort((a, b) => a.authors.compareTo(b.authors));
+    }
+    else if (_sortBy == SortBy.rating){
+      books.sort((a, b) => a.overall_rating.compareTo(b.overall_rating));
+    }
+    else if (_sortBy == SortBy.favoritesCount){
+      books.sort((a, b) => a.favorites_count.compareTo(b.favorites_count));
+    }
+    
     return books;
   }
 
@@ -135,8 +190,15 @@ class _CatalogHomeState extends State<CatalogHome> {
             )),
           actions: <Widget>[
             IconButton(
+              style: style,
+              tooltip: "Sort By",
+              icon: const Icon(Icons.sort_by_alpha_outlined),
+              onPressed: () {
+                _openSortModal(context);
+            }),
+            IconButton(
                 style: style,
-                tooltip: "Filter",
+                tooltip: "View Type",
                 icon: Icon(_viewType == ViewType.tile ? Icons.grid_view : Icons.view_agenda),
                 onPressed: () {
                   setState(() {
@@ -149,7 +211,6 @@ class _CatalogHomeState extends State<CatalogHome> {
                 }),
           ],
         ),
-        // drawer: const LeftDrawer(),
         body: FutureBuilder(
             future: fetchBook(),
             builder: (context, AsyncSnapshot snapshot) {
@@ -193,8 +254,8 @@ class _CatalogHomeState extends State<CatalogHome> {
                     return GridView.builder(
                       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
                       shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: ((MediaQuery.of(context).size.width / 3) / (MediaQuery.of(context).size.height / 2.88)),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 181 / 385,
                         crossAxisCount: 3,
                         crossAxisSpacing: 5.0,
                         mainAxisSpacing: 5.0,

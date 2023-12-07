@@ -11,17 +11,14 @@ class BookCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         child: Column(children: [
-          SizedBox(
-            height: 180,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: AspectRatio(
-                aspectRatio: AppData().bookAspectRatio,
-                child: Image.network(book.thumbnail, fit: BoxFit.fitHeight),
-              ),
-            )
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: AspectRatio(
+              aspectRatio: AppData().bookAspectRatio,
+              child: Image.network(book.thumbnail, fit: BoxFit.fitHeight)
+            ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 7),
@@ -30,6 +27,18 @@ class BookCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const Icon(Icons.star),
+                    Text(
+                      '${book.overall_rating}',
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
                 Text(
                   book.title,
                   style: const TextStyle(
@@ -41,17 +50,16 @@ class BookCard extends StatelessWidget {
                   softWrap: true,
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  "by ${book.authors.split(';').map((author) => author).join(', ')}",
-                  style: const TextStyle(
-                      fontSize: 12.0,
-                  ),  
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  softWrap: true,
-                  textAlign: TextAlign.left,
-                ),
+                // Text(
+                //   "by ${book.authors.split(';').map((author) => author).join(', ')}",
+                //   style: const TextStyle(
+                //       fontSize: 12.0,
+                //   ),  
+                //   overflow: TextOverflow.ellipsis,
+                //   maxLines: 1,
+                //   softWrap: true,
+                //   textAlign: TextAlign.left,
+                // ),
               ],
             ),
           )

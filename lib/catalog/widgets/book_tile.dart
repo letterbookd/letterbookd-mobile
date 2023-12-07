@@ -5,8 +5,7 @@ import 'package:letterbookd/main.dart';
 class BookTile extends StatelessWidget {
   final Book book;
 
-  const BookTile({Key? key, required this.book})
-      : super(key: key); // Constructor
+  const BookTile({Key? key, required this.book}) : super(key: key); // Constructor
 
   // const BookTile(this.book, {super.key}); // Constructor
 
@@ -20,17 +19,14 @@ class BookTile extends StatelessWidget {
         children: [
           SizedBox(
             width: 70,
-            child: ClipRRect(
+            child: 
+            ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: AspectRatio(
                 aspectRatio: AppData().bookAspectRatio,
                 child: Image.network(book.thumbnail, fit: BoxFit.fitHeight),
               ),
-            )
-            // child: AspectRatio(
-            //   aspectRatio: AppData().bookAspectRatio,
-            //   child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
-            // ),
+            ),
           ),
           Flexible(
               child: Container(
@@ -50,7 +46,18 @@ class BookTile extends StatelessWidget {
                 Text(
                     "by ${book.authors.split(';').map((author) => author).join(', ')}"),
                 const SizedBox(height: 10),
-                Text(book.categories),
+                // Text(book.categories),
+                Row(
+                  children: [
+                    const Icon(Icons.star),
+                    Text(
+                      '${book.overall_rating}',
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ))
