@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/main.dart';
 
-// TODO: nanti ganti jadi book.fields.[data]
-
 class DetailBookPage extends StatelessWidget {
   final Book book;
 
@@ -16,7 +14,7 @@ class DetailBookPage extends StatelessWidget {
         title: const Text('Book Detail'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+        padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

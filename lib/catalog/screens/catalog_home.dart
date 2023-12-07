@@ -80,9 +80,9 @@ class _CatalogHomeState extends State<CatalogHome> {
     // melakukan konversi data json menjadi object Product
     List<Book> books = [];
     for (var d in data) {
-        if (d != null) {
-            books.add(Book.fromJson(d));
-        }
+      if (d != null) {
+          books.add(Book.fromJson(d));
+      }
     }
 
     if (_sortBy == SortBy.title){
@@ -108,102 +108,104 @@ class _CatalogHomeState extends State<CatalogHome> {
     );
     
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Catalog'),
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(4.0),
-            child: Divider(
-              height: 1,
-              indent: 10,
-              endIndent: 10,
-            )),
-          actions: <Widget>[
-            IconButton(
-              style: style,
-              tooltip: "Sort By",
-              icon: const Icon(Icons.sort_by_alpha_outlined),
-              onPressed: () {
-                _openSortModal(context);
-            }),
-            IconButton(
-                style: style,
-                tooltip: "View Type",
-                icon: Icon(_viewType == ViewType.tile ? Icons.grid_view_sharp : Icons.view_list),
-                onPressed: () {
-                  setState(() {
-                    if (_viewType == ViewType.tile) {
-                      _viewType = ViewType.grid;
-                    } else {
-                      _viewType = ViewType.tile;
-                    }
-                  });
-                }),
-          ],
-        ),
-        body: FutureBuilder(
-            future: fetchBook(),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.data == null) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                if (!snapshot.hasData) {
-                  return const Column(
-                    children: [
-                      Text(
-                        "Tidak ada data buku.",
-                        style:
-                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
-                      ),
-                      SizedBox(height: 8),
-                    ],
-                  );
+      appBar: AppBar(
+        title: const Text('Catalog'),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(4.0),
+          child: Divider(
+            height: 1,
+            indent: 10,
+            endIndent: 10,
+          )),
+        actions: <Widget>[
+          IconButton(
+            style: style,
+            tooltip: "Sort By",
+            icon: const Icon(Icons.sort_by_alpha_outlined),
+            onPressed: () {
+              _openSortModal(context);
+          }),
+          IconButton(
+            style: style,
+            tooltip: "View Type",
+            icon: Icon(_viewType == ViewType.tile ? Icons.grid_view_sharp : Icons.view_list),
+            onPressed: () {
+              setState(() {
+                if (_viewType == ViewType.tile) {
+                  _viewType = ViewType.grid;
                 } else {
-
-                  // build tile view
-                  if (_viewType == ViewType.tile) {
-                    return ListView.builder(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (_, index) => InkWell(
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return DetailBookPage(
-                                  book: snapshot.data![index]);
-                            }));
-                          },
-                          child: BookTile(book: snapshot.data![index]),
-                          )    
-                        );
-
-                  } 
-                  
-                  // build grid view
-                  else {
-                    return GridView.builder(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-                      shrinkWrap: true,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 181 / 385,
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 5.0,
-                        mainAxisSpacing: 5.0,
-                      ),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (_, index) => InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return DetailBookPage(
-                                book: snapshot.data![index]);
-                          }));
-                        },
-                        child: BookCard(book: snapshot.data![index]),
-                        )    
-                      );
-                  }
+                  _viewType = ViewType.tile;
                 }
-                }
-            }));
+              });
+            }
+          ),
+        ],
+      ),
+      body: FutureBuilder(
+        future: fetchBook(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            if (!snapshot.hasData) {
+              return const Column(
+                children: [
+                  Text(
+                    "Tidak ada data buku.",
+                    style:
+                        TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                  ),
+                  SizedBox(height: 8),
+                ],
+              );
+            } else {
+
+              // build tile view
+              if (_viewType == ViewType.tile) {
+                return ListView.builder(
+                  padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (_, index) => InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DetailBookPage(
+                            book: snapshot.data![index]);
+                      }));
+                    },
+                    child: BookTile(book: snapshot.data![index]),
+                  )
+                );
+              } 
+              
+              // build grid view
+              else {
+                return GridView.builder(
+                  padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 181 / 385,
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 5.0,
+                    mainAxisSpacing: 5.0,
+                  ),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (_, index) => InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DetailBookPage(
+                            book: snapshot.data![index]);
+                      }));
+                    },
+                    child: BookCard(book: snapshot.data![index]),
+                  )    
+                );
+              }
+            }
+          }
+        }
+      )
+    );
   }
 }

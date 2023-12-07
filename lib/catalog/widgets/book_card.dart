@@ -50,21 +50,10 @@ class BookCard extends StatelessWidget {
                   softWrap: true,
                   textAlign: TextAlign.left,
                 ),
-                // Text(
-                //   "by ${book.authors.split(';').map((author) => author).join(', ')}",
-                //   style: const TextStyle(
-                //       fontSize: 12.0,
-                //   ),  
-                //   overflow: TextOverflow.ellipsis,
-                //   maxLines: 1,
-                //   softWrap: true,
-                //   textAlign: TextAlign.left,
-                // ),
               ],
             ),
           )
-        ],
-        ),
+        ]),
       )
     );
   }

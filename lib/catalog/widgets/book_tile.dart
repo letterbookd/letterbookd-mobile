@@ -7,8 +7,6 @@ class BookTile extends StatelessWidget {
 
   const BookTile({Key? key, required this.book}) : super(key: key); // Constructor
 
-  // const BookTile(this.book, {super.key}); // Constructor
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -44,9 +42,8 @@ class BookTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                    "by ${book.fields.authors.split(';').map((author) => author).join(', ')}"),
+                  "by ${book.fields.authors.split(';').map((author) => author).join(', ')}"),
                 const SizedBox(height: 10),
-                // Text(book.categories),
                 Row(
                   children: [
                     const Icon(Icons.star),
