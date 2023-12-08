@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/reader/screens/reader_settings.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:letterbookd/reader/models/reader.dart';
 
 class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
@@ -11,11 +14,62 @@ class ReaderHome extends StatefulWidget {
 class ReaderHomeState extends State<ReaderHome> {
   bool isSearchMode = false;
 
+  Future<List<Reader>> fetchReaders() async {
+    // https://letterbookd-a09-tk.pbp.cs.ui.ac.id/reader/get-reader-json/
+    var url = Uri.parse(
+        // http://10.0.2.2:8080/auth/login/
+        'http://10.0.2.2:8080/reader/json/');
+    var response = await http.get(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+
+    // melakukan decode response menjadi bentuk json
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    // melakukan konversi data json menjadi object Reader
+    List<Reader> listReaders = [];
+    /*
+    for (var d in data) {
+      listReaders.add(Reader.fromJson(d));
+    }
+    */
+    for (var d in data) {
+      if (d != null) {
+        listReaders.add(Reader.fromJson(d));
+      }
+    }
+
+    return listReaders;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: isSearchMode ? _buildSearchAppBar() : _buildRegularAppBar(),
-      body: _buildBody(context),
+      body: FutureBuilder<List<Reader>>(
+        future: fetchReaders(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("Tidak ada data pembaca."));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final reader = snapshot.data![index];
+                return ListTile(
+                  title: Text(reader.fields.displayName),
+                  subtitle: Text(reader.fields.bio),
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -53,57 +107,6 @@ class ReaderHomeState extends State<ReaderHome> {
         onSubmitted: (value) {
           // nanti search di sini
         },
-      ),
-    );
-  }
-
-  Widget _buildBody(BuildContext context) {
-    // Dummy data
-    final reader = {
-      'username': 'letter',
-      'name': 'letterbookd',
-      'bio': 'Loves reading fantasy novels',
-    };
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: ListView(
-        children: [
-          const SizedBox(height: 16),
-          const Center(
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
-            ),
-          ),
-          _buildUserInfoCard('Username', reader['username']!),
-          _buildUserInfoCard('Name', reader['name']!),
-          _buildUserInfoCard('Bio', reader['bio']!),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const EditProfileScreen()),
-              );
-            },
-            style: Theme.of(context).elevatedButtonTheme.style,
-            child: const Text('Edit Profile'),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Library',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          _buildGridSection(4), // Library cards
-          const SizedBox(height: 24),
-          const Text(
-            'Review',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          _buildGridSection(4), // Review cards
-        ],
       ),
     );
   }
