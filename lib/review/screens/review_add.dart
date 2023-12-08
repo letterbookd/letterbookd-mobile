@@ -3,18 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class ShopFormPage extends StatefulWidget {
-  const ShopFormPage({super.key});
+// Kurang Impor dari modul library
+// import 'package:library_module/library_module.dart';
+
+class AddFormPage extends StatefulWidget {
+  const AddFormPage({super.key});
 
   @override
-  State<ShopFormPage> createState() => _ShopFormPageState();
+  State<AddFormPage> createState() => _AddFormPageState();
 }
 
-class _ShopFormPageState extends State<ShopFormPage> {
+class _AddFormPageState extends State<AddFormPage> {
   final _formKey = GlobalKey<FormState>();
-  String _statusOnReview = "";
+  String _statusOnReview = ""; // Get the value from your library module here
   int _starsRating = 0;
   String _reviewText = "";
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // Handle form submission here
+      print('Status on Review: $_statusOnReview');
+      print('Stars Rating: $_starsRating');
+      print('Review Text: $_reviewText');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +35,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
       appBar: AppBar(
         title: const Center(
           child: Text(
-            'Form Tambah Produk',
+            'Form Tambah Review',
           ),
         ),
         backgroundColor: Colors.indigo,
@@ -32,11 +44,12 @@ class _ShopFormPageState extends State<ShopFormPage> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                initialValue: _statusOnReview,
+                readOnly: true,
                 decoration: InputDecoration(
                   hintText: "Status on Review",
                   labelText: "Status on Review",
@@ -44,17 +57,6 @@ class _ShopFormPageState extends State<ShopFormPage> {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _statusOnReview = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Shouldn't be Empty!";
-                  }
-                  return null;
-                },
               ),
             ),
             Padding(
@@ -69,7 +71,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
                 ),
                 onChanged: (String? value) {
                   setState(() {
-                    _starsRating = int.parse(value!); //tambah variabel price
+                    _starsRating = int.parse(value!);
                   });
                 },
                 validator: (String? value) {
@@ -95,7 +97,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
                 ),
                 onChanged: (String? value) {
                   setState(() {
-                    _reviewText = value!; //tambah variabel description
+                    _reviewText = value!;
                   });
                 },
                 validator: (String? value) {
@@ -114,13 +116,8 @@ class _ShopFormPageState extends State<ShopFormPage> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
-                  },
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  onPressed: _submitForm,
+                  child: const Text('Submit'),
                 ),
               ),
             ),
