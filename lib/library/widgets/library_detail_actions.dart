@@ -28,9 +28,9 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
       // STEP 3: listens to request and update UI accordingly
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           behavior: SnackBarBehavior.floating,
-          content: Text('Favorited!'),
+          content: Text(_isFavorited ? 'Favorited!' : 'Removed from Favorites'),
         ),
       );
 
@@ -84,7 +84,7 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
                       const SizedBox(
                         height: 4,
                       ),
-                      Text(_isFavorited ? "Unfavorite" : "Favorite"),
+                      Text(_isFavorited ? "In favorites" : "Favorite"),
                     ],
                   )),
             ),

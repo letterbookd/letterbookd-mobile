@@ -3,7 +3,16 @@ import 'package:letterbookd/library/widgets/library_filter_modal.dart';
 import 'package:letterbookd/library/widgets/library_tile.dart';
 import 'package:letterbookd/main.dart';
 
-/// ini contoh
+class LibraryData {
+  final List<String> trackingStatusList = [
+    "Finished Reading",
+    "Currently Reading",
+    "On Hold",
+    "Planning to Read",
+    "Dropped",
+  ];
+}
+
 class LibraryHome extends StatelessWidget {
   const LibraryHome({super.key});
 
@@ -73,7 +82,7 @@ class LibraryHome extends StatelessWidget {
       ),
       body: Container(
         child: GridView.builder(
-            padding: EdgeInsets.symmetric(vertical: 4.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: AppData().bookAspectRatio,
               crossAxisCount: 3,
