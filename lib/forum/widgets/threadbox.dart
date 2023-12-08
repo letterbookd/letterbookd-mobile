@@ -35,7 +35,7 @@ class ThreadBox extends StatelessWidget {
                   onPressed: () {
                     // Implement your like action here
                   },
-                  icon: const Icon(Icons.thumb_up),
+                  icon: const Icon(Icons.favorite),
                   label: const Text('Like'),
                 ),
                 TextButton.icon(
