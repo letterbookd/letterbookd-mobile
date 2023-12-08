@@ -3,7 +3,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ReviewHome extends StatelessWidget {
-  const ReviewHome({Key? key}) : super(key: key);
+  ReviewHome({Key? key}) : super(key: key);
 
   static const List<ReviewItem> items = [
     ReviewItem("Lihat Review Saya", Icons.preview),
@@ -135,7 +135,7 @@ class ReviewItem {
 class ReviewCard extends StatelessWidget {
   final ReviewItem item;
 
-  const ReviewCard(this.item);
+  const ReviewCard(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {

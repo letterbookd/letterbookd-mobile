@@ -55,7 +55,7 @@ jobs:
         with:
           allowUpdates: true
           artifacts: "build/app/outputs/flutter-apk/*.apk"
-          body: "Published at ${{ steps.date.outputs.date }}"
-          name: "v${{ steps.version.outputs.version }}"
+          body: "A new version of the letterbookd app"
+          name: "letterbookd v${{ steps.version.outputs.version }}"
           token: ${{ secrets.GH_TOKEN }}
           tag: ${{ steps.version.outputs.version }}

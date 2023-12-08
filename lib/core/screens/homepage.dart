@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     const LibraryHome(),
     const CatalogHome(),
     const ForumHome(),
-    const ReviewHome(),
+    ReviewHome(),
     const ReaderHome(),
   ];
 

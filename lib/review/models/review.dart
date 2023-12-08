@@ -1,3 +1,4 @@
+// ignore_for_file: non_constant_identifier_names
 
 class Review{
     int starsRating;
@@ -12,4 +13,4 @@ class Review{
       this.statusOnReview,
       this.reviewText,
     );
-    }
+}
