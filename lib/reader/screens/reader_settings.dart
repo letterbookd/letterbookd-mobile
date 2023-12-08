@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -22,7 +22,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: ListView(
           children: [
             _buildTextInputField('Name', 'Enter your name'),
-            _buildTextInputField('Bio', 'Write a short bio'),
+            _buildTextInputField('Bio', 'Write a short bio', maxLines: 5),
             SwitchListTile(
               title: const Text('Share Library'),
               value: shareLibrary,
@@ -51,10 +51,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildTextInputField(String label, String hint) {
+  Widget _buildTextInputField(String label, String hint, {int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
+        maxLines: maxLines,
+        keyboardType:
+            maxLines > 1 ? TextInputType.multiline : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
