@@ -4,6 +4,7 @@ import 'package:letterbookd/catalog/screens/detail_book.dart';
 import 'package:letterbookd/catalog/widgets/book_card.dart';
 import 'package:letterbookd/catalog/widgets/book_tile.dart';
 import 'package:letterbookd/catalog/widgets/sort_modal.dart';
+import 'package:letterbookd/catalog/widgets/filter_modal.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -21,6 +22,12 @@ enum SortBy {
   favoritesCount,
 }
 
+// declare filter by
+enum FilterBy {
+  all,
+  library,
+}
+
 class CatalogHome extends StatefulWidget {
   const CatalogHome({Key? key}) : super(key: key);
 
@@ -34,6 +41,8 @@ class _CatalogHomeState extends State<CatalogHome> {
   ViewType _viewType = ViewType.tile;
   // ignore: prefer_final_fields
   SortBy _sortBy = SortBy.title;
+  // ignore: prefer_final_fields
+  FilterBy _filterBy = FilterBy.all;
 
   // method for opening sort modal
   void _openSortModal(BuildContext context) {
@@ -46,7 +55,7 @@ class _CatalogHomeState extends State<CatalogHome> {
         return const BookSortModal();
       },
     ).then((value) {
-      if (value == 'title') {
+      if (value == 'all') {
         _sortBy = SortBy.title;
       }
       else if (value == 'authors') {
@@ -65,10 +74,35 @@ class _CatalogHomeState extends State<CatalogHome> {
     });
   }
 
+  // method for opening filter modal
+  void _openFilterModal(BuildContext context) {
+    showModalBottomSheet(
+      useRootNavigator: true,
+      showDragHandle: true,
+      enableDrag: true,
+      context: context,
+      builder: (BuildContext context) {
+        return const BookFilterModal();
+      },
+    ).then((value) {
+      if (value == 'all') {
+        _filterBy = FilterBy.all;
+      }
+      else if (value == 'library') {
+        _filterBy = FilterBy.library;
+      }
+
+      fetchBook().then((_) {
+        setState(() {}); // Trigger rebuild after fetching books
+      });
+    });
+  }
+
   Future<List<Book>> fetchBook() async {
     
     var url = Uri.parse(
-        'https://letterbookd-a09-tk.pbp.cs.ui.ac.id/catalog/json/');
+        'http://10.0.2.2:8000/catalog/json/'
+    );
     var response = await http.get(
         url,
         headers: {"Content-Type": "application/json"},
@@ -97,6 +131,8 @@ class _CatalogHomeState extends State<CatalogHome> {
     else if (_sortBy == SortBy.favoritesCount){
       books.sort((a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
     }
+
+    //TODO: handle filter
     
     return books;
   }
@@ -118,6 +154,13 @@ class _CatalogHomeState extends State<CatalogHome> {
             endIndent: 10,
           )),
         actions: <Widget>[
+          IconButton(
+            style: style,
+            tooltip: "Filter",
+            icon: const Icon(Icons.filter_list_rounded),
+            onPressed: () {
+              _openFilterModal(context);
+          }),
           IconButton(
             style: style,
             tooltip: "Sort By",
