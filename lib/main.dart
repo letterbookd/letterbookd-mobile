@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/authenticate/screens/login.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/core/screens/homepage.dart';
@@ -39,7 +40,7 @@ class App extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        home: const HomePage(),
+        home: const LoginPage(),
       ),
     );
   }
