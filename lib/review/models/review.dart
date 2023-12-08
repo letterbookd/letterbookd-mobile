@@ -1,15 +1,16 @@
 // ignore_for_file: non_constant_identifier_names
 
-class Review {
-  int stars_rating;
-  int total_rating;
-  String status_on_review;
-  String review_text;
+class Review{
+    int starsRating;
+    int totalRating;
+    String statusOnReview;
+    String reviewText;
 
-  Review(
-    this.stars_rating,
-    this.total_rating,
-    this.status_on_review,
-    this.review_text,
-  );
+
+    Review(
+      this.starsRating,
+      this.totalRating,
+      this.statusOnReview,
+      this.reviewText,
+    );
 }
