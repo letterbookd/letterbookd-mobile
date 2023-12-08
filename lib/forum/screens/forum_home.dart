@@ -20,7 +20,7 @@ class ForumHome extends StatelessWidget {
         result.add(Thread.fromJson(i));
       }
 
-      print(result);
+      // print(result);
       return result;
     } catch (e) {
       throw Exception('error : $e');
@@ -65,7 +65,7 @@ class ForumHome extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddForumPage(),
+              builder: (context) => const AddForumPage(),
             ));
           },
           child: const Icon(Icons.add),

@@ -34,7 +34,7 @@ class _AddForumPageState extends State<AddForumPage> {
             },
           ));
 
-      print(response);
+      // print(response);
       return response;
     } catch (e) {
       throw Exception('error : $e');
@@ -47,19 +47,19 @@ class _AddForumPageState extends State<AddForumPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add New Thread"),
+        title: const Text("Add New Thread"),
         centerTitle: true,
       ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Thread Title: "),
-                SizedBox(
+                const Text("Thread Title: "),
+                const SizedBox(
                   height: 16,
                 ),
                 TextFormField(
@@ -81,11 +81,11 @@ class _AddForumPageState extends State<AddForumPage> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Text("Thread Content: "),
-                SizedBox(
+                const Text("Thread Content: "),
+                const SizedBox(
                   height: 16,
                 ),
                 TextFormField(
@@ -110,7 +110,7 @@ class _AddForumPageState extends State<AddForumPage> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Align(
@@ -130,7 +130,7 @@ class _AddForumPageState extends State<AddForumPage> {
                         } else {
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
-                            ..showSnackBar(SnackBar(
+                            ..showSnackBar(const SnackBar(
                                 content:
                                     Text("Data yang dimmasukan tidak valid!")));
                         }

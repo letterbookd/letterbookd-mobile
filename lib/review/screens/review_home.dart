@@ -3,7 +3,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ReviewHome extends StatelessWidget {
-  ReviewHome({Key? key}) : super(key: key);
+  const ReviewHome({Key? key}) : super(key: key);
 
   static const List<ReviewItem> items = [
     ReviewItem("Lihat Review Saya", Icons.preview),
@@ -15,13 +15,14 @@ class ReviewHome extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Text("Reviews"),
+        title: const Text("Reviews"),
       ),
       body: Column(
         children: [
           Container(
             color: Theme.of(context).colorScheme.primaryContainer,
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -31,7 +32,7 @@ class ReviewHome extends StatelessWidget {
                     Text.rich(
                       TextSpan(
                         children: [
-                          TextSpan(
+                          const TextSpan(
                             text: "4.5",
                             style: TextStyle(fontSize: 48.0),
                           ),
@@ -71,7 +72,7 @@ class ReviewHome extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
+                SizedBox(
                   width: 200.0,
                   child: ListView.builder(
                     shrinkWrap: true,
