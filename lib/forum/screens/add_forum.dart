@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:letterbookd/forum/models/thread.dart';
 import 'package:letterbookd/forum/screens/forum_home.dart';
+import 'package:letterbookd/main.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -26,7 +27,7 @@ class _AddForumPageState extends State<AddForumPage> {
   ) async {
     try {
       final response = await request.post(
-          'http://10.0.2.2:8000/forum/create-json/',
+          '${AppData().url}/forum/create-json/',
           jsonEncode(
             {
               'title': title,

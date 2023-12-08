@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:letterbookd/main.dart';
 import 'dart:convert';
 import 'package:letterbookd/reader/models/reader.dart';
 
@@ -14,7 +15,7 @@ class ReaderHomeState extends State<ReaderHome> {
   bool isSearchMode = false;
 
   Future<List<Reader>> fetchReaders() async {
-    var url = Uri.parse('http://10.0.2.2:8080/reader/json/');
+    var url = Uri.parse('${AppData().url}/reader/json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},

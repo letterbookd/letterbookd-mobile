@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:letterbookd/forum/models/thread.dart';
 import 'package:letterbookd/forum/screens/add_forum.dart';
 import 'package:letterbookd/forum/widgets/threadbox.dart';
+import 'package:letterbookd/main.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,7 @@ class ForumHome extends StatelessWidget {
 
   Future<List<Thread>> _fetchThread(CookieRequest request) async {
     try {
-      final response = await request.get('http://10.0.2.2:8000/forum/json/');
+      final response = await request.get('${AppData().url}/forum/json/');
 
       List<Thread> result = [];
 
