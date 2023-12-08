@@ -3,9 +3,20 @@ import 'package:letterbookd/library/widgets/library_filter_modal.dart';
 import 'package:letterbookd/library/widgets/library_tile.dart';
 import 'package:letterbookd/main.dart';
 
-/// ini contoh
+class LibraryData {
+  final List<String> trackingStatusList = [
+    "Finished Reading",
+    "Currently Reading",
+    "On Hold",
+    "Planning to Read",
+    "Dropped",
+  ];
+}
+
 class LibraryHome extends StatelessWidget {
   const LibraryHome({super.key});
+
+  void _addBookForm(BuildContext context) {}
 
   void _openFilterModal(BuildContext context) {
     showModalBottomSheet<void>(
@@ -47,6 +58,13 @@ class LibraryHome extends StatelessWidget {
         actions: <Widget>[
           IconButton(
               style: style,
+              tooltip: "Add book",
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                _addBookForm(context);
+              }),
+          IconButton(
+              style: style,
               tooltip: "Filter",
               icon: const Icon(Icons.filter_list_rounded),
               onPressed: () {
@@ -63,9 +81,8 @@ class LibraryHome extends StatelessWidget {
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.all(8.0),
-        alignment: Alignment.topCenter,
         child: GridView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: AppData().bookAspectRatio,
               crossAxisCount: 3,
@@ -74,13 +91,6 @@ class LibraryHome extends StatelessWidget {
             itemBuilder: (context, index) {
               return const LibraryTile();
             }),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(
-          Icons.book,
-        ),
-        label: const Text("Add book"),
       ),
     );
   }
