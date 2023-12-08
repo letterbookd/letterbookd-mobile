@@ -13,14 +13,14 @@ class ReviewHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Text("Reviews"),
       ),
       body: Column(
         children: [
           Container(
-            color: Colors.blue[50],
+            color: Theme.of(context).colorScheme.primaryContainer,
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,7 +39,7 @@ class ReviewHome extends StatelessWidget {
                             text: "/5",
                             style: TextStyle(
                               fontSize: 24.0,
-                              color: Colors.grey,
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
                         ],
@@ -106,16 +106,13 @@ class ReviewHome extends StatelessWidget {
           ),
           Expanded(
             child: ListView.separated(
-              padding: EdgeInsets.only(bottom: 8.0, top: 8.0),
+              padding: EdgeInsets.all(8.0),
               itemCount: 10, // Replace with the actual number of reviews
               itemBuilder: (context, index) {
                 return ReviewCard(ReviewItem("User $index", Icons.person));
               },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  thickness: 2.0,
-                  color: Colors.blue[100],
-                );
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(height: 8.0);
               },
             ),
           ),
@@ -141,7 +138,7 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blue[100],
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
