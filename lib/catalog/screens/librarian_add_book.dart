@@ -2,12 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/screens/librarian_catalog.dart';
-import 'package:letterbookd/forum/models/thread.dart';
-import 'package:letterbookd/forum/screens/forum_home.dart';
 import 'package:letterbookd/main.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class AddBookPage extends StatefulWidget {
   const AddBookPage({super.key});
@@ -282,7 +279,7 @@ class _AddBookPageState extends State<AddBookPage> {
                           if (response['status'] == 'success') {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
-                              content: Text("Produk baru berhasil disimpan!"),
+                              content: Text("Buku baru berhasil ditambahkan!"),
                               ));
                               Navigator.pushReplacement(
                                   context,
