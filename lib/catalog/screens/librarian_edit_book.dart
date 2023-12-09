@@ -1,19 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:letterbookd/core/screens/librarian_homepage.dart';
+import 'package:letterbookd/catalog/screens/librarian_catalog.dart';
 import 'package:letterbookd/main.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class AddBookPage extends StatefulWidget {
-  const AddBookPage({super.key});
+class EditBookPage extends StatefulWidget {
+  const EditBookPage({super.key});
 
   @override
-  State<AddBookPage> createState() => _AddBookPageState();
+  State<EditBookPage> createState() => _EditBookPageState();
 }
 
-class _AddBookPageState extends State<AddBookPage> {
+class _EditBookPageState extends State<EditBookPage> {
   final _formKey = GlobalKey<FormState>();
 
   String _isbn13 = "";
@@ -50,7 +50,7 @@ class _AddBookPageState extends State<AddBookPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add New Book"),
+        title: const Text("Edit Book"),
         centerTitle: true,
       ),
       body: Form(
@@ -281,8 +281,10 @@ class _AddBookPageState extends State<AddBookPage> {
                                   .showSnackBar(const SnackBar(
                               content: Text("Buku baru berhasil ditambahkan!"),
                               ));
-                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                const LibrarianHomePage()), (Route<dynamic> route) => false);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => LibrarianCatalog()),
+                              );
                           } else {
                               ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()

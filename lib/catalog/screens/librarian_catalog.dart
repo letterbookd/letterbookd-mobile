@@ -45,7 +45,7 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
         return const BookSortModal();
       },
     ).then((value) {
-      if (value == 'all') {
+      if (value == 'title') {
         _sortBy = SortBy.title;
       } else if (value == 'authors') {
         _sortBy = SortBy.authors;
