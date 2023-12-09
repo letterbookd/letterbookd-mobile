@@ -110,8 +110,9 @@ class LibrarianDetailBookPage extends StatelessWidget{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: <Widget>[
-              SizedBox(
-              width: 130,
+            ],),
+            Center(child: SizedBox(
+              width: 180,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: AspectRatio(
@@ -120,66 +121,6 @@ class LibrarianDetailBookPage extends StatelessWidget{
                   ),
                 )
               ),
-
-              Flexible(child:
-                Container(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        book.fields.title,
-                        style: const TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Text(
-                        'by ${book.fields.authors.split(';').map((author) => author).join(', ')}',
-                        style: const TextStyle(fontSize: 14.0),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Text(
-                        '${book.fields.publishedYear}',
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Row(
-                        children: [
-                          const Icon(Icons.star),
-                          Text(
-                            '${book.fields.overallRating}',
-                            style: const TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5.0),
-                      Text(
-                        'Favorited by ${book.fields.favoritesCount} reader(s)',
-                        style: const TextStyle(fontSize: 14.0,),
-                      ),
-                      const SizedBox(height: 10.0),
-                    ],
-                  )
-                )
-              ),
-            ],),
-
-            const SizedBox(height: 20.0),
-            const Text(
-              "Description",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
-            ),
-            const SizedBox(height: 7.0),
-            Text(
-              book.fields.description,
-              style: const TextStyle(fontSize: 15.0),
-              textAlign: TextAlign.justify,
             ),
             const SizedBox(height: 20.0),
             const Text(
@@ -189,6 +130,42 @@ class LibrarianDetailBookPage extends StatelessWidget{
             const SizedBox(height: 7.0),
             Text(
               '${book.fields.isbn13}',
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              "Title",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
+            Text(
+              book.fields.title,
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              "Authors",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
+            Text(
+              book.fields.authors,
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              "Published year",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
+            Text(
+              '${book.fields.publishedYear}',
               style: const TextStyle(
                 fontSize: 15.0,
               ),
@@ -212,6 +189,37 @@ class LibrarianDetailBookPage extends StatelessWidget{
             Text(
               '${book.fields.pageCount}',
               style: const TextStyle(fontSize: 15.0,),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              "Overall rating",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
+            Text(
+              '${book.fields.overallRating}',
+              style: const TextStyle(fontSize: 15.0,),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              "Favorites count",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 7.0),
+            Text(
+              '${book.fields.favoritesCount}',
+              style: const TextStyle(fontSize: 15.0,),
+            ),
+            const SizedBox(height: 25.0),
+            const Text(
+              "Description",
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+            ),
+            const SizedBox(height: 10.0),
+            Text(
+              book.fields.description,
+              style: const TextStyle(fontSize: 15.0),
+              textAlign: TextAlign.justify,
             ),
           ],
         ),

@@ -127,6 +127,14 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
               onPressed: () {
                 _openSortModal(context);
               }),
+          IconButton(
+            style: style,
+            tooltip: "Refresh",
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {});
+            },
+          ),
         ],
       ),
       body: FutureBuilder(
