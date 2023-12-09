@@ -7,6 +7,8 @@ import 'package:letterbookd/catalog/widgets/sort_modal.dart';
 import 'package:letterbookd/catalog/widgets/filter_modal.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 import 'package:letterbookd/main.dart';
 
@@ -46,7 +48,7 @@ class _CatalogHomeState extends State<CatalogHome> {
   FilterBy _filterBy = FilterBy.all;
 
   // method for opening sort modal
-  void _openSortModal(BuildContext context) {
+  void _openSortModal(BuildContext context, CookieRequest request) {
     showModalBottomSheet(
       useRootNavigator: true,
       showDragHandle: true,
@@ -56,7 +58,7 @@ class _CatalogHomeState extends State<CatalogHome> {
         return const BookSortModal();
       },
     ).then((value) {
-      if (value == 'all') {
+      if (value == 'title') {
         _sortBy = SortBy.title;
       } else if (value == 'authors') {
         _sortBy = SortBy.authors;
@@ -66,14 +68,14 @@ class _CatalogHomeState extends State<CatalogHome> {
         _sortBy = SortBy.favoritesCount;
       }
 
-      fetchBook().then((_) {
+      fetchBook(request).then((_) {
         setState(() {}); // Trigger rebuild after fetching books
       });
     });
   }
 
   // method for opening filter modal
-  void _openFilterModal(BuildContext context) {
+  void _openFilterModal(BuildContext context, CookieRequest request) {
     showModalBottomSheet(
       useRootNavigator: true,
       showDragHandle: true,
@@ -89,23 +91,34 @@ class _CatalogHomeState extends State<CatalogHome> {
         _filterBy = FilterBy.library;
       }
 
-      fetchBook().then((_) {
+      fetchBook(request).then((_) {
         setState(() {}); // Trigger rebuild after fetching books
       });
     });
   }
 
-  Future<List<Book>> fetchBook() async {
-    var url = Uri.parse('${AppData().url}/catalog/json/');
-    var response = await http.get(
-      url,
-      headers: {"Content-Type": "application/json"},
-    );
+  Future<List<Book>> fetchBook(CookieRequest request) async {
 
-    // melakukan decode response menjadi bentuk json
-    var data = jsonDecode(utf8.decode(response.bodyBytes));
+    dynamic url;
+    dynamic response;
+    dynamic data;
 
-    // melakukan konversi data json menjadi object Product
+    if(_filterBy == FilterBy.all){
+      url = Uri.parse('${AppData().url}/catalog/json/');
+      response = await http.get(
+        url,
+        headers: {"Content-Type": "application/json"},
+      );
+
+      // melakukan decode response menjadi bentuk json
+      data = jsonDecode(utf8.decode(response.bodyBytes));
+    }
+    else if(_filterBy == FilterBy.library){
+      response = await request.get('${AppData().url}/catalog/get-related-books-json/');
+      data = response['library'];
+    }
+
+    // melakukan konversi data json menjadi object Book
     List<Book> books = [];
     for (var d in data) {
       if (d != null) {
@@ -118,20 +131,18 @@ class _CatalogHomeState extends State<CatalogHome> {
     } else if (_sortBy == SortBy.authors) {
       books.sort((a, b) => a.fields.authors.compareTo(b.fields.authors));
     } else if (_sortBy == SortBy.rating) {
-      books.sort(
-          (a, b) => b.fields.overallRating.compareTo(a.fields.overallRating));
+      books.sort((a, b) => b.fields.overallRating.compareTo(a.fields.overallRating));
     } else if (_sortBy == SortBy.favoritesCount) {
-      books.sort(
-          (a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
+      books.sort((a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
     }
-
-    //TODO: handle filter
 
     return books;
   }
 
   @override
   Widget build(BuildContext context) {
+    CookieRequest request = context.watch<CookieRequest>();
+
     final ButtonStyle style = TextButton.styleFrom(
       foregroundColor: Theme.of(context).colorScheme.onBackground,
     );
@@ -152,14 +163,14 @@ class _CatalogHomeState extends State<CatalogHome> {
                 tooltip: "Filter",
                 icon: const Icon(Icons.filter_list_rounded),
                 onPressed: () {
-                  _openFilterModal(context);
+                  _openFilterModal(context, request);
                 }),
             IconButton(
                 style: style,
                 tooltip: "Sort By",
                 icon: const Icon(Icons.sort_by_alpha_outlined),
                 onPressed: () {
-                  _openSortModal(context);
+                  _openSortModal(context, request);
                 }),
             IconButton(
                 style: style,
@@ -179,7 +190,7 @@ class _CatalogHomeState extends State<CatalogHome> {
           ],
         ),
         body: FutureBuilder(
-            future: fetchBook(),
+            future: fetchBook(request),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.data == null) {
                 return const Center(child: CircularProgressIndicator());
