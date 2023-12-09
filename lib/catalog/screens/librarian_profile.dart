@@ -27,7 +27,7 @@ class _LibrarianProfileState extends State<LibrarianProfile> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book Detail'),
+        title: const Text('Librarian Profile'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),

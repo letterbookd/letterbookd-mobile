@@ -151,42 +151,52 @@ class _CatalogHomeState extends State<CatalogHome> {
       appBar: AppBar(
         title: const Text('Catalog'),
         bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(4.0),
-            child: Divider(
-              height: 1,
-              indent: 10,
-              endIndent: 10,
-            )),
+          preferredSize: Size.fromHeight(4.0),
+          child: Divider(
+            height: 1,
+            indent: 10,
+            endIndent: 10,
+          )
+        ),
         actions: <Widget>[
           IconButton(
-              style: style,
-              tooltip: "Filter",
-              icon: const Icon(Icons.filter_list_rounded),
-              onPressed: () {
-                _openFilterModal(context, request);
-              }),
+            style: style,
+            tooltip: "Filter",
+            icon: const Icon(Icons.filter_list_rounded),
+            onPressed: () {
+              _openFilterModal(context, request);
+            }
+          ),
           IconButton(
-              style: style,
-              tooltip: "Sort By",
-              icon: const Icon(Icons.sort_by_alpha_outlined),
-              onPressed: () {
-                _openSortModal(context, request);
-              }),
+            style: style,
+            tooltip: "Sort By",
+            icon: const Icon(Icons.sort_by_alpha_outlined),
+            onPressed: () {
+              _openSortModal(context, request);
+            }
+          ),
           IconButton(
-              style: style,
-              tooltip: "View Type",
-              icon: Icon(_viewType == ViewType.tile
-                  ? Icons.grid_view_sharp
-                  : Icons.view_list),
-              onPressed: () {
-                setState(() {
-                  if (_viewType == ViewType.tile) {
-                    _viewType = ViewType.grid;
-                  } else {
-                    _viewType = ViewType.tile;
-                  }
-                });
-              }),
+            style: style,
+            tooltip: "View Type",
+            icon: Icon(_viewType == ViewType.tile ? Icons.grid_view_sharp : Icons.view_list),
+            onPressed: () {
+              setState(() {
+                if (_viewType == ViewType.tile) {
+                  _viewType = ViewType.grid;
+                } else {
+                  _viewType = ViewType.tile;
+                }
+              });
+            }
+          ),
+          IconButton(
+            style: style,
+            tooltip: "Refresh",
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {});
+            },
+          )
         ],
       ),
       body: FutureBuilder(
@@ -234,7 +244,7 @@ class _CatalogHomeState extends State<CatalogHome> {
                   shrinkWrap: true,
                   gridDelegate:
                       const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 181 / 385,
+                    childAspectRatio: 181 / 400,
                     crossAxisCount: 3,
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,

@@ -72,7 +72,7 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
     // melakukan decode response menjadi bentuk json
     var data = jsonDecode(utf8.decode(response.bodyBytes));
 
-    // melakukan konversi data json menjadi object Product
+    // melakukan konversi data json menjadi object Book
     List<Book> books = [];
     for (var d in data) {
       if (d != null) {
@@ -103,30 +103,33 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
       appBar: AppBar(
         title: const Text('Catalog'),
         bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(4.0),
-            child: Divider(
-              height: 1,
-              indent: 10,
-              endIndent: 10,
-            )),
+          preferredSize: Size.fromHeight(4.0),
+          child: Divider(
+            height: 1,
+            indent: 10,
+            endIndent: 10,
+          )
+        ),
         actions: <Widget>[
           IconButton(
-              style: style,
-              tooltip: "Add book",
-              icon: const Icon(Icons.add),
-              onPressed: () {
-              Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return const AddBookPage();
-                      }));
-              }),
+            style: style,
+            tooltip: "Add book",
+            icon: const Icon(Icons.add),
+            onPressed: () {
+            Navigator.push(context,
+                      MaterialPageRoute(builder: (context) {
+                      return const AddBookPage();
+                    }));
+            }
+          ),
           IconButton(
-              style: style,
-              tooltip: "Sort By",
-              icon: const Icon(Icons.sort_by_alpha_outlined),
-              onPressed: () {
-                _openSortModal(context);
-              }),
+            style: style,
+            tooltip: "Sort By",
+            icon: const Icon(Icons.sort_by_alpha_outlined),
+            onPressed: () {
+              _openSortModal(context);
+            }
+          ),
           IconButton(
             style: style,
             tooltip: "Refresh",

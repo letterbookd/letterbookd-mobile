@@ -149,7 +149,7 @@ class _AddBookPageState extends State<AddBookPage> {
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Title tidak boleh kosong!";
+                      return "Categories tidak boleh kosong!";
                     }
                     return null;
                   },
@@ -221,10 +221,10 @@ class _AddBookPageState extends State<AddBookPage> {
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Published year tidak boleh kosong!";
+                      return "Page count tidak boleh kosong!";
                     }
                     if (int.tryParse(value) == null) {
-                      return "Published year harus berupa angka!";
+                      return "Page count harus berupa angka!";
                     }
                     return null;
                   },

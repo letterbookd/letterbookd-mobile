@@ -109,8 +109,6 @@ class LibrarianDetailBookPage extends StatelessWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: <Widget>[
-            ],),
             Center(child: SizedBox(
               width: 180,
               child: ClipRRect(

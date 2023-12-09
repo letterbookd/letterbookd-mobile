@@ -52,7 +52,9 @@ class _EditBookPageState extends State<EditBookPage> {
   @override
   void initState() {
     super.initState();
-    _currentBook = widget.book; // Initialize with the provided book data
+    
+    // Initialize with the provided book data
+    _currentBook = widget.book;
     _isbn13 = _currentBook.fields.isbn13.toString();
     _title = _currentBook.fields.title;
     _authors = _currentBook.fields.authors;
@@ -172,7 +174,7 @@ class _EditBookPageState extends State<EditBookPage> {
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Title tidak boleh kosong!";
+                      return "Categories tidak boleh kosong!";
                     }
                     return null;
                   },
