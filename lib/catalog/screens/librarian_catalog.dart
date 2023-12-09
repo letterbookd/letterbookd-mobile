@@ -3,6 +3,7 @@ import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/catalog/screens/librarian_detail_book.dart';
 import 'package:letterbookd/catalog/widgets/librarian_book_tile.dart';
 import 'package:letterbookd/catalog/widgets/sort_modal.dart';
+import 'package:letterbookd/catalog/screens/librarian_add_book.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -109,6 +110,16 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
               endIndent: 10,
             )),
         actions: <Widget>[
+          IconButton(
+              style: style,
+              tooltip: "Add book",
+              icon: const Icon(Icons.add),
+              onPressed: () {
+              Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const AddBookPage();
+                      }));
+              }),
           IconButton(
               style: style,
               tooltip: "Sort By",
