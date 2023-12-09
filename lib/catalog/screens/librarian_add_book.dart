@@ -66,14 +66,12 @@ class _AddBookPageState extends State<AddBookPage> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: "ISBN",
-                    // labelText: "ISBN",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      // _isbn13 = int.parse(value!);
                       _isbn13 = value!;
                     });
                   },
@@ -94,7 +92,6 @@ class _AddBookPageState extends State<AddBookPage> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: "Title",
-                    labelText: "Title",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -118,7 +115,6 @@ class _AddBookPageState extends State<AddBookPage> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: "Authors",
-                    labelText: "Authors",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -142,7 +138,6 @@ class _AddBookPageState extends State<AddBookPage> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: "Categories",
-                    labelText: "Categories",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -166,7 +161,6 @@ class _AddBookPageState extends State<AddBookPage> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: "Thumbnail",
-                    labelText: "Thumbnail",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -185,36 +179,11 @@ class _AddBookPageState extends State<AddBookPage> {
                 ),
                 const SizedBox(height: 20,),
 
-                const Text("Description: "),
-                const SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Description",
-                    labelText: "Description",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _description = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Description tidak boleh kosong!";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20,),
-
                 const Text("Published year: "),
                 const SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: "Published year",
-                    labelText: "Published year",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -241,7 +210,6 @@ class _AddBookPageState extends State<AddBookPage> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: "Page count",
-                    labelText: "Page count",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -257,6 +225,30 @@ class _AddBookPageState extends State<AddBookPage> {
                     }
                     if (int.tryParse(value) == null) {
                       return "Published year harus berupa angka!";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20,),
+
+                const Text("Description: "),
+                const SizedBox(height: 16),
+                TextFormField(
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                    hintText: "Description",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _description = value!;
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return "Description tidak boleh kosong!";
                     }
                     return null;
                   },
@@ -293,7 +285,7 @@ class _AddBookPageState extends State<AddBookPage> {
                         }
                       },
                       child: const Text(
-                        "Submit",
+                        "Add Book",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

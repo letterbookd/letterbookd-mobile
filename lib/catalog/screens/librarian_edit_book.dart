@@ -203,30 +203,6 @@ class _EditBookPageState extends State<EditBookPage> {
                 ),
                 const SizedBox(height: 20,),
 
-                const Text("Description: "),
-                const SizedBox(height: 16),
-                TextFormField(
-                  initialValue: _currentBook.fields.description,
-                  decoration: InputDecoration(
-                    hintText: "Description",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _description = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Description tidak boleh kosong!";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20,),
-
                 const Text("Published year: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -271,10 +247,35 @@ class _EditBookPageState extends State<EditBookPage> {
                   },
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return "Published year tidak boleh kosong!";
+                      return "Page count tidak boleh kosong!";
                     }
                     if (int.tryParse(value) == null) {
-                      return "Published year harus berupa angka!";
+                      return "Page count harus berupa angka!";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20,),
+
+                const Text("Description: "),
+                const SizedBox(height: 16),
+                TextFormField(
+                  maxLines: 10,
+                  initialValue: _currentBook.fields.description,
+                  decoration: InputDecoration(
+                    hintText: "Description",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _description = value!;
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return "Description tidak boleh kosong!";
                     }
                     return null;
                   },
@@ -318,7 +319,7 @@ class _EditBookPageState extends State<EditBookPage> {
                         }
                       },
                       child: const Text(
-                        "Edit",
+                        "Edit Book",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
