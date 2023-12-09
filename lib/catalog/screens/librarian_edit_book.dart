@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:letterbookd/catalog/screens/librarian_catalog.dart';
+import 'package:letterbookd/catalog/models/book.dart';
+import 'package:letterbookd/catalog/screens/librarian_detail_book.dart';
 import 'package:letterbookd/main.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
 class EditBookPage extends StatefulWidget {
-  const EditBookPage({super.key});
+  final Book book;
+
+  const EditBookPage({Key? key, required this.book}) : super(key: key);
 
   @override
   State<EditBookPage> createState() => _EditBookPageState();
@@ -15,6 +18,7 @@ class EditBookPage extends StatefulWidget {
 
 class _EditBookPageState extends State<EditBookPage> {
   final _formKey = GlobalKey<FormState>();
+  late Book _currentBook;
 
   String _isbn13 = "";
   String _title = "";
@@ -25,12 +29,13 @@ class _EditBookPageState extends State<EditBookPage> {
   String _publishedYear = "";
   String _pageCount = "";
 
-  Future<Map<String, dynamic>> _addBook(
+  Future<Map<String, dynamic>> _editBook(
     CookieRequest request,
   ) async {
     final response = await request.postJson(
-                      '${AppData().url}/catalog/add-book-flutter/',
+                      '${AppData().url}/catalog/edit-book-flutter/',
                       jsonEncode(<String, String>{
+                          'pk': _currentBook.pk.toString(),
                           'isbn13': _isbn13,
                           'title': _title,
                           'authors': _authors,
@@ -42,6 +47,20 @@ class _EditBookPageState extends State<EditBookPage> {
                       }));
     
     return response;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _currentBook = widget.book; // Initialize with the provided book data
+    _isbn13 = _currentBook.fields.isbn13.toString();
+    _title = _currentBook.fields.title;
+    _authors = _currentBook.fields.authors;
+    _categories = _currentBook.fields.categories;
+    _thumbnail = _currentBook.fields.thumbnail;
+    _description = _currentBook.fields.description;
+    _publishedYear = _currentBook.fields.publishedYear.toString();
+    _pageCount = _currentBook.fields.pageCount.toString();
   }
 
   @override
@@ -64,16 +83,15 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("ISBN: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.isbn13.toString(),
                   decoration: InputDecoration(
                     hintText: "ISBN",
-                    // labelText: "ISBN",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      // _isbn13 = int.parse(value!);
                       _isbn13 = value!;
                     });
                   },
@@ -92,9 +110,9 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("Title: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.title,
                   decoration: InputDecoration(
                     hintText: "Title",
-                    labelText: "Title",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -116,9 +134,9 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("Authors: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.authors,
                   decoration: InputDecoration(
                     hintText: "Authors",
-                    labelText: "Authors",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -140,9 +158,9 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("Categories: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.categories,
                   decoration: InputDecoration(
                     hintText: "Categories",
-                    labelText: "Categories",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -164,9 +182,9 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("Thumbnail: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.thumbnail,
                   decoration: InputDecoration(
                     hintText: "Thumbnail",
-                    labelText: "Thumbnail",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -188,9 +206,9 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("Description: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.description,
                   decoration: InputDecoration(
                     hintText: "Description",
-                    labelText: "Description",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -212,9 +230,9 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("Published year: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.publishedYear.toString(),
                   decoration: InputDecoration(
                     hintText: "Published year",
-                    labelText: "Published year",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -239,9 +257,9 @@ class _EditBookPageState extends State<EditBookPage> {
                 const Text("Page count: "),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _currentBook.fields.pageCount.toString(),
                   decoration: InputDecoration(
                     hintText: "Page count",
-                    labelText: "Page count",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -275,15 +293,20 @@ class _EditBookPageState extends State<EditBookPage> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          final response = await _addBook(request);
+                          final response = await _editBook(request);
                           if (response['status'] == 'success') {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
-                              content: Text("Buku baru berhasil ditambahkan!"),
+                              content: Text("Buku berhasil diedit!"),
                               ));
+
+                              // remove the old book detail page
+                              Navigator.of(context).removeRouteBelow(ModalRoute.of(context)!);
+
+                              // replace edit page with new book detail page
                               Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => LibrarianCatalog()),
+                                  MaterialPageRoute(builder: (context) => LibrarianDetailBookPage(book: Book.fromJson(response['book_data'][0]))),
                               );
                           } else {
                               ScaffoldMessenger.of(context)
@@ -295,7 +318,7 @@ class _EditBookPageState extends State<EditBookPage> {
                         }
                       },
                       child: const Text(
-                        "Submit",
+                        "Edit",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

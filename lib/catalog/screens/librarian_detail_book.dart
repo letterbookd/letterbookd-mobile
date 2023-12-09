@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class LibrarianDetailBookPage extends StatelessWidget {
+class LibrarianDetailBookPage extends StatelessWidget{
   final Book book;
 
   const LibrarianDetailBookPage({Key? key, required this.book}) : super(key: key);
@@ -92,7 +92,7 @@ class LibrarianDetailBookPage extends StatelessWidget {
               onPressed: () {
               Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                        return const EditBookPage();
+                        return EditBookPage(book: book);
                       }));
               }),
           IconButton(
