@@ -7,6 +7,8 @@ import 'package:letterbookd/forum/screens/forum_detail.dart';
 import 'package:letterbookd/forum/widgets/threadbox.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class ForumHome extends StatefulWidget {
   const ForumHome({super.key});
