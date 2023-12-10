@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
+import 'package:letterbookd/catalog/screens/catalog_search.dart';
 import 'package:letterbookd/catalog/screens/detail_book.dart';
 import 'package:letterbookd/catalog/widgets/book_card.dart';
 import 'package:letterbookd/catalog/widgets/book_tile.dart';
@@ -174,6 +175,17 @@ class _CatalogHomeState extends State<CatalogHome> {
             onPressed: () {
               _openSortModal(context, request);
             }
+          ),
+          IconButton(
+            style: style,
+            tooltip: "Search",
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const CatalogSearchPage();
+                      }));
+            },
           ),
           IconButton(
             style: style,
