@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/library/screens/library_detail.dart';
+import 'package:letterbookd/library/screens/library_home.dart';
 
 /// Grid tile for library homepage
 class LibraryTile extends StatelessWidget {
-  const LibraryTile({super.key});
+  final LibraryItem item;
+
+  const LibraryTile({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class LibraryTile extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const LibraryBookDetailPage(),
+              builder: (context) => LibraryBookDetailPage(item: item),
             ),
           );
         },
@@ -28,10 +31,8 @@ class LibraryTile extends StatelessWidget {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           fit: StackFit.expand,
           children: [
-            /// TODO: replace with proper book cover
-            const Image(
-              image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+            Image(
+              image: NetworkImage(item.bookData.fields.authors),
               fit: BoxFit.fitHeight,
             ),
             Container(
@@ -49,12 +50,10 @@ class LibraryTile extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                /// TODO: replace with proper book title
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    "Book Title",
+                    item.bookData.fields.title,
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: Colors.white,
                         ),

@@ -3,7 +3,9 @@ import 'package:letterbookd/library/screens/library_home.dart';
 import 'package:letterbookd/main.dart';
 
 class LibraryDetailHeader extends StatelessWidget {
-  const LibraryDetailHeader({super.key});
+  final LibraryItem item;
+
+  const LibraryDetailHeader({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class LibraryDetailHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Book Title", // TODO: repalce with libBook.fields.title
+                            item.bookData.fields.title,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!
@@ -45,7 +47,7 @@ class LibraryDetailHeader extends StatelessWidget {
                                 ),
                           ),
                           Text(
-                            "by Author(s)", // TODO: repalce with libBook.fields.authors
+                            "by ${item.bookData.fields.authors.split(';').map((author) => author).join(', ')}",
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -55,7 +57,7 @@ class LibraryDetailHeader extends StatelessWidget {
                                 ),
                           ),
                           Text(
-                            "1999", // TODO: repalce with libBook.fields.release_year
+                            item.bookData.fields.publishedYear.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -72,7 +74,7 @@ class LibraryDetailHeader extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(5.0)),
                             child: Text(
                               LibraryData().trackingStatusList[
-                                  0], // TODO: repalce with libBook.fields.tracking_status
+                                  item.libraryData.fields.trackingStatus],
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!

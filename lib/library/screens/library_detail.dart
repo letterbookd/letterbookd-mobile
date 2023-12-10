@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-// import 'package:letterbookd/library/models/librarybook.dart';
+import 'package:letterbookd/library/screens/library_home.dart';
 import 'package:letterbookd/library/widgets/library_detail_actions.dart';
 import 'package:letterbookd/library/widgets/library_detail_header.dart';
 
 class LibraryBookDetailPage extends StatefulWidget {
-  // TODO: final LibraryBook libBook;
+  final LibraryItem item;
 
-  const LibraryBookDetailPage({super.key});
+  const LibraryBookDetailPage({super.key, required this.item});
 
   @override
   State<LibraryBookDetailPage> createState() => _LibraryBookDetailPageState();
 }
 
 class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
-  // TODO: replace with const LibraryBookDetailPage({Key? key, required this.libBook}) : super(key: key);
-
   void _editStatus(BuildContext context) {
     var currencies = [
       "Food",
@@ -119,14 +117,14 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             // HEADER: Cover, Title, Author(s), Year, Tracking status
-            const LibraryDetailHeader(),
+            LibraryDetailHeader(item: widget.item),
 
             // ACTIONS: Favorite, Open in catalog, See reviews
-            const LibraryDetailActions(),
+            LibraryDetailActions(item: widget.item),
 
             // BODY: description
             Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', // TODO: replace with libBook.fields.amount
+              widget.item.bookData.fields.description,
               textAlign: TextAlign.justify,
               style: Theme.of(context).textTheme.bodyMedium,
             ),

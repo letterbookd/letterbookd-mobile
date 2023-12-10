@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/library/screens/library_home.dart';
 // import 'package:provider/provider.dart';
 // import 'package:letterbookd/library/models/librarybook.dart';
 
 class LibraryDetailActions extends StatefulWidget {
-  // TODO: final LibraryBook libBook;
+  final LibraryItem item;
 
-  const LibraryDetailActions({super.key});
+  const LibraryDetailActions({super.key, required this.item});
+
   @override
   State<LibraryDetailActions> createState() => new _LibraryDetailActionsState();
 }
