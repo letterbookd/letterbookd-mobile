@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
+import 'package:letterbookd/catalog/screens/librarian_catalog_search.dart';
 import 'package:letterbookd/catalog/screens/librarian_detail_book.dart';
 import 'package:letterbookd/catalog/widgets/librarian_book_tile.dart';
 import 'package:letterbookd/catalog/widgets/sort_modal.dart';
@@ -129,6 +130,17 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
             onPressed: () {
               _openSortModal(context);
             }
+          ),
+          IconButton(
+            style: style,
+            tooltip: "Search",
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const LibrarianCatalogSearchPage();
+                      }));
+            },
           ),
           IconButton(
             style: style,
