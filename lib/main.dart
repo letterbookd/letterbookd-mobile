@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/authenticate/screens/login.dart';
+import 'package:letterbookd/forum/screens/forum_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/core/screens/homepage.dart';
@@ -10,7 +12,7 @@ void main() {
 /// Data konstanta untuk aplikasi
 class AppData {
   final Color seedColor = Colors.blue;
-  final String url = "https://letterbookd-a09-tk.pbp.cs.ui.ac.id/";
+  final String url = "http://10.0.2.2:8000";
   final double bookAspectRatio = 181 / 291;
 }
 
@@ -39,7 +41,7 @@ class App extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        home: const HomePage(),
+        home: const LoginPage(),
       ),
     );
   }

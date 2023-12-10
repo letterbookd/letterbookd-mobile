@@ -4,11 +4,7 @@ import 'package:letterbookd/library/widgets/library_detail_actions.dart';
 import 'package:letterbookd/library/widgets/library_detail_header.dart';
 
 class LibraryBookDetailPage extends StatelessWidget {
-  // TODO: final LibraryBook libBook;
-
   const LibraryBookDetailPage({super.key});
-
-  // TODO: replace with const LibraryBookDetailPage({Key? key, required this.libBook}) : super(key: key);
 
   void _editStatus(BuildContext context) {}
 

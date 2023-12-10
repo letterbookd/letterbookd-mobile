@@ -69,7 +69,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
                 ),
                 onChanged: (String? value) {
                   setState(() {
-                    _starsRating = int.parse(value!); //tambah variabel price
+                    _starsRating = int.parse(value!);
                   });
                 },
                 validator: (String? value) {

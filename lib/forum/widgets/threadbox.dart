@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+//import 'package:letterbookd/forum/screens/forum_detail.dart';
 
 class ThreadBox extends StatelessWidget {
   final String title;
@@ -32,18 +33,12 @@ class ThreadBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: () {
-                    // Implement your like action here
-                  },
-                  icon: const Icon(Icons.thumb_up),
+                  onPressed: null,
+                  icon: const Icon(Icons.favorite),
                   label: const Text('Like'),
                 ),
                 TextButton.icon(
-                  onPressed: () {
-                    // For now, we just print a message
-                    // Later, you can implement navigation to a reply page
-                    print('Reply to $title');
-                  },
+                  onPressed: null,
                   icon: const Icon(Icons.reply),
                   label: const Text('Reply'),
                 ),
