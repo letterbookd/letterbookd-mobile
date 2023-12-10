@@ -1,4 +1,4 @@
-// ignore_for_file: sort_child_properties_last, avoid_print
+// ignore_for_file: sort_child_properties_last, avoid_print, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:letterbookd/forum/models/thread.dart';

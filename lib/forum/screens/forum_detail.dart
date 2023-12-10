@@ -111,7 +111,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Container(
+                child: SizedBox(
                   height: MediaQuery.of(context).size.height * 1.6,
                   width: double.infinity,
                   child: Column(
