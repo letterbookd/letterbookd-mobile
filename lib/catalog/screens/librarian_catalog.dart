@@ -123,10 +123,6 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
                     // auto update book data
                     setState((){});
                   });
-              // Navigator.push(context,
-              //           MaterialPageRoute(builder: (context) {
-              //           return const AddBookPage();
-              //         }));
               }
           ),
           IconButton(

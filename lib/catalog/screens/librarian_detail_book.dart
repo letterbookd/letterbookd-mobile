@@ -46,6 +46,7 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
                 .showSnackBar(SnackBar(
             content: Text("Buku '${book.fields.title}' berhasil dihapus!"),
             ));
+            
             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
               const LibrarianHomePage()), (Route<dynamic> route) => false);
         } else {

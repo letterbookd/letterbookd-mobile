@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
-import 'package:letterbookd/catalog/screens/librarian_detail_book.dart';
 import 'package:letterbookd/main.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
