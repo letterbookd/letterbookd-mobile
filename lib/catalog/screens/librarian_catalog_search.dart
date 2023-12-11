@@ -114,12 +114,14 @@ class _LibrarianCatalogSearchPageState extends State<LibrarianCatalogSearchPage>
                         top: 10, bottom: 10, left: 10, right: 10),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) => InkWell(
-                        onTap: () {
+                        onTap: () async {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return LibrarianDetailBookPage(
-                                book: snapshot.data![index]);
-                          }));
+                              MaterialPageRoute(builder: (context) =>
+                              LibrarianDetailBookPage(
+                                book: snapshot.data![index]))).then((_){
+                                  // auto update book data
+                                  setState((){});
+                                });
                         },
                         child: LibrarianBookTile(book: snapshot.data![index]),
                       )

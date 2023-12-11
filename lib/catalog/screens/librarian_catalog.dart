@@ -117,11 +117,17 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
             tooltip: "Add book",
             icon: const Icon(Icons.add),
             onPressed: () {
-            Navigator.push(context,
-                      MaterialPageRoute(builder: (context) {
-                      return const AddBookPage();
-                    }));
-            }
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) =>
+                const AddBookPage())).then((_){
+                    // auto update book data
+                    setState((){});
+                  });
+              // Navigator.push(context,
+              //           MaterialPageRoute(builder: (context) {
+              //           return const AddBookPage();
+              //         }));
+              }
           ),
           IconButton(
             style: style,
@@ -137,9 +143,11 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
             icon: const Icon(Icons.search),
             onPressed: () {
               Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return const LibrarianCatalogSearchPage();
-                      }));
+                      MaterialPageRoute(builder: (context) =>
+                      const LibrarianCatalogSearchPage())).then((_){
+                          // auto update book data
+                          setState((){});
+                        });
             },
           ),
           IconButton(
@@ -177,10 +185,11 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
                 itemBuilder: (_, index) => InkWell(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return LibrarianDetailBookPage(
-                          book: snapshot.data![index]);
-                    }));
+                      MaterialPageRoute(builder: (context) =>
+                      LibrarianDetailBookPage(book: snapshot.data![index]))).then((_){
+                          // auto update book data
+                          setState((){});
+                        });
                   },
                   child: LibrarianBookTile(book: snapshot.data![index]),
                 )

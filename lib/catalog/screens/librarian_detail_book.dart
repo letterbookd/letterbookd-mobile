@@ -7,10 +7,26 @@ import 'dart:convert';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class LibrarianDetailBookPage extends StatelessWidget{
+class LibrarianDetailBookPage extends StatefulWidget{
   final Book book;
 
   const LibrarianDetailBookPage({Key? key, required this.book}) : super(key: key);
+
+  @override
+  State<LibrarianDetailBookPage> createState() => _LibrarianDetailBookPageState();
+
+}
+
+class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
+  late Book book;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialize with the provided book data
+    book = widget.book;
+  }
 
   _showAlertDialog(BuildContext context, CookieRequest request) {
 
@@ -89,11 +105,18 @@ class LibrarianDetailBookPage extends StatelessWidget{
               style: style,
               tooltip: "Edit Book Data",
               icon: const Icon(Icons.edit),
-              onPressed: () {
-              Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return EditBookPage(book: book);
-                      }));
+              onPressed: () async {
+                var value = await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                          return EditBookPage(book: book);
+                        }));
+
+                if (value != null) {
+                  setState(() {
+                    // update edited book data
+                      book = value;
+                  });
+                }
               }),
           IconButton(
               style: style,

@@ -273,8 +273,7 @@ class _AddBookPageState extends State<AddBookPage> {
                                   .showSnackBar(const SnackBar(
                               content: Text("Buku baru berhasil ditambahkan!"),
                               ));
-                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                const LibrarianHomePage()), (Route<dynamic> route) => false);
+                              Navigator.pop(context);
                           } else {
                               ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()

@@ -303,14 +303,8 @@ class _EditBookPageState extends State<EditBookPage> {
                               content: Text("Buku berhasil diedit!"),
                               ));
 
-                              // remove the old book detail page
-                              Navigator.of(context).removeRouteBelow(ModalRoute.of(context)!);
+                              Navigator.pop(context, Book.fromJson(response['book_data'][0]));
 
-                              // replace edit page with new book detail page
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => LibrarianDetailBookPage(book: Book.fromJson(response['book_data'][0]))),
-                              );
                           } else {
                               ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
