@@ -25,7 +25,7 @@ enum SortBy {
 }
 
 class LibrarianCatalog extends StatefulWidget {
-  const LibrarianCatalog({Key? key}) : super(key: key);
+  const LibrarianCatalog({super.key});
 
   @override
   State<LibrarianCatalog> createState() => _LibrarianCatalogState();

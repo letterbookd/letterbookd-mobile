@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class LibrarianDetailBookPage extends StatefulWidget{
   final Book book;
 
-  const LibrarianDetailBookPage({Key? key, required this.book}) : super(key: key);
+  const LibrarianDetailBookPage({super.key, required this.book});
 
   @override
   State<LibrarianDetailBookPage> createState() => _LibrarianDetailBookPageState();
@@ -41,6 +41,7 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
       child: const Text("Delete"),
       onPressed:  () async {
         final response = await _deleteBook(request);
+        if (!context.mounted) return;
         if (response['status'] == 'success') {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(

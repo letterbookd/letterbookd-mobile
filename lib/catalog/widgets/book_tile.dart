@@ -5,7 +5,7 @@ import 'package:letterbookd/main.dart';
 class BookTile extends StatelessWidget {
   final Book book;
 
-  const BookTile({Key? key, required this.book}) : super(key: key); // Constructor
+  const BookTile({super.key, required this.book}); // Constructor
 
   @override
   Widget build(BuildContext context) {

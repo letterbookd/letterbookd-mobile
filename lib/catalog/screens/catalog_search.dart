@@ -28,18 +28,6 @@ class _CatalogSearchPageState extends State<CatalogSearchPage> {
 
   final TextEditingController _searched = TextEditingController();
 
-  // declare the list of to-be-displayed books
-  // List<Book> books = [];
-  
-  // void updateList(String value){
-
-  //   fetchBook();
-
-  //   setState(() {
-  //     books = books.where((element) => element.fields.title.toLowerCase().contains(value.toLowerCase())).toList();
-  //   });
-  // }
-
   Future<List<Book>> fetchBook() async {
     var url = Uri.parse('${AppData().url}/catalog/json/');
     var response = await http.get(
@@ -156,11 +144,6 @@ class _CatalogSearchPageState extends State<CatalogSearchPage> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (_, index) => InkWell(
                             onTap: () {
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) {
-                              //   return DetailBookPage(
-                              //       book: snapshot.data![index]);
-                              // }));
                               Navigator.push(context,
                                 MaterialPageRoute(builder: (context) =>
                                 DetailBookPage(book: snapshot.data![index]))).then((_){
@@ -188,11 +171,6 @@ class _CatalogSearchPageState extends State<CatalogSearchPage> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (_, index) => InkWell(
                             onTap: () {
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) {
-                              //   return DetailBookPage(
-                              //       book: snapshot.data![index]);
-                              // }));
                               Navigator.push(context,
                                 MaterialPageRoute(builder: (context) =>
                                 DetailBookPage(book: snapshot.data![index]))).then((_){

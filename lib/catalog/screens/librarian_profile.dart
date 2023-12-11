@@ -7,15 +7,12 @@ class LibrarianProfile extends StatefulWidget {
   const LibrarianProfile({super.key});
 
   @override
-  _LibrarianProfileState createState() => _LibrarianProfileState();
-
+  State<LibrarianProfile> createState() => _LibrarianProfileState();
 }
 
 class _LibrarianProfileState extends State<LibrarianProfile> {
 
-  Future<String> _getUsername(
-    CookieRequest request,
-  ) async {
+  Future<String> _getUsername(CookieRequest request) async {
     final response = await request.get('${AppData().url}/catalog/get-username/');
 
     return response['username'];

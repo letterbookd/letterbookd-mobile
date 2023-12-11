@@ -34,7 +34,7 @@ enum FilterBy {
 }
 
 class CatalogHome extends StatefulWidget {
-  const CatalogHome({Key? key}) : super(key: key);
+  const CatalogHome({super.key});
 
   @override
   State<CatalogHome> createState() => _CatalogHomeState();

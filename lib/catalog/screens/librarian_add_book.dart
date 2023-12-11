@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:letterbookd/core/screens/librarian_homepage.dart';
 import 'package:letterbookd/main.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -268,6 +267,7 @@ class _AddBookPageState extends State<AddBookPage> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final response = await _addBook(request);
+                          if (!context.mounted) return;
                           if (response['status'] == 'success') {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(

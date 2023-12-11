@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class EditBookPage extends StatefulWidget {
   final Book book;
 
-  const EditBookPage({Key? key, required this.book}) : super(key: key);
+  const EditBookPage({super.key, required this.book});
 
   @override
   State<EditBookPage> createState() => _EditBookPageState();
@@ -296,6 +296,8 @@ class _EditBookPageState extends State<EditBookPage> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final response = await _editBook(request);
+                          if (!context.mounted) return;
+                          
                           if (response['status'] == 'success') {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
