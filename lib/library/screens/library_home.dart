@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
-import 'package:letterbookd/library/models/library.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:letterbookd/library/models/librarybook.dart';
 import 'package:letterbookd/library/widgets/library_filter_modal.dart';
 import 'package:letterbookd/library/widgets/library_tile.dart';
-import 'package:http/http.dart' as http;
 import 'package:letterbookd/main.dart';
 import 'dart:convert';
 
 // filter and sort types
 enum DisplayType {
-  tile,
+  list,
   grid,
 }
 
@@ -64,7 +64,8 @@ class LibraryHome extends StatefulWidget {
 class _LibraryHomeState extends State<LibraryHome> {
   late List<LibraryItem> _cachedLibraryItems;
   late List<LibraryItem> _sortedLibraryItems;
-  DisplayType _displayType = DisplayType.tile;
+
+  DisplayType _displayType = DisplayType.grid;
   SortBy _sortBy = SortBy.title;
   SortDirection _sortDirection = SortDirection.descending;
   FilterBy _filterBy = FilterBy.all;
@@ -93,22 +94,17 @@ class _LibraryHomeState extends State<LibraryHome> {
   }
 
   /// Getting all libraryBook in user
-  Future<List<LibraryItem>> fetchLibrary() async {
-    var url = Uri.parse('${AppData().url}/library/get/');
-    var response = await http.get(
-      url,
-      headers: {"Content-Type": "application/json"},
+  Future<List<LibraryItem>> fetchLibrary(CookieRequest request) async {
+    var response = await request.get(
+      '${AppData().url}/library/get/',
     );
 
     // melakukan decode response menjadi bentuk json
-    var jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-
     List<LibraryItem> libraryItem = [];
-    for (var data in jsonResponse) {
-      if (data != null) {
-        libraryItem.add(LibraryItem(LibraryBook.fromJson(data["library_data"]),
-            Book.fromJson(data["book_data"])));
-      }
+    for (var i = 0; i < response["library"].length; i++) {
+      libraryItem.add(LibraryItem(
+          LibraryBook.fromJson(response["library"][0][i]),
+          Book.fromJson(response["library"][1][i])));
     }
 
     return libraryItem;
@@ -177,6 +173,8 @@ class _LibraryHomeState extends State<LibraryHome> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     final ButtonStyle style = TextButton.styleFrom(
       foregroundColor: Theme.of(context).colorScheme.onBackground,
     );
@@ -217,7 +215,7 @@ class _LibraryHomeState extends State<LibraryHome> {
           ],
         ),
         body: FutureBuilder(
-            future: fetchLibrary(),
+            future: fetchLibrary(request),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.data == null) {
                 return const Center(child: CircularProgressIndicator());
@@ -238,7 +236,7 @@ class _LibraryHomeState extends State<LibraryHome> {
                   _sortedLibraryItems = applySortAndFilters();
 
                   // build tile view
-                  if (_displayType == DisplayType.tile) {
+                  if (_displayType == DisplayType.list) {
                     return Text("todo");
                     // return ListView.builder(
                     //     padding: const EdgeInsets.only(
