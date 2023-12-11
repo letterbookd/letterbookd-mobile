@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/library/models/librarybook.dart';
 import 'package:letterbookd/library/widgets/library_filter_modal.dart';
 import 'package:letterbookd/library/widgets/library_tile.dart';
-import 'package:letterbookd/main.dart';
 
 // filter and sort types
 enum DisplayType {
@@ -95,7 +95,7 @@ class _LibraryHomeState extends State<LibraryHome> {
   /// Getting all libraryBook in user
   Future<List<LibraryItem>> fetchLibrary(CookieRequest request) async {
     var response = await request.get(
-      '${AppData().url}/library/api/get/',
+      '${app_data.baseUrl}/library/api/get/',
     );
 
     // melakukan decode response menjadi bentuk json
@@ -258,8 +258,9 @@ class _LibraryHomeState extends State<LibraryHome> {
                     return GridView.builder(
                         padding: const EdgeInsets.symmetric(
                             vertical: 4.0, horizontal: 4.0),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: AppData().bookAspectRatio,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: app_data.bookAspectRatio,
                           crossAxisCount: 3,
                         ),
                         itemCount: _sortedLibraryItems.length,

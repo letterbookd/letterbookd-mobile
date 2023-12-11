@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/library/screens/library_home.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 
 class LibraryDetailHeader extends StatelessWidget {
   final LibraryItem item;
@@ -15,7 +15,7 @@ class LibraryDetailHeader extends StatelessWidget {
         child: Row(
           children: <Widget>[
             AspectRatio(
-              aspectRatio: AppData().bookAspectRatio,
+              aspectRatio: app_data.bookAspectRatio,
               child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondaryContainer,

@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/screens/detail_book.dart';
 import 'package:letterbookd/library/screens/library_home.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
@@ -15,7 +13,7 @@ class LibraryDetailActions extends StatefulWidget {
   const LibraryDetailActions({super.key, required this.item});
 
   @override
-  State<LibraryDetailActions> createState() => new _LibraryDetailActionsState();
+  State<LibraryDetailActions> createState() => _LibraryDetailActionsState();
 }
 
 class _LibraryDetailActionsState extends State<LibraryDetailActions> {
@@ -37,7 +35,7 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
 
       // STEP 2: sends POST request to toggle current item favorite
       final response = await request.post(
-        '${AppData().url}/library/api/update/${widget.item.libraryData.fields.book}',
+        '${app_data.baseUrl}/library/api/update/${widget.item.libraryData.fields.book}',
         {"isFavorited": _isFavorited.toString()},
       );
       if (!context.mounted) return;
@@ -78,7 +76,6 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
       }));
     }
 
-    // TODO: navigates to this book's catalog page
     void openCatalog(BuildContext context) {
       // STEP 1: Navigator push to catalog page of the book
       Navigator.push(context, MaterialPageRoute(builder: (context) {
