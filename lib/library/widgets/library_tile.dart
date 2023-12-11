@@ -12,7 +12,7 @@ class LibraryTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.secondaryContainer,
       ),
       child: InkWell(
         onTap: () {
@@ -54,7 +54,7 @@ class LibraryTile extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    "book_title",
+                    "Book Title",
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: Colors.white,
                         ),

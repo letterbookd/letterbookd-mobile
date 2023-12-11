@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/library/screens/library_home.dart';
 import 'package:letterbookd/main.dart';
 
 class LibraryDetailHeader extends StatelessWidget {
@@ -14,19 +15,18 @@ class LibraryDetailHeader extends StatelessWidget {
             AspectRatio(
               aspectRatio: AppData().bookAspectRatio,
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                clipBehavior: Clip.hardEdge,
-                child: const Hero(
-                  tag: "libbok-cover",
-                  child: Image(
-                    image: NetworkImage(
-                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                    fit: BoxFit.fitHeight,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-              ),
+                  clipBehavior: Clip.hardEdge,
+                  child: const InkWell(
+                    child: Image(
+                      image: NetworkImage(
+                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                      fit: BoxFit.fitHeight,
+                    ),
+                  )),
             ),
             Expanded(
                 child: Padding(
@@ -63,6 +63,24 @@ class LibraryDetailHeader extends StatelessWidget {
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
+                          ),
+                          Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 6.0),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: Text(
+                              LibraryData().trackingStatusList[
+                                  0], // TODO: repalce with libBook.fields.tracking_status
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge!
+                                  .copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                            ),
                           ),
                         ])))
           ],
