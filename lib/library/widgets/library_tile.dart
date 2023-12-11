@@ -31,8 +31,12 @@ class LibraryTile extends StatelessWidget {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           fit: StackFit.expand,
           children: [
-            Image(
-              image: NetworkImage(item.bookData.fields.authors),
+            Image.network(
+              item.bookData.fields.thumbnail,
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return const Center();
+              },
               fit: BoxFit.fitHeight,
             ),
             Container(

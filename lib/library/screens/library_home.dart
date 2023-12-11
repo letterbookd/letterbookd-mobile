@@ -6,7 +6,6 @@ import 'package:letterbookd/library/models/librarybook.dart';
 import 'package:letterbookd/library/widgets/library_filter_modal.dart';
 import 'package:letterbookd/library/widgets/library_tile.dart';
 import 'package:letterbookd/main.dart';
-import 'dart:convert';
 
 // filter and sort types
 enum DisplayType {
@@ -96,7 +95,7 @@ class _LibraryHomeState extends State<LibraryHome> {
   /// Getting all libraryBook in user
   Future<List<LibraryItem>> fetchLibrary(CookieRequest request) async {
     var response = await request.get(
-      '${AppData().url}/library/get/',
+      '${AppData().url}/library/api/get/',
     );
 
     // melakukan decode response menjadi bentuk json

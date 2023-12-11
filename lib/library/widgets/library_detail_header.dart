@@ -22,10 +22,13 @@ class LibraryDetailHeader extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   clipBehavior: Clip.hardEdge,
-                  child: const InkWell(
-                    child: Image(
-                      image: NetworkImage(
-                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                  child: InkWell(
+                    child: Image.network(
+                      item.bookData.fields.thumbnail,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const Center();
+                      },
                       fit: BoxFit.fitHeight,
                     ),
                   )),
