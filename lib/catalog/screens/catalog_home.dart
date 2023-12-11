@@ -181,10 +181,16 @@ class _CatalogHomeState extends State<CatalogHome> {
             tooltip: "Search",
             icon: const Icon(Icons.search),
             onPressed: () {
+              // Navigator.push(context,
+              //           MaterialPageRoute(builder: (context) {
+              //           return const CatalogSearchPage();
+              //         }));
               Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return const CatalogSearchPage();
-                      }));
+                      MaterialPageRoute(builder: (context) =>
+                      const CatalogSearchPage())).then((_){
+                          // auto update book data
+                          setState((){});
+                        });
             },
           ),
           IconButton(
@@ -237,11 +243,17 @@ class _CatalogHomeState extends State<CatalogHome> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) => InkWell(
                     onTap: () {
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) {
+                      //   return DetailBookPage(
+                      //       book: snapshot.data![index]);
+                      // }));
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return DetailBookPage(
-                            book: snapshot.data![index]);
-                      }));
+                        MaterialPageRoute(builder: (context) =>
+                        DetailBookPage(book: snapshot.data![index]))).then((_){
+                            // auto update book data
+                            setState((){});
+                          });
                     },
                     child: BookTile(book: snapshot.data![index]),
                   )
@@ -264,11 +276,17 @@ class _CatalogHomeState extends State<CatalogHome> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) => InkWell(
                     onTap: () {
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) {
+                      //   return DetailBookPage(
+                      //       book: snapshot.data![index]);
+                      // }));
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return DetailBookPage(
-                            book: snapshot.data![index]);
-                      }));
+                        MaterialPageRoute(builder: (context) =>
+                        DetailBookPage(book: snapshot.data![index]))).then((_){
+                            // auto update book data
+                            setState((){});
+                          });
                     },
                     child: BookCard(book: snapshot.data![index]),
                   )

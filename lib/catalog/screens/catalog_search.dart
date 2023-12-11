@@ -156,11 +156,17 @@ class _CatalogSearchPageState extends State<CatalogSearchPage> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (_, index) => InkWell(
                             onTap: () {
+                              // Navigator.push(context,
+                              //     MaterialPageRoute(builder: (context) {
+                              //   return DetailBookPage(
+                              //       book: snapshot.data![index]);
+                              // }));
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return DetailBookPage(
-                                    book: snapshot.data![index]);
-                              }));
+                                MaterialPageRoute(builder: (context) =>
+                                DetailBookPage(book: snapshot.data![index]))).then((_){
+                                    // auto update book data
+                                    setState((){});
+                                  });
                             },
                             child: BookTile(book: snapshot.data![index]),
                           )
@@ -182,11 +188,17 @@ class _CatalogSearchPageState extends State<CatalogSearchPage> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (_, index) => InkWell(
                             onTap: () {
+                              // Navigator.push(context,
+                              //     MaterialPageRoute(builder: (context) {
+                              //   return DetailBookPage(
+                              //       book: snapshot.data![index]);
+                              // }));
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return DetailBookPage(
-                                    book: snapshot.data![index]);
-                              }));
+                                MaterialPageRoute(builder: (context) =>
+                                DetailBookPage(book: snapshot.data![index]))).then((_){
+                                    // auto update book data
+                                    setState((){});
+                                  });
                             },
                             child: BookCard(book: snapshot.data![index]),
                           )
