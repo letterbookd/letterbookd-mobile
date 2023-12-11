@@ -83,24 +83,27 @@ class _LibraryHomeState extends State<LibraryHome> {
     );
   }
 
-  void _refreshLibrary(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        behavior: SnackBarBehavior.floating,
-        content: Text('Refreshing library'),
-      ),
-    );
+  void _refreshLibrary(BuildContext context) async {
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Refreshing library'),
+        ),
+      );
+    setState(() {});
   }
 
   /// Getting all libraryBook in user
-  Future<List<LibraryItem>> fetchLibrary(CookieRequest request) async {
+  Future<List<LibraryItem>> _fetchLibrary(CookieRequest request) async {
     var response = await request.get(
       '${app_data.baseUrl}/library/api/get/',
     );
 
     // melakukan decode response menjadi bentuk json
     List<LibraryItem> libraryItem = [];
-    for (var i = 0; i < response["library"].length; i++) {
+    for (var i = 0; i < response["library"][0].length; i++) {
       libraryItem.add(LibraryItem(
           LibraryBook.fromJson(response["library"][0][i]),
           Book.fromJson(response["library"][1][i])));
@@ -214,63 +217,69 @@ class _LibraryHomeState extends State<LibraryHome> {
           ],
         ),
         body: FutureBuilder(
-            future: fetchLibrary(request),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.data == null) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                if (!snapshot.hasData) {
-                  return const Column(
-                    children: [
-                      Text(
-                        "Tidak ada data buku.",
-                        style:
-                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
-                      ),
-                      SizedBox(height: 8),
-                    ],
-                  );
-                } else {
-                  _cachedLibraryItems = snapshot.data;
-                  _sortedLibraryItems = applySortAndFilters();
+            future: _fetchLibrary(request),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return const Center(child: CircularProgressIndicator());
+                default:
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    if (!snapshot.hasData) {
+                      return const Column(
+                        children: [
+                          Text(
+                            "Tidak ada data buku.",
+                            style: TextStyle(
+                                color: Color(0xff59A5D8), fontSize: 20),
+                          ),
+                          SizedBox(height: 8),
+                        ],
+                      );
+                    } else {
+                      _cachedLibraryItems = snapshot.data;
+                      _sortedLibraryItems = applySortAndFilters();
 
-                  // build tile view
-                  if (_displayType == DisplayType.list) {
-                    return Text("todo");
-                    // return ListView.builder(
-                    //     padding: const EdgeInsets.only(
-                    //         top: 10, bottom: 10, left: 10, right: 10),
-                    //     itemCount: snapshot.data!.length,
-                    //     itemBuilder: (_, index) => InkWell(
-                    //           onTap: () {
-                    //             Navigator.push(context,
-                    //                 MaterialPageRoute(builder: (context) {
-                    //               return DetailBookPage(
-                    //                   book: snapshot.data![index]);
-                    //             }));
-                    //           },
-                    //           child: BookTile(book: snapshot.data![index]),
-                    //         ));
-                  }
+                      // build tile view
+                      if (_displayType == DisplayType.list) {
+                        return Text("todo");
+                        // return ListView.builder(
+                        //     padding: const EdgeInsets.only(
+                        //         top: 10, bottom: 10, left: 10, right: 10),
+                        //     itemCount: snapshot.data!.length,
+                        //     itemBuilder: (_, index) => InkWell(
+                        //           onTap: () {
+                        //             Navigator.push(context,
+                        //                 MaterialPageRoute(builder: (context) {
+                        //               return DetailBookPage(
+                        //                   book: snapshot.data![index]);
+                        //             }));
+                        //           },
+                        //           child: BookTile(book: snapshot.data![index]),
+                        //         ));
+                      }
 
-                  // build grid view
-                  else {
-                    return GridView.builder(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4.0, horizontal: 4.0),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: app_data.bookAspectRatio,
-                          crossAxisCount: 3,
-                        ),
-                        itemCount: _sortedLibraryItems.length,
-                        itemBuilder: (context, index) {
-                          return LibraryTile(
-                            item: _sortedLibraryItems[index],
-                          );
-                        });
+                      // build grid view
+                      else {
+                        return GridView.builder(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 4.0),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio: app_data.bookAspectRatio,
+                              crossAxisCount: 3,
+                            ),
+                            itemCount: _sortedLibraryItems.length,
+                            itemBuilder: (context, index) {
+                              return LibraryTile(
+                                item: _sortedLibraryItems[index],
+                              );
+                            });
+                      }
+                    }
                   }
-                }
               }
             }));
   }

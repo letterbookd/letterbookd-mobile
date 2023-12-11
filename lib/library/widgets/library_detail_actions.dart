@@ -29,8 +29,8 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
       // STEP 1: disable button as a debounce
       setState(() {
         _isFavoriteDisabled = true;
-        widget.item.libraryData.fields.isFavorited =
-            !widget.item.libraryData.fields.isFavorited;
+        _isFavorited = !widget.item.libraryData.fields.isFavorited;
+        widget.item.libraryData.fields.isFavorited = _isFavorited;
       });
 
       // STEP 2: sends POST request to toggle current item favorite

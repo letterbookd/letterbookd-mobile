@@ -18,7 +18,7 @@ class LibraryDetailHeader extends StatelessWidget {
               aspectRatio: app_data.bookAspectRatio,
               child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   clipBehavior: Clip.hardEdge,
@@ -49,6 +49,9 @@ class LibraryDetailHeader extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                 ),
                           ),
+                          const SizedBox(
+                            height: 4.0,
+                          ),
                           Text(
                             "by ${item.bookData.fields.authors.split(';').map((author) => author).join(', ')}",
                             style: Theme.of(context)
@@ -59,6 +62,9 @@ class LibraryDetailHeader extends StatelessWidget {
                                       Theme.of(context).colorScheme.secondary,
                                 ),
                           ),
+                          const SizedBox(
+                            height: 4.0,
+                          ),
                           Text(
                             item.bookData.fields.publishedYear.toString(),
                             style: Theme.of(context)
@@ -68,6 +74,9 @@ class LibraryDetailHeader extends StatelessWidget {
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
+                          ),
+                          const SizedBox(
+                            height: 4.0,
                           ),
                           Container(
                             padding:
