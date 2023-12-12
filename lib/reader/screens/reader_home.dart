@@ -15,6 +15,7 @@ class ReaderHome extends StatefulWidget {
 
 class ReaderHomeState extends State<ReaderHome> {
   bool isSearchMode = false;
+  bool hasSearched = false;
   List<ReaderElement> listReaders = [];
   TextEditingController searchController = TextEditingController();
 
@@ -105,8 +106,7 @@ class ReaderHomeState extends State<ReaderHome> {
                     const Center(
                       child: CircleAvatar(
                         radius: 50,
-                        backgroundImage: AssetImage(
-                            'assets/images/pfp_0.jpg'),
+                        backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
                       ),
                     ),
                     _buildUserInfoCard('Username', reader.displayName),
@@ -121,9 +121,7 @@ class ReaderHomeState extends State<ReaderHome> {
                           ),
                         ).then((result) {
                           if (result != null && result == true) {
-                            setState(() {
-                              
-                            });
+                            setState(() {});
                           }
                         });
                       },
@@ -144,6 +142,7 @@ class ReaderHomeState extends State<ReaderHome> {
     );
   }
 
+  /*
   Widget _buildSearchResults(
       BuildContext context, List<ReaderElement> readers) {
     debugPrint(readers.toString());
@@ -153,7 +152,26 @@ class ReaderHomeState extends State<ReaderHome> {
       ],
     );
   }
+  */
 
+  Widget _buildSearchResults(
+      BuildContext context, List<ReaderElement> readers) {
+    // Jika daftar readers kosong, tampilkan pesan "No readers found"
+    if (readers.isEmpty && hasSearched) {
+      return const Center(
+        child: Text('No readers found'),
+      );
+    }
+
+    // Jika ada hasil, tampilkan kartu pembaca
+    return Column(
+      children: [
+        for (var reader in readers) _buildReaderCard(reader),
+      ],
+    );
+  }
+
+  /*
   Widget _buildReaderCard(ReaderElement reader) {
     return Card(
       margin: const EdgeInsets.all(16.0),
@@ -165,6 +183,21 @@ class ReaderHomeState extends State<ReaderHome> {
             subtitle: Text(reader.bio),
           ),
         ],
+      ),
+    );
+  }
+  */
+
+  Widget _buildReaderCard(ReaderElement reader) {
+    return Card(
+      margin: const EdgeInsets.all(16.0),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage:
+              AssetImage('assets/images/pfp_0.jpg'), // Gambar profil
+        ),
+        title: Text(reader.displayName),
+        subtitle: Text(reader.bio),
       ),
     );
   }
@@ -186,6 +219,7 @@ class ReaderHomeState extends State<ReaderHome> {
           onPressed: () {
             setState(() {
               listReaders = [];
+              hasSearched = false;
               searchController.text = "";
               isSearchMode = true;
             });
@@ -216,6 +250,7 @@ class ReaderHomeState extends State<ReaderHome> {
           searchReaders(value).then((results) {
             setState(() {
               listReaders = results;
+              hasSearched = true;
             });
           });
         },

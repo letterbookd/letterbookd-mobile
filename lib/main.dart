@@ -12,7 +12,8 @@ void main() {
 /// Data konstanta untuk aplikasi
 class AppData {
   final Color seedColor = Colors.blue;
-  final String url = "http://127.0.0.1:8000";
+  // final String url = "http://127.0.0.1:8000";
+  final String url = "http://10.0.2.2:8000";
   final double bookAspectRatio = 181 / 291;
 }
 
