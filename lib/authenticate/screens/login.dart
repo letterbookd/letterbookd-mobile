@@ -5,6 +5,7 @@ import 'package:letterbookd/main.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -77,6 +78,9 @@ class _LoginPageState extends State<LoginPage> {
                 if (request.loggedIn) {
                   String message = response['message'];
                   String uname = response['username'];
+
+                  saveUserDataToSharedPreferences(username);
+
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const HomePage()),
@@ -109,5 +113,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+  
+  Future<void> saveUserDataToSharedPreferences(String username) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
   }
 }
