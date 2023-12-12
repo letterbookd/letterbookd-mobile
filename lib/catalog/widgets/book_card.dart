@@ -5,7 +5,7 @@ import 'package:letterbookd/main.dart';
 class BookCard extends StatelessWidget {
   final Book book;
 
-  const BookCard({Key? key, required this.book}) : super(key: key); // Constructor
+  const BookCard({super.key, required this.book}); // Constructor
 
   @override
   Widget build(BuildContext context) {
