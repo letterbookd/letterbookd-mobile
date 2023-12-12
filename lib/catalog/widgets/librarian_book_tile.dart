@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 
 class LibrarianBookTile extends StatelessWidget {
   final Book book;
@@ -10,19 +10,19 @@ class LibrarianBookTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
+        child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       padding: const EdgeInsets.all(15.0),
       child: Row(
         children: [
           SizedBox(
             width: 70,
-            child: 
-            ClipRRect(
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: AspectRatio(
-                aspectRatio: AppData().bookAspectRatio,
-                child: Image.network(book.fields.thumbnail, fit: BoxFit.fitHeight),
+                aspectRatio: app_data.bookAspectRatio,
+                child:
+                    Image.network(book.fields.thumbnail, fit: BoxFit.fitHeight),
               ),
             ),
           ),

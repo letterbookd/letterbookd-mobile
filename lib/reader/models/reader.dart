@@ -27,18 +27,19 @@ class ReaderElement {
     required this.preferences,
   });
 
-factory ReaderElement.fromJson(Map<String, dynamic> json) {
-  return ReaderElement(
-    id: json["id"] ?? 0,
-    userId: json["user_id"] ?? 0,
-    displayName: json["display_name"] ?? "",
-    bio: json["bio"] ?? "",
-    profilePicture: json["profile_picture"] ?? 0,
-    personalLibraryId: json["personal_library_id"] ?? 0,
-    preferencesId: json["preferences_id"] ?? 0,
-    preferences: Preferences.fromJson(json["preferences"]) ?? Preferences(shareReviews: false, shareLibrary: false),
-  );
-}
+  factory ReaderElement.fromJson(Map<String, dynamic> json) {
+    return ReaderElement(
+      id: json["id"] ?? 0,
+      userId: json["user_id"] ?? 0,
+      displayName: json["display_name"] ?? "",
+      bio: json["bio"] ?? "",
+      profilePicture: json["profile_picture"] ?? 0,
+      personalLibraryId: json["personal_library_id"] ?? 0,
+      preferencesId: json["preferences_id"] ?? 0,
+      preferences: Preferences.fromJson(json["preferences"]) ??
+          Preferences(shareReviews: false, shareLibrary: false),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -105,7 +106,7 @@ class Reader {
                 .map((x) => ReaderPreference.fromJson(x))),
       );
     } else {
-      throw FormatException("Invalid 'readers' field");
+      throw const FormatException("Invalid 'readers' field");
     }
   }
 

@@ -244,7 +244,7 @@ class _LibraryHomeState extends State<LibraryHome> {
 
                       // build tile view
                       if (_displayType == DisplayType.list) {
-                        return Text("todo");
+                        return const Text("todo");
                         // return ListView.builder(
                         //     padding: const EdgeInsets.only(
                         //         top: 10, bottom: 10, left: 10, right: 10),

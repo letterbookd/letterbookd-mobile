@@ -66,6 +66,7 @@ class Fields {
       };
 }
 
+// ignore: constant_identifier_names
 enum Model { LIBRARY_LIBRARYBOOK }
 
 final modelValues =

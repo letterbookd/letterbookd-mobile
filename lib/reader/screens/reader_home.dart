@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:letterbookd/main.dart';
-import 'dart:convert';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/reader/models/reader.dart';
 import 'package:letterbookd/reader/screens/reader_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
@@ -20,7 +19,6 @@ class ReaderHomeState extends State<ReaderHome> {
   List<ReaderElement> listReaders = [];
   TextEditingController searchController = TextEditingController();
 
-
   Future<String?> _getSavedUsername() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('username');
@@ -30,7 +28,7 @@ class ReaderHomeState extends State<ReaderHome> {
     String? username = await _getSavedUsername();
 
     if (username != null) {
-      var url = Uri.parse('${AppData().url}/reader/get-reader-json/');
+      var url = Uri.parse('${app_data.baseUrl}/reader/get-reader-json/');
       var response = await http.get(
         url,
         headers: {
@@ -54,7 +52,7 @@ class ReaderHomeState extends State<ReaderHome> {
     String? username = await _getSavedUsername();
 
     if (username != null) {
-      var url = Uri.parse('${AppData().url}/reader/search-readers?q=$query');
+      var url = Uri.parse('${app_data.baseUrl}/reader/search-readers?q=$query');
       var response = await http.get(
         url,
         headers: {
@@ -127,9 +125,9 @@ class ReaderHomeState extends State<ReaderHome> {
                           }
                         });
                       },
-                      child: Container(
+                      child: const SizedBox(
                         width: double.infinity,
-                        child: const Text(
+                        child: Text(
                           'Edit Profile',
                           textAlign: TextAlign.center,
                         ),
@@ -194,7 +192,7 @@ class ReaderHomeState extends State<ReaderHome> {
     return Card(
       margin: const EdgeInsets.all(16.0),
       child: ListTile(
-        leading: CircleAvatar(
+        leading: const CircleAvatar(
           backgroundImage:
               AssetImage('assets/images/pfp_0.jpg'), // Gambar profil
         ),

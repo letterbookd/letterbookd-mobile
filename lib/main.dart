@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/authenticate/screens/login.dart';
-import 'package:letterbookd/forum/screens/forum_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -8,13 +7,6 @@ import 'dart:io';
 void main() {
   HttpOverrides.global = MyHttpOverrides();
   runApp(const App());
-}
-
-/// [DEPRECATED] Data konstanta untuk aplikasi
-class AppData {
-  final Color seedColor = Colors.blue;
-  final String url = "http://10.0.2.2:8000";
-  final double bookAspectRatio = 181 / 291;
 }
 
 class App extends StatelessWidget {

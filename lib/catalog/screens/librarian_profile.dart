@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 
 class LibrarianProfile extends StatefulWidget {
   const LibrarianProfile({super.key});
@@ -11,9 +11,9 @@ class LibrarianProfile extends StatefulWidget {
 }
 
 class _LibrarianProfileState extends State<LibrarianProfile> {
-
   Future<String> _getUsername(CookieRequest request) async {
-    final response = await request.get('${AppData().url}/catalog/get-username/');
+    final response =
+        await request.get('${app_data.baseUrl}/catalog/get-username/');
 
     return response['username'];
   }
@@ -27,7 +27,8 @@ class _LibrarianProfileState extends State<LibrarianProfile> {
         title: const Text('Librarian Profile'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+        padding:
+            const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -37,11 +38,13 @@ class _LibrarianProfileState extends State<LibrarianProfile> {
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.data == null) {
                   return const Center(child: CircularProgressIndicator());
-                } 
-                else {
+                } else {
                   return Text(
                     "Username: ${snapshot.data}",
-                    style: const TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+                    style: const TextStyle(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   );
                 }
               },

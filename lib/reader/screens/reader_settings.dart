@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:letterbookd/main.dart';
 import 'package:letterbookd/reader/models/reader.dart';
-import 'dart:convert';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -32,7 +32,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
-    var url = Uri.parse('${AppData().url}/reader/update-profile/');
+    var url = Uri.parse('${app_data.baseUrl}/reader/update-profile/');
 
     var response = await http.post(
       url,
@@ -45,16 +45,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         'share_library': shareLibrary,
       }),
     );
+    if (!context.mounted) return;
 
-    var requestData = {
-      'username': username,
-      'display_name': nameController.text,
-      'bio': bioController.text,
-      'share_reviews': shareReviews,
-      'share_library': shareLibrary,
-    };
+    // var requestData = {
+    //   'username': username,
+    //   'display_name': nameController.text,
+    //   'bio': bioController.text,
+    //   'share_reviews': shareReviews,
+    //   'share_library': shareLibrary,
+    // };
 
-    print("Sending data: $requestData");
+    // print("Sending data: $requestData");
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +73,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String? username = await _getSavedUsername();
 
     if (username != null) {
-      var url = Uri.parse('${AppData().url}/reader/get-reader-json/');
+      var url = Uri.parse('${app_data.baseUrl}/reader/get-reader-json/');
       var response = await http.get(
         url,
         headers: {
@@ -84,13 +85,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
         debugPrint(jsonData.toString());
-        var reader_data = ReaderElement.fromJson(jsonData);
-        debugPrint(reader_data.preferences.shareLibrary.toString());
+        var readerData = ReaderElement.fromJson(jsonData);
+        debugPrint(readerData.preferences.shareLibrary.toString());
         setState(() {
-          nameController.text = reader_data.displayName ?? '';
-          bioController.text = reader_data.bio ?? '';
-          shareLibrary = reader_data.preferences.shareLibrary ?? false;
-          shareReviews = reader_data.preferences.shareReviews ?? false;
+          nameController.text = readerData.displayName ?? '';
+          bioController.text = readerData.bio ?? '';
+          shareLibrary = readerData.preferences.shareLibrary ?? false;
+          shareReviews = readerData.preferences.shareReviews ?? false;
         });
       } else {
         throw Exception('Failed to load reader');

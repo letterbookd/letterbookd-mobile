@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:letterbookd/core/screens/librarian_homepage.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -81,13 +82,13 @@ class _LoginPageState extends State<LoginPage> {
                   bool librarian = response['librarian'];
                   saveUserDataToSharedPreferences(username);
 
-                  if(librarian){
+                  if (librarian) {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const LibrarianHomePage()),
+                      MaterialPageRoute(
+                          builder: (context) => const LibrarianHomePage()),
                     );
-                  }
-                  else{
+                  } else {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => const HomePage()),
@@ -122,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  
+
   Future<void> saveUserDataToSharedPreferences(String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);

@@ -10,8 +10,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 
 // declare view types
 enum ViewType {
@@ -99,13 +98,12 @@ class _CatalogHomeState extends State<CatalogHome> {
   }
 
   Future<List<Book>> fetchBook(CookieRequest request) async {
-
     dynamic url;
     dynamic response;
     dynamic data;
 
-    if(_filterBy == FilterBy.all){
-      url = Uri.parse('${AppData().url}/catalog/json/');
+    if (_filterBy == FilterBy.all) {
+      url = Uri.parse('${app_data.baseUrl}/catalog/json/');
       response = await http.get(
         url,
         headers: {"Content-Type": "application/json"},
@@ -113,9 +111,9 @@ class _CatalogHomeState extends State<CatalogHome> {
 
       // melakukan decode response menjadi bentuk json
       data = jsonDecode(utf8.decode(response.bodyBytes));
-    }
-    else if(_filterBy == FilterBy.library){
-      response = await request.get('${AppData().url}/catalog/get-related-books-json/');
+    } else if (_filterBy == FilterBy.library) {
+      response = await request
+          .get('${app_data.baseUrl}/catalog/get-related-books-json/');
       data = response['library'];
     }
 
@@ -132,9 +130,11 @@ class _CatalogHomeState extends State<CatalogHome> {
     } else if (_sortBy == SortBy.authors) {
       books.sort((a, b) => a.fields.authors.compareTo(b.fields.authors));
     } else if (_sortBy == SortBy.rating) {
-      books.sort((a, b) => b.fields.overallRating.compareTo(a.fields.overallRating));
+      books.sort(
+          (a, b) => b.fields.overallRating.compareTo(a.fields.overallRating));
     } else if (_sortBy == SortBy.favoritesCount) {
-      books.sort((a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
+      books.sort(
+          (a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
     }
 
     return books;
@@ -149,139 +149,141 @@ class _CatalogHomeState extends State<CatalogHome> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Catalog'),
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(4.0),
-          child: Divider(
-            height: 1,
-            indent: 10,
-            endIndent: 10,
-          )
+        appBar: AppBar(
+          title: const Text('Catalog'),
+          bottom: const PreferredSize(
+              preferredSize: Size.fromHeight(4.0),
+              child: Divider(
+                height: 1,
+                indent: 10,
+                endIndent: 10,
+              )),
+          actions: <Widget>[
+            IconButton(
+                style: style,
+                tooltip: "Filter",
+                icon: const Icon(Icons.filter_list_rounded),
+                onPressed: () {
+                  _openFilterModal(context, request);
+                }),
+            IconButton(
+                style: style,
+                tooltip: "Sort By",
+                icon: const Icon(Icons.sort_by_alpha_outlined),
+                onPressed: () {
+                  _openSortModal(context, request);
+                }),
+            IconButton(
+              style: style,
+              tooltip: "Search",
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CatalogSearchPage()))
+                    .then((_) {
+                  // auto update book data
+                  setState(() {});
+                });
+              },
+            ),
+            IconButton(
+                style: style,
+                tooltip: "View Type",
+                icon: Icon(_viewType == ViewType.tile
+                    ? Icons.grid_view_sharp
+                    : Icons.view_list),
+                onPressed: () {
+                  setState(() {
+                    if (_viewType == ViewType.tile) {
+                      _viewType = ViewType.grid;
+                    } else {
+                      _viewType = ViewType.tile;
+                    }
+                  });
+                }),
+            IconButton(
+              style: style,
+              tooltip: "Refresh",
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                setState(() {});
+              },
+            )
+          ],
         ),
-        actions: <Widget>[
-          IconButton(
-            style: style,
-            tooltip: "Filter",
-            icon: const Icon(Icons.filter_list_rounded),
-            onPressed: () {
-              _openFilterModal(context, request);
-            }
-          ),
-          IconButton(
-            style: style,
-            tooltip: "Sort By",
-            icon: const Icon(Icons.sort_by_alpha_outlined),
-            onPressed: () {
-              _openSortModal(context, request);
-            }
-          ),
-          IconButton(
-            style: style,
-            tooltip: "Search",
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>
-                      const CatalogSearchPage())).then((_){
-                          // auto update book data
-                          setState((){});
-                        });
-            },
-          ),
-          IconButton(
-            style: style,
-            tooltip: "View Type",
-            icon: Icon(_viewType == ViewType.tile ? Icons.grid_view_sharp : Icons.view_list),
-            onPressed: () {
-              setState(() {
-                if (_viewType == ViewType.tile) {
-                  _viewType = ViewType.grid;
+        body: FutureBuilder(
+            future: fetchBook(request),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                if (!snapshot.hasData) {
+                  return const Column(
+                    children: [
+                      Text(
+                        "Tidak ada data buku.",
+                        style:
+                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  );
                 } else {
-                  _viewType = ViewType.tile;
-                }
-              });
-            }
-          ),
-          IconButton(
-            style: style,
-            tooltip: "Refresh",
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              setState(() {});
-            },
-          )
-        ],
-      ),
-      body: FutureBuilder(
-        future: fetchBook(request),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            if (!snapshot.hasData) {
-              return const Column(
-                children: [
-                  Text(
-                    "Tidak ada data buku.",
-                    style:
-                        TextStyle(color: Color(0xff59A5D8), fontSize: 20),
-                  ),
-                  SizedBox(height: 8),
-                ],
-              );
-            } else {
-              // build tile view
-              if (_viewType == ViewType.tile) {
-                return ListView.builder(
-                  padding: const EdgeInsets.only(
-                      top: 10, bottom: 10, left: 10, right: 10),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (_, index) => InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>
-                        DetailBookPage(book: snapshot.data![index]))).then((_){
-                            // auto update book data
-                            setState((){});
-                          });
-                    },
-                    child: BookTile(book: snapshot.data![index]),
-                  )
-                );
-              }
+                  // build tile view
+                  if (_viewType == ViewType.tile) {
+                    return ListView.builder(
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 10, right: 10),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (_, index) => InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailBookPage(
+                                            book: snapshot.data![index]))).then(
+                                    (_) {
+                                  // auto update book data
+                                  setState(() {});
+                                });
+                              },
+                              child: BookTile(book: snapshot.data![index]),
+                            ));
+                  }
 
-              // build grid view
-              else {
-                return GridView.builder(
-                  padding: const EdgeInsets.only(
-                      top: 10, bottom: 10, left: 10, right: 10),
-                  shrinkWrap: true,
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 181 / 400,
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 5.0,
-                  ),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (_, index) => InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>
-                        DetailBookPage(book: snapshot.data![index]))).then((_){
-                            // auto update book data
-                            setState((){});
-                          });
-                    },
-                    child: BookCard(book: snapshot.data![index]),
-                  )
-                );
+                  // build grid view
+                  else {
+                    return GridView.builder(
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 10, right: 10),
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 181 / 400,
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 5.0,
+                          mainAxisSpacing: 5.0,
+                        ),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (_, index) => InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailBookPage(
+                                            book: snapshot.data![index]))).then(
+                                    (_) {
+                                  // auto update book data
+                                  setState(() {});
+                                });
+                              },
+                              child: BookCard(book: snapshot.data![index]),
+                            ));
+                  }
+                }
               }
-            }
-          }
-        }
-      )
-    );
+            }));
   }
 }
