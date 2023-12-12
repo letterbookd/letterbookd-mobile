@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:letterbookd/library/screens/library_home.dart';
-import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:letterbookd/main.dart';
 
 class LibraryDetailHeader extends StatelessWidget {
-  final LibraryItem item;
-
-  const LibraryDetailHeader({super.key, required this.item});
+  const LibraryDetailHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,23 +12,21 @@ class LibraryDetailHeader extends StatelessWidget {
         child: Row(
           children: <Widget>[
             AspectRatio(
-              aspectRatio: app_data.bookAspectRatio,
+              aspectRatio: AppData().bookAspectRatio,
               child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                clipBehavior: Clip.hardEdge,
+                child: const Hero(
+                  tag: "libbok-cover",
+                  child: Image(
+                    image: NetworkImage(
+                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                    fit: BoxFit.fitHeight,
                   ),
-                  clipBehavior: Clip.hardEdge,
-                  child: InkWell(
-                    child: Image.network(
-                      item.bookData.fields.thumbnail,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return const Center();
-                      },
-                      fit: BoxFit.fitHeight,
-                    ),
-                  )),
+                ),
+              ),
             ),
             Expanded(
                 child: Padding(
@@ -41,7 +36,7 @@ class LibraryDetailHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            item.bookData.fields.title,
+                            "Book Title", // TODO: repalce with libBook.fields.title
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!
@@ -49,11 +44,8 @@ class LibraryDetailHeader extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                 ),
                           ),
-                          const SizedBox(
-                            height: 4.0,
-                          ),
                           Text(
-                            "by ${item.bookData.fields.authors.split(';').map((author) => author).join(', ')}",
+                            "by Author(s)", // TODO: repalce with libBook.fields.authors
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -62,11 +54,8 @@ class LibraryDetailHeader extends StatelessWidget {
                                       Theme.of(context).colorScheme.secondary,
                                 ),
                           ),
-                          const SizedBox(
-                            height: 4.0,
-                          ),
                           Text(
-                            item.bookData.fields.publishedYear.toString(),
+                            "1999", // TODO: repalce with libBook.fields.release_year
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -74,27 +63,6 @@ class LibraryDetailHeader extends StatelessWidget {
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
-                          ),
-                          const SizedBox(
-                            height: 4.0,
-                          ),
-                          Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 6.0),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                borderRadius: BorderRadius.circular(5.0)),
-                            child: Text(
-                              LibraryData().trackingStatusList[
-                                  item.libraryData.fields.trackingStatus],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                  ),
-                            ),
                           ),
                         ])))
           ],

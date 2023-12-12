@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_new, unnecessary_this, prefer_collection_literals
-
 class ThreadDetail {
   String? title;
   String? threadContent;
@@ -20,29 +18,29 @@ class ThreadDetail {
     if (json['replies'] != null) {
       replies = <Replies>[];
       json['replies'].forEach((v) {
-        replies!.add(new Replies.fromJson(v));
+        replies!.add(Replies.fromJson(v));
       });
     }
     if (json['likes'] != null) {
       likes = <Likes>[];
       json['likes'].forEach((v) {
-        likes!.add(new Likes.fromJson(v));
+        likes!.add(Likes.fromJson(v));
       });
     }
     userLiked = json['user_liked'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['thread_content'] = this.threadContent;
-    if (this.replies != null) {
-      data['replies'] = this.replies!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['thread_content'] = threadContent;
+    if (replies != null) {
+      data['replies'] = replies!.map((v) => v.toJson()).toList();
     }
-    if (this.likes != null) {
-      data['likes'] = this.likes!.map((v) => v.toJson()).toList();
+    if (likes != null) {
+      data['likes'] = likes!.map((v) => v.toJson()).toList();
     }
-    data['user_liked'] = this.userLiked;
+    data['user_liked'] = userLiked;
     return data;
   }
 }
@@ -61,9 +59,9 @@ class Replies {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['content'] = this.content;
-    data['created_by'] = this.createdBy;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['content'] = content;
+    data['created_by'] = createdBy;
     return data;
   }
 }
@@ -78,8 +76,8 @@ class Likes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['created_by'] = this.createdBy;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['created_by'] = createdBy;
     return data;
   }
 }

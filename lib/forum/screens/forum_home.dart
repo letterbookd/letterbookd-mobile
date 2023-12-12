@@ -1,11 +1,10 @@
-// ignore_for_file: sort_child_properties_last, avoid_print, prefer_const_constructors
+// ignore_for_file: sort_child_properties_last, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:letterbookd/forum/models/thread.dart';
 import 'package:letterbookd/forum/screens/add_edit_forum.dart';
 import 'package:letterbookd/forum/screens/forum_detail.dart';
 import 'package:letterbookd/forum/widgets/threadbox.dart';
-import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +18,8 @@ class ForumHome extends StatefulWidget {
 class _ForumHomeState extends State<ForumHome> {
   Future<Map<String, List<Thread>>> _fetchThread(CookieRequest request) async {
     try {
-      final response = await request.get('${app_data.baseUrl}/forum/json/');
+      final response = await request.get('http://10.0.2.2:8000/forum/json/');
+      print(response);
       List<Thread> result = [];
       List<Thread> popularResult = [];
       for (var i in response['threads']) {
@@ -29,7 +29,7 @@ class _ForumHomeState extends State<ForumHome> {
       for (var i in response['threads_by_like']) {
         popularResult.add(Thread.fromJson(i));
       }
-      print(response);
+      // print(response);
 
       return {'newest': result, 'popular': popularResult};
     } catch (e) {
@@ -75,7 +75,7 @@ class _ForumHomeState extends State<ForumHome> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddForumPage(
+              builder: (context) => const AddForumPage(
                 isEdit: false,
               ),
             ));

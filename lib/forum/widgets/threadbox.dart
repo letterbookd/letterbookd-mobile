@@ -1,17 +1,17 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-//import 'package:letterbookd/forum/screens/forum_detail.dart';
+import 'package:letterbookd/forum/screens/forum_detail.dart';
 
 class ThreadBox extends StatelessWidget {
   final String title;
   final String content;
 
   const ThreadBox({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

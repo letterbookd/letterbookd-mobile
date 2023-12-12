@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
-import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:letterbookd/main.dart';
 
 class BookTile extends StatelessWidget {
   final Book book;
 
-  const BookTile({super.key, required this.book}); // Constructor
+  const BookTile({Key? key, required this.book})
+      : super(key: key); // Constructor
+
+  // const BookTile(this.book, {super.key}); // Constructor
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Material(
         child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       padding: const EdgeInsets.all(15.0),
       child: Row(
         children: [
           SizedBox(
             width: 70,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: AspectRatio(
-                aspectRatio: app_data.bookAspectRatio,
-                child:
-                    Image.network(book.fields.thumbnail, fit: BoxFit.fitHeight),
-              ),
+            child: AspectRatio(
+              aspectRatio: AppData().bookAspectRatio,
+              child: Image.network(book.thumbnail, fit: BoxFit.fitWidth),
             ),
           ),
           Flexible(
@@ -34,7 +33,7 @@ class BookTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  book.fields.title,
+                  book.title,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -42,19 +41,9 @@ class BookTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                    "by ${book.fields.authors.split(';').map((author) => author).join(', ')}"),
+                    "by ${book.authors.split(';').map((author) => author).join(', ')}"),
                 const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.star),
-                    Text(
-                      '${book.fields.overallRating}',
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ],
-                ),
+                Text(book.categories),
               ],
             ),
           ))

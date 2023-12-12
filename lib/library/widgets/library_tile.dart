@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/library/screens/library_detail.dart';
-import 'package:letterbookd/library/screens/library_home.dart';
 
 /// Grid tile for library homepage
 class LibraryTile extends StatelessWidget {
-  final LibraryItem item;
-
-  const LibraryTile({super.key, required this.item});
+  const LibraryTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +12,14 @@ class LibraryTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.surfaceVariant,
       ),
       child: InkWell(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LibraryBookDetailPage(item: item),
+              builder: (context) => const LibraryBookDetailPage(),
             ),
           );
         },
@@ -31,12 +28,10 @@ class LibraryTile extends StatelessWidget {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           fit: StackFit.expand,
           children: [
-            Image.network(
-              item.bookData.fields.thumbnail,
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return const Center();
-              },
+            /// TODO: replace with proper book cover
+            const Image(
+              image: NetworkImage(
+                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
               fit: BoxFit.fitHeight,
             ),
             Container(
@@ -54,10 +49,12 @@ class LibraryTile extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                /// TODO: replace with proper book title
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    item.bookData.fields.title,
+                    "book_title",
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: Colors.white,
                         ),

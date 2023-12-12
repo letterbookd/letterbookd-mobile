@@ -1,12 +1,12 @@
-// ignore_for_file: avoid_print, prefer_const_constructors
+// ignore_for_file: avoid_print
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-//import 'package:letterbookd/forum/models/thread.dart';
+import 'package:letterbookd/forum/models/thread.dart';
 import 'package:letterbookd/forum/models/thread_detail.dart';
 import 'package:letterbookd/forum/screens/add_edit_forum.dart';
-//import 'package:letterbookd/forum/screens/forum_home.dart';
+import 'package:letterbookd/forum/screens/forum_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -30,13 +30,14 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   bool isLikedChoosen = false;
   final TextEditingController _replyController = TextEditingController();
 
-  Future<ThreadDetail> _fetchDetail(CookieRequest request, int pk) async {
+  Future<Map<String, dynamic>> _fetchDetail(
+      CookieRequest request, int pk) async {
     try {
       final response =
           await request.post('http://10.0.2.2:8000/forum/view-json/$pk/', {});
 
-      ThreadDetail result = ThreadDetail.fromJson(response['data']);
-
+      var result = {'data': null, 'is_admin': response['is_admin']};
+      result['data'] = ThreadDetail.fromJson(response['data']);
       return result;
     } catch (e) {
       throw Exception('error : $e');
@@ -96,22 +97,22 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Forum Detail"),
+          title: const Text("Forum Detail"),
           centerTitle: true,
         ),
         body: FutureBuilder(
           future: _fetchDetail(request, widget.pk),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
-            isLiked = snapshot.data!.userLiked!;
+            isLiked = snapshot.data!['data'].userLiked!;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: SizedBox(
+                child: Container(
                   height: MediaQuery.of(context).size.height * 1.6,
                   width: double.infinity,
                   child: Column(
@@ -125,95 +126,102 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                               CircleAvatar(
                                 child: Text(widget.threader[0].toUpperCase()),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 16,
                               ),
                               Text("@${widget.threader}")
                             ],
                           ),
-                          PopupMenuButton(
-                            onSelected: (String choice) {
-                              if (choice == 'Edit') {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AddForumPage(
-                                    isEdit: true,
-                                    title: snapshot.data!.title ?? "",
-                                    content: snapshot.data!.threadContent ?? "",
-                                    pk: widget.pk,
-                                  ),
-                                ));
-                              } else if (choice == 'Delete') {
-                                showDialog(
-                                  context: context,
-                                  builder: (
-                                    BuildContext contextDialog,
-                                  ) {
-                                    return AlertDialog(
-                                      title: const Text('Delete Post'),
-                                      content: const Text(
-                                          'Are you sure you want to delete this Thread?'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            // Delete the comment and close the dialog
-                                            _deleteThread(request, widget.pk);
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            // Close the dialog without deleting the comment
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('Cancel',
-                                              style: TextStyle(
-                                                  color: Colors.blue)),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            itemBuilder: (BuildContext context) {
-                              return ['Edit', 'Delete'].map((String choice) {
-                                return PopupMenuItem<String>(
-                                  value: choice,
-                                  child: Text(
-                                    choice,
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                );
-                              }).toList();
-                            },
+                          Visibility(
+                            visible: snapshot.data!['is_admin'],
+                            child: PopupMenuButton(
+                              onSelected: (String choice) {
+                                if (choice == 'Edit') {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddForumPage(
+                                      isEdit: true,
+                                      title: snapshot.data!['data'].title ?? "",
+                                      content: snapshot
+                                              .data!['data'].threadContent ??
+                                          "",
+                                      pk: widget.pk,
+                                    ),
+                                  ));
+                                } else if (choice == 'Delete') {
+                                  showDialog(
+                                    context: context,
+                                    builder: (
+                                      BuildContext contextDialog,
+                                    ) {
+                                      return AlertDialog(
+                                        title: const Text('Delete Post'),
+                                        content: const Text(
+                                            'Are you sure you want to delete this Thread?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () async {
+                                              // Delete the comment and close the dialog
+                                              _deleteThread(request, widget.pk);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Delete',
+                                                style: TextStyle(
+                                                    color: Colors.red)),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              // Close the dialog without deleting the comment
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.blue)),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              itemBuilder: (BuildContext context) {
+                                return ['Edit', 'Delete'].map((String choice) {
+                                  return PopupMenuItem<String>(
+                                    value: choice,
+                                    child: Text(
+                                      choice,
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                  );
+                                }).toList();
+                              },
+                            ),
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(
-                        snapshot.data!.title ?? "",
-                        style: TextStyle(fontSize: 30),
+                        snapshot.data!['data'].title ?? "",
+                        style: const TextStyle(fontSize: 30),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 6,
                       ),
                       Text(
-                        snapshot.data!.threadContent ?? "",
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        snapshot.data!['data'].threadContent ?? "",
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
                         textAlign: TextAlign.justify,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Divider(),
+                      const Divider(),
                       Text(widget.createdAt),
-                      Divider(),
+                      const Divider(),
                       Row(
                         children: [
                           IconButton(
@@ -223,7 +231,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                   isReply = true;
                                 });
                               },
-                              icon: Icon(Icons.chat_bubble)),
+                              icon: const Icon(Icons.chat_bubble)),
                           IconButton(
                               onPressed: () {
                                 setState(() {
@@ -237,15 +245,16 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                 Icons.favorite,
                                 color: isLiked ? Colors.red : Colors.grey,
                               )),
-                          Text("${snapshot.data!.likes!.length}")
+                          Text("${snapshot.data!['data'].likes!.length}")
                         ],
                       ),
-                      Divider(),
+                      const Divider(),
                       if (isReply)
-                        ...buildReply(
-                            context, snapshot.data!.replies ?? [], request),
+                        ...buildReply(context,
+                            snapshot.data!['data'].replies ?? [], request),
                       if (isLikedChoosen)
-                        ...buildLike(context, snapshot.data!.likes ?? [])
+                        ...buildLike(
+                            context, snapshot.data!['data'].likes ?? [])
                     ],
                   ),
                 ),
@@ -263,13 +272,13 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     return [
       Text(
         "Replies (${replies.length})",
-        style: TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 24),
       ),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
-      Text("Message:"),
-      SizedBox(
+      const Text("Message:"),
+      const SizedBox(
         height: 10,
       ),
       TextField(
@@ -288,7 +297,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
           setState(() {});
         },
       ),
-      SizedBox(
+      const SizedBox(
         height: 12,
       ),
       Center(
@@ -305,14 +314,14 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
           ),
         ),
       ),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
       SizedBox(
         height: MediaQuery.of(context).size.height * 0.75,
         child: ListView.separated(
           itemCount: replies.length,
-          separatorBuilder: (context, index) => SizedBox(
+          separatorBuilder: (context, index) => const SizedBox(
             height: 10,
           ),
           itemBuilder: (context, index) {
@@ -334,17 +343,17 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                               child: Text(
                                   replies[index].createdBy![0].toUpperCase()),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 16,
                             ),
                             Text(replies[index].createdBy ?? "")
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 6,
                         ),
                         Text(replies[index].content!),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                       ],
@@ -363,14 +372,14 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   List<Widget> buildLike(BuildContext context, List<Likes> likes) {
     return [
       Text("Likes (${likes.length})"),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
       SizedBox(
         height: MediaQuery.of(context).size.height * 0.75,
         child: ListView.separated(
           itemCount: likes.length,
-          separatorBuilder: (context, index) => SizedBox(
+          separatorBuilder: (context, index) => const SizedBox(
             height: 10,
           ),
           itemBuilder: (context, index) {
@@ -379,10 +388,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       child: Text("T"),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 16,
                     ),
                     Text("@${likes[index].createdBy}")

@@ -1,5 +1,5 @@
 name: letterbookd
-description: Bringing you, your books, and readers together. Now on mobile.
+description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -34,15 +34,12 @@ dependencies:
   http: 1.1.0
   pbp_django_auth: ^0.4.0
   provider: ^6.1.1
-  http: 1.1.0
-  percent_indicator: ^4.2.3
-  flutter_rating_bar: ^4.0.1
-  provider: ^6.1.1
 
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
