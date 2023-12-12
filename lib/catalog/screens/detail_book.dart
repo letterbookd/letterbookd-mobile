@@ -2,10 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/main.dart';
 
-class DetailBookPage extends StatelessWidget {
+class DetailBookPage extends StatefulWidget{
   final Book book;
 
   const DetailBookPage({super.key, required this.book});
+
+  @override
+  State<DetailBookPage> createState() => _DetailBookPageState();
+
+}
+
+class _DetailBookPageState extends State<DetailBookPage> {
+  late Book book;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialize with the provided book data
+    book = widget.book;
+  }
 
   @override
   Widget build(BuildContext context) {
