@@ -82,7 +82,7 @@ class _EditFormPageState extends State<EditFormPage> {
                 allowHalfRating: true,
                 itemCount: 5,
                 itemSize: 32.0,
-                itemBuilder: (context, _) => Icon(
+                itemBuilder: (context, _) => const Icon(
                   Icons.star,
                   color: Colors.amber,
                 ),
