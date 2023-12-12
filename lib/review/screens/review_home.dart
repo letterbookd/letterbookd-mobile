@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/review/screens/review_add.dart';
+import 'package:letterbookd/review/screens/review_edit.dart';
 
 class ReviewHome extends StatelessWidget {
   const ReviewHome({Key? key}) : super(key: key);
@@ -7,6 +8,7 @@ class ReviewHome extends StatelessWidget {
   static const List<ReviewItem> items = [
     ReviewItem("Lihat Review Saya", Icons.preview),
     ReviewItem("Tambah Review", Icons.rate_review),
+    ReviewItem("Edit Review", Icons.edit_document),
   ];
 
   @override
@@ -83,7 +85,11 @@ class ReviewCard extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => AddFormPage()),
             );
-          } else {
+          } else if (item.title == "Edit Review") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EditFormPage()),
+            );
             // Handle other item taps
           }
         },
