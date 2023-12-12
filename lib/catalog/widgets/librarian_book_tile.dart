@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/main.dart';
 
-class BookTile extends StatelessWidget {
+class LibrarianBookTile extends StatelessWidget {
   final Book book;
 
-  const BookTile({super.key, required this.book}); // Constructor
+  const LibrarianBookTile({super.key, required this.book}); // Constructor
 
   @override
   Widget build(BuildContext context) {
@@ -34,27 +34,37 @@ class BookTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  book.fields.title,
+                  'ISBN: ${book.fields.isbn13}',
                   style: const TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 15.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "by ${book.fields.authors.split(';').map((author) => author).join(', ')}"),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.star),
-                    Text(
-                      '${book.fields.overallRating}',
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ],
+                  'Title: ${book.fields.title}',
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                const SizedBox(height: 10),
+                Text(
+                  "Authors: ${book.fields.authors.split(';').map((author) => author).join(', ')}",
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Overall rating: ${book.fields.overallRating}',
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ))

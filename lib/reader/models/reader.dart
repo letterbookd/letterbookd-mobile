@@ -1,71 +1,117 @@
-// To parse this JSON data, do
-//
-//     final reader = readerFromJson(jsonString);
-
 import 'dart:convert';
 
-List<Reader> readerFromJson(String str) =>
-    List<Reader>.from(json.decode(str).map((x) => Reader.fromJson(x)));
+import 'package:letterbookd/reader/models/readerpreferences.dart';
 
-String readerToJson(List<Reader> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+Reader readerFromJson(String str) => Reader.fromJson(json.decode(str));
 
-class Reader {
-  String model;
-  int pk;
-  Fields fields;
+String readerToJson(Reader data) => json.encode(data.toJson());
 
-  Reader({
-    required this.model,
-    required this.pk,
-    required this.fields,
-  });
-
-  factory Reader.fromJson(Map<String, dynamic> json) => Reader(
-        model: json["model"],
-        pk: json["pk"],
-        fields: Fields.fromJson(json["fields"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "model": model,
-        "pk": pk,
-        "fields": fields.toJson(),
-      };
-}
-
-class Fields {
-  int user;
+class ReaderElement {
+  int id;
+  int userId;
   String displayName;
   String bio;
   int profilePicture;
-  int personalLibrary;
-  int preferences;
+  int personalLibraryId;
+  int preferencesId;
+  Preferences preferences;
 
-  Fields({
-    required this.user,
+  ReaderElement({
+    required this.id,
+    required this.userId,
     required this.displayName,
     required this.bio,
     required this.profilePicture,
-    required this.personalLibrary,
+    required this.personalLibraryId,
+    required this.preferencesId,
     required this.preferences,
   });
 
-  factory Fields.fromJson(Map<String, dynamic> json) => Fields(
-        user: json["user"],
-        displayName: json["display_name"],
-        bio: json["bio"],
-        profilePicture: json["profile_picture"],
-        personalLibrary: json["personal_library"],
-        preferences: json["preferences"],
-      );
+factory ReaderElement.fromJson(Map<String, dynamic> json) {
+  return ReaderElement(
+    id: json["id"] ?? 0,
+    userId: json["user_id"] ?? 0,
+    displayName: json["display_name"] ?? "",
+    bio: json["bio"] ?? "",
+    profilePicture: json["profile_picture"] ?? 0,
+    personalLibraryId: json["personal_library_id"] ?? 0,
+    preferencesId: json["preferences_id"] ?? 0,
+    preferences: Preferences.fromJson(json["preferences"]) ?? Preferences(shareReviews: false, shareLibrary: false),
+  );
+}
 
   Map<String, dynamic> toJson() => {
-        "user": user,
+        "id": id,
+        "user_id": userId,
         "display_name": displayName,
         "bio": bio,
         "profile_picture": profilePicture,
-        "personal_library": personalLibrary,
-        "preferences": preferences,
+        "personal_library_id": personalLibraryId,
+        "preferences_id": preferencesId,
+      };
+}
+
+class ReaderPreference {
+  int id;
+  bool shareReviews;
+  bool shareLibrary;
+
+  ReaderPreference({
+    required this.id,
+    required this.shareReviews,
+    required this.shareLibrary,
+  });
+
+  factory ReaderPreference.fromJson(Map<String, dynamic> json) =>
+      ReaderPreference(
+        id: json["id"],
+        shareReviews: json["share_reviews"],
+        shareLibrary: json["share_library"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "share_reviews": shareReviews,
+        "share_library": shareLibrary,
+      };
+}
+
+class Reader {
+  List<ReaderElement> readers;
+  List<ReaderPreference> readerPreferences;
+
+  Reader({
+    required this.readers,
+    required this.readerPreferences,
+  });
+
+  factory Reader.fromJson(Map<String, dynamic> json) {
+    var readersJson = json["readers"];
+    if (readersJson is List) {
+      // If readersJson is a list, use it as is
+      return Reader(
+        readers: List<ReaderElement>.from(
+            readersJson.map((x) => ReaderElement.fromJson(x["fields"]))),
+        readerPreferences: List<ReaderPreference>.from(
+            json["reader_preferences"]
+                .map((x) => ReaderPreference.fromJson(x))),
+      );
+    } else if (readersJson is Map) {
+      // If readersJson is a map, wrap it in a list
+      return Reader(
+        readers: [ReaderElement.fromJson(readersJson["fields"])],
+        readerPreferences: List<ReaderPreference>.from(
+            json["reader_preferences"]
+                .map((x) => ReaderPreference.fromJson(x))),
+      );
+    } else {
+      throw FormatException("Invalid 'readers' field");
+    }
+  }
+
+  Map<String, dynamic> toJson() => {
+        "readers": List<dynamic>.from(readers.map((x) => x.toJson())),
+        "reader_preferences":
+            List<dynamic>.from(readerPreferences.map((x) => x.toJson())),
       };
 }

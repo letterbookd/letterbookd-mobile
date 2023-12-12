@@ -1,18 +1,21 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
+// ignore_for_file: avoid_print
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:letterbookd/forum/models/thread.dart';
-import 'package:letterbookd/forum/screens/forum_home.dart';
-import 'package:letterbookd/main.dart';
+//import 'package:letterbookd/forum/models/thread.dart';
+//import 'package:letterbookd/forum/screens/forum_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 
 class AddForumPage extends StatefulWidget {
-  const AddForumPage({super.key});
-
+  const AddForumPage(
+      {required this.isEdit, this.title, this.content, this.pk, super.key});
+  final bool isEdit;
+  final int? pk;
+  final String? title;
+  final String? content;
   @override
   State<AddForumPage> createState() => _AddForumPageState();
 }
@@ -29,7 +32,7 @@ class _AddForumPageState extends State<AddForumPage> {
   ) async {
     try {
       final response = await request.post(
-          '${AppData().url}/forum/create-json/',
+          'http://10.0.2.2:8000/forum/create-json/',
           jsonEncode(
             {
               'title': title,
@@ -37,11 +40,45 @@ class _AddForumPageState extends State<AddForumPage> {
             },
           ));
 
-      // print(response);
+      print(response);
       return response;
     } catch (e) {
       throw Exception('error : $e');
     }
+  }
+
+  Future<Map<String, dynamic>> _editThread(
+    CookieRequest request,
+    String title,
+    String content,
+    int pk,
+  ) async {
+    try {
+      final response = await request.post(
+          'http://10.0.2.2:8000/forum/edit-json/$pk/',
+          jsonEncode(
+            {
+              'title': title,
+              'content': content,
+            },
+          ));
+
+      print(response);
+      return response;
+    } catch (e) {
+      throw Exception('error : $e');
+    }
+  }
+
+  @override
+  void initState() {
+    widget.title != null
+        ? _titleController.text = widget.title!
+        : _titleController.text = "";
+    widget.content != null
+        ? _contentController.text = widget.content!
+        : _contentController.text = "";
+    super.initState();
   }
 
   @override
@@ -50,7 +87,9 @@ class _AddForumPageState extends State<AddForumPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add New Thread"),
+        title: !widget.isEdit
+            ? const Text("Add New Thread")
+            : const Text("Edit Thread"),
         centerTitle: true,
       ),
       body: Form(
@@ -127,9 +166,18 @@ class _AddForumPageState extends State<AddForumPage> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          _postThread(request, _titleController.text,
-                              _contentController.text);
-                          Navigator.pop(context);
+                          if (!widget.isEdit) {
+                            _postThread(request, _titleController.text,
+                                _contentController.text);
+                          }
+
+                          if (widget.isEdit) {
+                            print("lg ngedit");
+                            _editThread(request, _titleController.text,
+                                _contentController.text, widget.pk!);
+                          }
+
+                          Navigator.of(context).pop();
                         } else {
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()

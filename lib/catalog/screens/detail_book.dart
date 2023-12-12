@@ -5,7 +5,7 @@ import 'package:letterbookd/main.dart';
 class DetailBookPage extends StatelessWidget {
   final Book book;
 
-  const DetailBookPage({Key? key, required this.book}) : super(key: key);
+  const DetailBookPage({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
