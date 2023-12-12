@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/library/screens/library_home.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 
 class LibraryDetailHeader extends StatelessWidget {
-  const LibraryDetailHeader({super.key});
+  final LibraryItem item;
+
+  const LibraryDetailHeader({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -13,17 +15,20 @@ class LibraryDetailHeader extends StatelessWidget {
         child: Row(
           children: <Widget>[
             AspectRatio(
-              aspectRatio: AppData().bookAspectRatio,
+              aspectRatio: app_data.bookAspectRatio,
               child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   clipBehavior: Clip.hardEdge,
-                  child: const InkWell(
-                    child: Image(
-                      image: NetworkImage(
-                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                  child: InkWell(
+                    child: Image.network(
+                      item.bookData.fields.thumbnail,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const Center();
+                      },
                       fit: BoxFit.fitHeight,
                     ),
                   )),
@@ -36,7 +41,7 @@ class LibraryDetailHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Book Title", // TODO: repalce with libBook.fields.title
+                            item.bookData.fields.title,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!
@@ -44,8 +49,11 @@ class LibraryDetailHeader extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                 ),
                           ),
+                          const SizedBox(
+                            height: 4.0,
+                          ),
                           Text(
-                            "by Author(s)", // TODO: repalce with libBook.fields.authors
+                            "by ${item.bookData.fields.authors.split(';').map((author) => author).join(', ')}",
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -54,8 +62,11 @@ class LibraryDetailHeader extends StatelessWidget {
                                       Theme.of(context).colorScheme.secondary,
                                 ),
                           ),
+                          const SizedBox(
+                            height: 4.0,
+                          ),
                           Text(
-                            "1999", // TODO: repalce with libBook.fields.release_year
+                            item.bookData.fields.publishedYear.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -63,6 +74,9 @@ class LibraryDetailHeader extends StatelessWidget {
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
+                          ),
+                          const SizedBox(
+                            height: 4.0,
                           ),
                           Container(
                             padding:
@@ -72,7 +86,7 @@ class LibraryDetailHeader extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(5.0)),
                             child: Text(
                               LibraryData().trackingStatusList[
-                                  0], // TODO: repalce with libBook.fields.tracking_status
+                                  item.libraryData.fields.trackingStatus],
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!

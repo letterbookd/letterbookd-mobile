@@ -10,7 +10,7 @@ void main() {
   runApp(const App());
 }
 
-/// Data konstanta untuk aplikasi
+/// [DEPRECATED] Data konstanta untuk aplikasi
 class AppData {
   final Color seedColor = Colors.blue;
   final String url = "http://10.0.2.2:8000";
@@ -18,6 +18,8 @@ class AppData {
 }
 
 class App extends StatelessWidget {
+  final Color seedColor = Colors.blue;
+
   const App({super.key});
 
   // This widget is the root of your application.
@@ -32,13 +34,13 @@ class App extends StatelessWidget {
         title: 'letterbookd',
         theme: ThemeData(
           brightness: Brightness.light,
-          colorScheme: ColorScheme.fromSeed(seedColor: AppData().seedColor),
+          colorScheme: ColorScheme.fromSeed(seedColor: seedColor),
           useMaterial3: true,
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
           colorScheme: ColorScheme.fromSeed(
-              seedColor: AppData().seedColor, brightness: Brightness.dark),
+              seedColor: seedColor, brightness: Brightness.dark),
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,

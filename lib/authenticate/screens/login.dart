@@ -1,8 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:letterbookd/core/screens/homepage.dart';
-import 'package:letterbookd/core/screens/librarian_homepage.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                 String password = _passwordController.text;
 
                 final response =
-                    await request.login("${AppData().url}/auth/login/", {
+                    await request.login("${app_data.baseUrl}/auth/login/", {
                   'username': username,
                   'password': password,
                 });
