@@ -17,34 +17,20 @@ class ReviewHome extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Reviews"),
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: "4.5",
-                            style: TextStyle(fontSize: 48.0),
-                          ),
-                          TextSpan(
-                            text: "/5",
-                            style: TextStyle(
-                              fontSize: 24.0,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ],
-                      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              color: Colors.blue,
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  const Text(
+                    'Review Page',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 10.0),
@@ -58,37 +44,7 @@ class ReviewHome extends StatelessWidget {
                       Expanded(
                         child: ReviewCard(items[1]),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  width: 200.0,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    reverse: true,
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-                          Text(
-                            "${index + 1}",
-                            style: const TextStyle(fontSize: 18.0),
-                          ),
-                          const SizedBox(width: 4.0),
-                          const Icon(Icons.star, color: Colors.orange),
-                          const SizedBox(width: 8.0),
-                          LinearPercentIndicator(
-                            lineHeight: 6.0,
-                            width: MediaQuery.of(context).size.width / 2.8,
-                            animation: true,
-                            animationDuration: 2500,
-                            percent:
-                                0.7, // Replace with the actual rating percentage
-                            progressColor: Colors.orange,
-                          ),
-                        ],
-                      );
-                    },
+                    ],
                   ),
                 ],
               ),
