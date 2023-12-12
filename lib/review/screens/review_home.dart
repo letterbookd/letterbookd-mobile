@@ -3,7 +3,7 @@ import 'package:letterbookd/review/screens/review_add.dart';
 import 'package:letterbookd/review/screens/review_edit.dart';
 
 class ReviewHome extends StatelessWidget {
-  const ReviewHome({Key? key}) : super(key: key);
+  const ReviewHome({super.key});
 
   static const List<ReviewItem> items = [
     ReviewItem("Lihat Review Saya", Icons.preview),
@@ -33,14 +33,14 @@ class ReviewHome extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
                         child: ReviewCard(items[0]),
                       ),
-                      SizedBox(width: 10.0),
+                      const SizedBox(width: 10.0),
                       Expanded(
                         child: ReviewCard(items[1]),
                       ),
@@ -67,7 +67,7 @@ class ReviewItem {
 class ReviewCard extends StatelessWidget {
   final ReviewItem item;
 
-  const ReviewCard(this.item);
+  const ReviewCard(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -83,12 +83,12 @@ class ReviewCard extends StatelessWidget {
             // Redirect to AddFormPage
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddFormPage()),
+              MaterialPageRoute(builder: (context) => const AddFormPage()),
             );
           } else if (item.title == "Edit Review") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EditFormPage()),
+              MaterialPageRoute(builder: (context) => const EditFormPage()),
             );
             // Handle other item taps
           }
@@ -98,10 +98,10 @@ class ReviewCard extends StatelessWidget {
           child: Row(
             children: [
               Icon(item.icon),
-              SizedBox(width: 4.0),
+              const SizedBox(width: 4.0),
               Text(
                 item.title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                 ),
               ),

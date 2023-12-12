@@ -8,7 +8,7 @@ import 'package:letterbookd/catalog/screens/librarian_add_book.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 
 // declare view types
 enum ViewType {
@@ -62,9 +62,8 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
     });
   }
 
-
   Future<List<Book>> fetchBook() async {
-    var url = Uri.parse('${AppData().url}/catalog/json/');
+    var url = Uri.parse('${app_data.baseUrl}/catalog/json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -86,9 +85,11 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
     } else if (_sortBy == SortBy.authors) {
       books.sort((a, b) => a.fields.authors.compareTo(b.fields.authors));
     } else if (_sortBy == SortBy.rating) {
-      books.sort((a, b) => b.fields.overallRating.compareTo(a.fields.overallRating));
+      books.sort(
+          (a, b) => b.fields.overallRating.compareTo(a.fields.overallRating));
     } else if (_sortBy == SortBy.favoritesCount) {
-      books.sort((a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
+      books.sort(
+          (a, b) => b.fields.favoritesCount.compareTo(a.fields.favoritesCount));
     }
 
     return books;
@@ -101,99 +102,101 @@ class _LibrarianCatalogState extends State<LibrarianCatalog> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Catalog'),
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(4.0),
-          child: Divider(
-            height: 1,
-            indent: 10,
-            endIndent: 10,
-          )
-        ),
-        actions: <Widget>[
-          IconButton(
-            style: style,
-            tooltip: "Add book",
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context,
-                MaterialPageRoute(builder: (context) =>
-                const AddBookPage())).then((_){
+        appBar: AppBar(
+          title: const Text('Catalog'),
+          bottom: const PreferredSize(
+              preferredSize: Size.fromHeight(4.0),
+              child: Divider(
+                height: 1,
+                indent: 10,
+                endIndent: 10,
+              )),
+          actions: <Widget>[
+            IconButton(
+                style: style,
+                tooltip: "Add book",
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddBookPage())).then((_) {
                     // auto update book data
-                    setState((){});
+                    setState(() {});
                   });
+                }),
+            IconButton(
+                style: style,
+                tooltip: "Sort By",
+                icon: const Icon(Icons.sort_by_alpha_outlined),
+                onPressed: () {
+                  _openSortModal(context);
+                }),
+            IconButton(
+              style: style,
+              tooltip: "Search",
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const LibrarianCatalogSearchPage())).then((_) {
+                  // auto update book data
+                  setState(() {});
+                });
+              },
+            ),
+            IconButton(
+              style: style,
+              tooltip: "Refresh",
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+        body: FutureBuilder(
+            future: fetchBook(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                if (!snapshot.hasData) {
+                  return const Column(
+                    children: [
+                      Text(
+                        "Tidak ada data buku.",
+                        style:
+                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  );
+                } else {
+                  return ListView.builder(
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 10, right: 10),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (_, index) => InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LibrarianDetailBookPage(
+                                                  book: snapshot.data![index])))
+                                  .then((_) {
+                                // auto update book data
+                                setState(() {});
+                              });
+                            },
+                            child:
+                                LibrarianBookTile(book: snapshot.data![index]),
+                          ));
+                }
               }
-          ),
-          IconButton(
-            style: style,
-            tooltip: "Sort By",
-            icon: const Icon(Icons.sort_by_alpha_outlined),
-            onPressed: () {
-              _openSortModal(context);
-            }
-          ),
-          IconButton(
-            style: style,
-            tooltip: "Search",
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>
-                      const LibrarianCatalogSearchPage())).then((_){
-                          // auto update book data
-                          setState((){});
-                        });
-            },
-          ),
-          IconButton(
-            style: style,
-            tooltip: "Refresh",
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              setState(() {});
-            },
-          ),
-        ],
-      ),
-      body: FutureBuilder(
-        future: fetchBook(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            if (!snapshot.hasData) {
-              return const Column(
-                children: [
-                  Text(
-                    "Tidak ada data buku.",
-                    style:
-                        TextStyle(color: Color(0xff59A5D8), fontSize: 20),
-                  ),
-                  SizedBox(height: 8),
-                ],
-              );
-            } else {
-              return ListView.builder(
-                padding: const EdgeInsets.only(
-                  top: 10, bottom: 10, left: 10, right: 10),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) => InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>
-                      LibrarianDetailBookPage(book: snapshot.data![index]))).then((_){
-                          // auto update book data
-                          setState((){});
-                        });
-                  },
-                  child: LibrarianBookTile(book: snapshot.data![index]),
-                )
-              );
-            }
-          }
-        }
-      )
-    );
+            }));
   }
 }

@@ -1,14 +1,8 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:letterbookd/forum/models/thread.dart';
-import 'package:letterbookd/forum/screens/forum_home.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class AddForumPage extends StatefulWidget {
   const AddForumPage({super.key});
@@ -29,7 +23,7 @@ class _AddForumPageState extends State<AddForumPage> {
   ) async {
     try {
       final response = await request.post(
-          '${AppData().url}/forum/create-json/',
+          '${app_data.baseUrl}/forum/create-json/',
           jsonEncode(
             {
               'title': title,

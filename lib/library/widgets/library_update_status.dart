@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LibraryUpdateModal extends StatefulWidget {
-  const LibraryUpdateModal({Key? key}) : super(key: key);
+  const LibraryUpdateModal({super.key});
 
   @override
   State<LibraryUpdateModal> createState() => _LibraryUpdateModal();
@@ -10,9 +10,9 @@ class LibraryUpdateModal extends StatefulWidget {
 class _LibraryUpdateModal extends State<LibraryUpdateModal> {
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return const Dialog(
         child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.0),
       child: Column(),
     ));
   }

@@ -5,9 +5,7 @@ import 'package:letterbookd/forum/models/thread.dart';
 import 'package:letterbookd/forum/screens/add_edit_forum.dart';
 import 'package:letterbookd/forum/screens/forum_detail.dart';
 import 'package:letterbookd/forum/widgets/threadbox.dart';
-import 'package:letterbookd/main.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +19,7 @@ class ForumHome extends StatefulWidget {
 class _ForumHomeState extends State<ForumHome> {
   Future<Map<String, List<Thread>>> _fetchThread(CookieRequest request) async {
     try {
-      final response = await request.get('${AppData().url}/forum/json/');
+      final response = await request.get('${app_data.baseUrl}/forum/json/');
       List<Thread> result = [];
       List<Thread> popularResult = [];
       for (var i in response['threads']) {

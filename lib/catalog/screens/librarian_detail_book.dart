@@ -2,60 +2,59 @@ import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/catalog/screens/librarian_edit_book.dart';
 import 'package:letterbookd/core/screens/librarian_homepage.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'dart:convert';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class LibrarianDetailBookPage extends StatefulWidget{
+class LibrarianDetailBookPage extends StatefulWidget {
   final Book book;
 
   const LibrarianDetailBookPage({super.key, required this.book});
 
   @override
-  State<LibrarianDetailBookPage> createState() => _LibrarianDetailBookPageState();
-
+  State<LibrarianDetailBookPage> createState() =>
+      _LibrarianDetailBookPageState();
 }
 
-class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
+class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage> {
   late Book book;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize with the provided book data
     book = widget.book;
   }
 
   _showAlertDialog(BuildContext context, CookieRequest request) {
-
     // set up the buttons
     Widget cancelButton = TextButton(
       child: const Text("Cancel"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget deleteButton = TextButton(
       child: const Text("Delete"),
-      onPressed:  () async {
+      onPressed: () async {
         final response = await _deleteBook(request);
         if (!context.mounted) return;
         if (response['status'] == 'success') {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("Buku '${book.fields.title}' berhasil dihapus!"),
-            ));
-            
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-              const LibrarianHomePage()), (Route<dynamic> route) => false);
+          ));
+
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => const LibrarianHomePage()),
+              (Route<dynamic> route) => false);
         } else {
-            ScaffoldMessenger.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(const SnackBar(
-                content:
-                    Text("Terdapat kesalahan, silakan coba lagi.")));
+                content: Text("Terdapat kesalahan, silakan coba lagi.")));
         }
       },
     );
@@ -83,11 +82,11 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
     CookieRequest request,
   ) async {
     final response = await request.postJson(
-                      '${AppData().url}/catalog/delete-book-flutter/',
-                      jsonEncode(<String, String>{
-                          'id': book.pk.toString(),
-                      }));
-    
+        '${app_data.baseUrl}/catalog/delete-book-flutter/',
+        jsonEncode(<String, String>{
+          'id': book.pk.toString(),
+        }));
+
     return response;
   }
 
@@ -109,14 +108,14 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
               icon: const Icon(Icons.edit),
               onPressed: () async {
                 var value = await Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                          return EditBookPage(book: book);
-                        }));
+                    MaterialPageRoute(builder: (context) {
+                  return EditBookPage(book: book);
+                }));
 
                 if (value != null) {
                   setState(() {
                     // update edited book data
-                      book = value;
+                    book = value;
                   });
                 }
               }),
@@ -130,25 +129,30 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+        padding:
+            const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: SizedBox(
-              width: 180,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: AspectRatio(
-                  aspectRatio: AppData().bookAspectRatio,
-                  child: Image.network(book.fields.thumbnail, fit: BoxFit.fitHeight),
-                  ),
-                )
-              ),
+            Center(
+              child: SizedBox(
+                  width: 180,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: AspectRatio(
+                      aspectRatio: app_data.bookAspectRatio,
+                      child: Image.network(book.fields.thumbnail,
+                          fit: BoxFit.fitHeight),
+                    ),
+                  )),
             ),
             const SizedBox(height: 20.0),
             const Text(
               "ISBN",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
@@ -160,7 +164,10 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
             const SizedBox(height: 20.0),
             const Text(
               "Title",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
@@ -172,7 +179,10 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
             const SizedBox(height: 20.0),
             const Text(
               "Authors",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
@@ -184,7 +194,10 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
             const SizedBox(height: 20.0),
             const Text(
               "Published year",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
@@ -196,47 +209,70 @@ class _LibrarianDetailBookPageState extends State<LibrarianDetailBookPage>{
             const SizedBox(height: 20.0),
             const Text(
               "Categories",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
               book.fields.categories,
-              style: const TextStyle(fontSize: 15.0,),
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
             ),
             const SizedBox(height: 20.0),
             const Text(
               "Page Count",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
               '${book.fields.pageCount}',
-              style: const TextStyle(fontSize: 15.0,),
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
             ),
             const SizedBox(height: 20.0),
             const Text(
               "Overall rating",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
               '${book.fields.overallRating}',
-              style: const TextStyle(fontSize: 15.0,),
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
             ),
             const SizedBox(height: 20.0),
             const Text(
               "Favorites count",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 7.0),
             Text(
               '${book.fields.favoritesCount}',
-              style: const TextStyle(fontSize: 15.0,),
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
             ),
             const SizedBox(height: 25.0),
             const Text(
               "Description",
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10.0),
             Text(

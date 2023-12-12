@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-// import 'package:letterbookd/library/models/librarybook.dart';
+import 'package:letterbookd/library/screens/library_home.dart';
 import 'package:letterbookd/library/widgets/library_detail_actions.dart';
 import 'package:letterbookd/library/widgets/library_detail_header.dart';
 
 class LibraryBookDetailPage extends StatefulWidget {
-  // TODO: final LibraryBook libBook;
+  final LibraryItem item;
 
-  const LibraryBookDetailPage({super.key});
+  const LibraryBookDetailPage({super.key, required this.item});
 
   @override
   State<LibraryBookDetailPage> createState() => _LibraryBookDetailPageState();
 }
 
 class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
-  // TODO: replace with const LibraryBookDetailPage({Key? key, required this.libBook}) : super(key: key);
-
   void _editStatus(BuildContext context) {
     var currencies = [
       "Food",
@@ -78,14 +76,22 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
     );
   }
 
+  // TODO: delete library book from library
   void _deleteFromLibrary(BuildContext context) {
+    // STEP 1: navigate back to previous, show snackbar as a progress start
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        behavior: SnackBarBehavior.floating,
-        content: Text('Removing from library'),
-      ),
-    );
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Removing from library'),
+        ),
+      );
+
+    // STEP 2: send delete POST request
+
+    // STEP 3: update with snackbar and refresh library
   }
 
   @override
@@ -116,19 +122,34 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
         margin: const EdgeInsets.only(top: 16),
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // HEADER: Cover, Title, Author(s), Year, Tracking status
-            const LibraryDetailHeader(),
+            LibraryDetailHeader(item: widget.item),
 
             // ACTIONS: Favorite, Open in catalog, See reviews
-            const LibraryDetailActions(),
+            LibraryDetailActions(item: widget.item),
 
             // BODY: description
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', // TODO: replace with libBook.fields.amount
-              textAlign: TextAlign.justify,
-              style: Theme.of(context).textTheme.bodyMedium,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Description",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                Text(
+                  widget.item.bookData.fields.description,
+                  textAlign: TextAlign.justify,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
             ),
           ],
         ),

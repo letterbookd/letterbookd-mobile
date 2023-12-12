@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -28,18 +28,18 @@ class _AddBookPageState extends State<AddBookPage> {
     CookieRequest request,
   ) async {
     final response = await request.postJson(
-                      '${AppData().url}/catalog/add-book-flutter/',
-                      jsonEncode(<String, String>{
-                          'isbn13': _isbn13,
-                          'title': _title,
-                          'authors': _authors,
-                          'categories': _categories,
-                          'thumbnail': _thumbnail,
-                          'description': _description,
-                          'publised_year': _publishedYear,
-                          'page_count': _pageCount,
-                      }));
-    
+        '${app_data.baseUrl}/catalog/add-book-flutter/',
+        jsonEncode(<String, String>{
+          'isbn13': _isbn13,
+          'title': _title,
+          'authors': _authors,
+          'categories': _categories,
+          'thumbnail': _thumbnail,
+          'description': _description,
+          'publised_year': _publishedYear,
+          'page_count': _pageCount,
+        }));
+
     return response;
   }
 
@@ -84,8 +84,9 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Title: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -107,8 +108,9 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Authors: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -130,8 +132,9 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Categories: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -153,8 +156,9 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Thumbnail: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -176,8 +180,9 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Published year: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -202,8 +207,9 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Page count: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -228,8 +234,9 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Description: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -252,9 +259,12 @@ class _AddBookPageState extends State<AddBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
@@ -269,17 +279,17 @@ class _AddBookPageState extends State<AddBookPage> {
                           final response = await _addBook(request);
                           if (!context.mounted) return;
                           if (response['status'] == 'success') {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
                               content: Text("Buku baru berhasil ditambahkan!"),
-                              ));
-                              Navigator.pop(context);
+                            ));
+                            Navigator.pop(context);
                           } else {
-                              ScaffoldMessenger.of(context)
+                            ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(const SnackBar(
-                                  content:
-                                      Text("Terdapat kesalahan, silakan coba lagi.")));
+                                  content: Text(
+                                      "Terdapat kesalahan, silakan coba lagi.")));
                           }
                         }
                       },

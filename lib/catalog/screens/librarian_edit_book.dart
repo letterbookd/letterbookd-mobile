@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
-import 'package:letterbookd/main.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -32,26 +32,26 @@ class _EditBookPageState extends State<EditBookPage> {
     CookieRequest request,
   ) async {
     final response = await request.postJson(
-                      '${AppData().url}/catalog/edit-book-flutter/',
-                      jsonEncode(<String, String>{
-                          'pk': _currentBook.pk.toString(),
-                          'isbn13': _isbn13,
-                          'title': _title,
-                          'authors': _authors,
-                          'categories': _categories,
-                          'thumbnail': _thumbnail,
-                          'description': _description,
-                          'publised_year': _publishedYear,
-                          'page_count': _pageCount,
-                      }));
-    
+        '${app_data.baseUrl}/catalog/edit-book-flutter/',
+        jsonEncode(<String, String>{
+          'pk': _currentBook.pk.toString(),
+          'isbn13': _isbn13,
+          'title': _title,
+          'authors': _authors,
+          'categories': _categories,
+          'thumbnail': _thumbnail,
+          'description': _description,
+          'publised_year': _publishedYear,
+          'page_count': _pageCount,
+        }));
+
     return response;
   }
 
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize with the provided book data
     _currentBook = widget.book;
     _isbn13 = _currentBook.fields.isbn13.toString();
@@ -106,8 +106,9 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Title: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -130,8 +131,9 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Authors: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -154,8 +156,9 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Categories: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -178,8 +181,9 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Thumbnail: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -202,8 +206,9 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Published year: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -229,8 +234,9 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Page count: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -256,8 +262,9 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Text("Description: "),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -281,9 +288,12 @@ class _EditBookPageState extends State<EditBookPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
@@ -297,21 +307,21 @@ class _EditBookPageState extends State<EditBookPage> {
                         if (_formKey.currentState!.validate()) {
                           final response = await _editBook(request);
                           if (!context.mounted) return;
-                          
+
                           if (response['status'] == 'success') {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
                               content: Text("Buku berhasil diedit!"),
-                              ));
+                            ));
 
-                              Navigator.pop(context, Book.fromJson(response['book_data'][0]));
-
+                            Navigator.pop(context,
+                                Book.fromJson(response['book_data'][0]));
                           } else {
-                              ScaffoldMessenger.of(context)
+                            ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(const SnackBar(
-                                  content:
-                                      Text("Terdapat kesalahan, silakan coba lagi.")));
+                                  content: Text(
+                                      "Terdapat kesalahan, silakan coba lagi.")));
                           }
                         }
                       },
