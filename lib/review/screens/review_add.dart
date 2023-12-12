@@ -1,5 +1,5 @@
-// import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class AddFormPage extends StatefulWidget {
 class _AddFormPageState extends State<AddFormPage> {
   final _formKey = GlobalKey<FormState>();
   String _statusOnReview = ""; // Get the value from your library module here
-  int _starsRating = 0;
+  double _starsRating = 0;
   String _reviewText = "";
 
   void _submitForm() {
@@ -44,7 +44,28 @@ class _AddFormPageState extends State<AddFormPage> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RatingBar.builder(
+                initialRating: _starsRating,
+                minRating: 0,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 32.0,
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    _starsRating = rating;
+                  });
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
@@ -52,7 +73,7 @@ class _AddFormPageState extends State<AddFormPage> {
                 readOnly: true,
                 decoration: InputDecoration(
                   hintText: "Status on Review",
-                  labelText: "Status on Review",
+                  labelText: "UNTRACKED",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   ),
@@ -61,33 +82,12 @@ class _AddFormPageState extends State<AddFormPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Rating",
-                  labelText: "Rating",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                onChanged: (String? value) {
+              child: TextField(
+                onChanged: (value) {
                   setState(() {
-                    _starsRating = int.parse(value!);
+                    _reviewText = value;
                   });
                 },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Shouldn't be Empty!";
-                  }
-                  if (int.tryParse(value) == null) {
-                    return "Should be an Integer";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
                 decoration: InputDecoration(
                   hintText: "Review Text",
                   labelText: "Review Text",
@@ -95,17 +95,7 @@ class _AddFormPageState extends State<AddFormPage> {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _reviewText = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Shouldn't be Empty!";
-                  }
-                  return null;
-                },
+                maxLines: 3, // Adjust the number of lines as needed
               ),
             ),
             Align(
@@ -116,8 +106,43 @@ class _AddFormPageState extends State<AddFormPage> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
-                  onPressed: _submitForm,
-                  child: const Text('Submit'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Review successfuly created!'),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Stars Rating: $_starsRating '),
+                                  Text('Status on Review: $_statusOnReview'),
+                                  Text('Review: $_reviewText'),
+
+                                  // TODO: Munculkan value-value lainnya
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      _formKey.currentState!.reset();
+                    }
+                  },
+                  child: const Text(
+                    "Save",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),

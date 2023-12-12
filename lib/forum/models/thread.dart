@@ -1,6 +1,8 @@
+// ignore_for_file: unnecessary_new, unnecessary_this, prefer_collection_literals
+
 class Threads {
   List<Thread>? threads;
-
+  List<Thread>? threadsByLike;
   Threads({this.threads});
 
   Threads.fromJson(Map<String, dynamic> json) {
@@ -8,6 +10,12 @@ class Threads {
       threads = <Thread>[];
       json['threads'].forEach((v) {
         threads!.add(Thread.fromJson(v));
+      });
+    }
+    if (json['threads_by_like'] != null) {
+      threadsByLike = <Thread>[];
+      json['threads_by_like'].forEach((v) {
+        threadsByLike!.add(new Thread.fromJson(v));
       });
     }
   }
@@ -48,7 +56,7 @@ class Thread {
 class Fields {
   String? title;
   String? content;
-  int? createdBy;
+  String? createdBy;
   String? createdAt;
   String? updatedAt;
 
