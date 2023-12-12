@@ -106,8 +106,43 @@ class _AddFormPageState extends State<AddFormPage> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
-                  onPressed: _submitForm,
-                  child: const Text('Submit'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Review successfuly created!'),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Stars Rating: $_starsRating '),
+                                  Text('Status on Review: $_statusOnReview'),
+                                  Text('Review: $_reviewText'),
+
+                                  // TODO: Munculkan value-value lainnya
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      _formKey.currentState!.reset();
+                    }
+                  },
+                  child: const Text(
+                    "Save",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
