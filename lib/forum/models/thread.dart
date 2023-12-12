@@ -9,7 +9,7 @@ class Threads {
     if (json['threads'] != null) {
       threads = <Thread>[];
       json['threads'].forEach((v) {
-        threads!.add(new Thread.fromJson(v));
+        threads!.add(Thread.fromJson(v));
       });
     }
     if (json['threads_by_like'] != null) {
@@ -21,9 +21,9 @@ class Threads {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.threads != null) {
-      data['threads'] = this.threads!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (threads != null) {
+      data['threads'] = threads!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -39,8 +39,7 @@ class Thread {
   Thread.fromJson(Map<String, dynamic> json) {
     model = json['model'];
     pk = json['pk'];
-    fields =
-        json['fields'] != null ? new Fields.fromJson(json['fields']) : null;
+    fields = json['fields'] != null ? Fields.fromJson(json['fields']) : null;
   }
 
   Map<String, dynamic> toJson() {
