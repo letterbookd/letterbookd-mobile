@@ -5,6 +5,8 @@ import 'package:letterbookd/reader/models/reader.dart';
 import 'package:letterbookd/reader/screens/reader_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:letterbookd/library/models/librarybook.dart';
+import 'package:letterbookd/library/models/library.dart';
 
 class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
@@ -13,11 +15,21 @@ class ReaderHome extends StatefulWidget {
   ReaderHomeState createState() => ReaderHomeState();
 }
 
+class BookDisplayInfo {
+  final String title;
+  // final String authors;
+  final String thumbnail;
+
+  BookDisplayInfo({required this.title, required this.thumbnail});
+}
+
 class ReaderHomeState extends State<ReaderHome> {
   bool isSearchMode = false;
   bool hasSearched = false;
   List<ReaderElement> listReaders = [];
   TextEditingController searchController = TextEditingController();
+  String? _username;
+  bool _shareLibrary = false;
 
   Future<String?> _getSavedUsername() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -26,7 +38,6 @@ class ReaderHomeState extends State<ReaderHome> {
 
   Future<ReaderElement?> fetchReaders() async {
     String? username = await _getSavedUsername();
-
     if (username != null) {
       var url = Uri.parse('${app_data.baseUrl}/reader/get-reader-json/');
       var response = await http.get(
@@ -40,12 +51,20 @@ class ReaderHomeState extends State<ReaderHome> {
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
         return ReaderElement.fromJson(jsonData);
-      } else {
-        throw Exception('Failed to load reader');
       }
     }
-
     return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  void _loadUsername() async {
+    _username = await _getSavedUsername();
+    setState(() {});
   }
 
   Future<List<ReaderElement>> searchReaders(String query) async {
@@ -82,6 +101,21 @@ class ReaderHomeState extends State<ReaderHome> {
     return [];
   }
 
+  Future<List<dynamic>> fetchLibrary(String username) async {
+    var url =
+        Uri.parse('${app_data.baseUrl}/reader/reader-library-api/$username');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+      throw Exception('Failed to load library');
+    }
+  }
+
+  /*
   Widget _buildBody(BuildContext context, List<ReaderElement> readers) {
     return ListView(
       children: [
@@ -139,6 +173,115 @@ class ReaderHomeState extends State<ReaderHome> {
             },
           ),
       ],
+    );
+  }
+  */
+
+  Widget _buildBody(BuildContext context, List<ReaderElement> readers) {
+    return ListView(
+      children: [
+        const SizedBox(height: 16),
+        // Display search results or user profile
+        if (isSearchMode)
+          _buildSearchResults(context, readers)
+        else
+          FutureBuilder<ReaderElement?>(
+            future: fetchReaders(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return const Center(child: Text("Tidak ada data pembaca."));
+              } else {
+                _shareLibrary =
+                    snapshot.data!.preferences.shareLibrary ?? false;
+                final reader = snapshot.data!;
+                return Column(
+                  children: [
+                    const Center(
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
+                      ),
+                    ),
+                    _buildUserInfoCard('Username', reader.displayName),
+                    _buildUserInfoCard('Bio', reader.bio),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditProfileScreen(),
+                          ),
+                        ).then((result) {
+                          if (result != null && result == true) {
+                            setState(() {});
+                          }
+                        });
+                      },
+                      child: const SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          'Edit Profile',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    // Show library reader
+                    if (_shareLibrary)
+                      FutureBuilder<List<dynamic>>(
+                        future: _username != null
+                            ? fetchLibrary(_username!)
+                            : Future.value([]),
+                        builder: (context, librarySnapshot) {
+                          if (librarySnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (librarySnapshot.hasError) {
+                            return Text('Error: ${librarySnapshot.error}');
+                          } else if (librarySnapshot.hasData) {
+                            return _buildLibraryList(librarySnapshot.data!);
+                          } else {
+                            return const Text('No books found');
+                          }
+                        },
+                      ),
+                  ],
+                );
+              }
+            },
+          ),
+      ],
+    );
+  }
+
+  Widget _buildLibraryList(List<dynamic> jsonBooks) {
+    // Konversi JSON ke BookDisplayInfo
+    List<BookDisplayInfo> books = jsonBooks.map((jsonBook) {
+      return BookDisplayInfo(
+        title: jsonBook['title'],
+        // authors: jsonBook['authors'],
+        thumbnail: jsonBook['thumbnail'],
+      );
+    }).toList();
+
+    // Tampilkan daftar buku
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: books.length,
+      itemBuilder: (context, index) {
+        var book = books[index];
+        return ListTile(
+          title: Text(book.title),
+          // subtitle: Text(book.authors),
+          leading:
+              book.thumbnail.isNotEmpty ? Image.network(book.thumbnail) : null,
+        );
+      },
     );
   }
 
@@ -212,7 +355,7 @@ class ReaderHomeState extends State<ReaderHome> {
 
   AppBar _buildRegularAppBar() {
     return AppBar(
-      title: const Text('Readers'),
+      title: const Text('Reader'),
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.search),
