@@ -5,8 +5,7 @@ import 'package:letterbookd/reader/models/reader.dart';
 import 'package:letterbookd/reader/screens/reader_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:letterbookd/library/models/librarybook.dart';
-import 'package:letterbookd/library/models/library.dart';
+import 'package:letterbookd/reader/models/readerreviews.dart';
 
 class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
@@ -30,6 +29,7 @@ class ReaderHomeState extends State<ReaderHome> {
   TextEditingController searchController = TextEditingController();
   String? _username;
   bool _shareLibrary = false;
+  bool _shareReview = false;
 
   Future<String?> _getSavedUsername() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -109,73 +109,22 @@ class ReaderHomeState extends State<ReaderHome> {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      print('Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
       throw Exception('Failed to load library');
     }
   }
 
-  /*
-  Widget _buildBody(BuildContext context, List<ReaderElement> readers) {
-    return ListView(
-      children: [
-        const SizedBox(height: 16),
-        // Display search results or user profile
-        if (isSearchMode)
-          _buildSearchResults(context, readers)
-        else
-          FutureBuilder<ReaderElement?>(
-            future: fetchReaders(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(child: Text("Tidak ada data pembaca."));
-              } else {
-                final reader = snapshot.data!;
-                return Column(
-                  children: [
-                    const Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
-                      ),
-                    ),
-                    _buildUserInfoCard('Username', reader.displayName),
-                    _buildUserInfoCard('Bio', reader.bio),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EditProfileScreen(),
-                          ),
-                        ).then((result) {
-                          if (result != null && result == true) {
-                            setState(() {});
-                          }
-                        });
-                      },
-                      child: const SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          'Edit Profile',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }
-            },
-          ),
-      ],
-    );
+  Future<List<Review>> fetchReviews(String username) async {
+    var url =
+        Uri.parse('${app_data.baseUrl}/reader/reader-review-api/$username');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonReviews = json.decode(response.body);
+      return jsonReviews.map((json) => Review.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load reviews');
+    }
   }
-  */
 
   Widget _buildBody(BuildContext context, List<ReaderElement> readers) {
     return ListView(
@@ -197,18 +146,39 @@ class ReaderHomeState extends State<ReaderHome> {
               } else {
                 _shareLibrary =
                     snapshot.data!.preferences.shareLibrary ?? false;
+                _shareReview = snapshot.data!.preferences.shareReviews ?? false;
                 final reader = snapshot.data!;
                 return Column(
-                  children: [
-                    const Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const CircleAvatar(
+                      radius: 50.0,
+                      backgroundImage: AssetImage('assets/images/pfp_0.jpg'),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      reader.displayName,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    _buildUserInfoCard('Username', reader.displayName),
-                    _buildUserInfoCard('Bio', reader.bio),
-                    const SizedBox(height: 16),
+                    Text(
+                      '@${reader.displayName}',
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                        reader.bio,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -223,7 +193,6 @@ class ReaderHomeState extends State<ReaderHome> {
                         });
                       },
                       child: const SizedBox(
-                        width: double.infinity,
                         child: Text(
                           'Edit Profile',
                           textAlign: TextAlign.center,
@@ -249,6 +218,40 @@ class ReaderHomeState extends State<ReaderHome> {
                           }
                         },
                       ),
+
+                    const SizedBox(height: 20),
+
+                    // Reader's review section
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text("Reviews",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold)),
+                    ),
+
+                    // Show reviews
+                    if (_shareReview)
+                      FutureBuilder<List<Review>>(
+                        future: _username != null
+                            ? fetchReviews(_username!)
+                            : Future.value([]),
+                        builder: (context, reviewSnapshot) {
+                          if (reviewSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (reviewSnapshot.hasError) {
+                            return Text('Error: ${reviewSnapshot.error}');
+                          } else if (reviewSnapshot.hasData &&
+                              reviewSnapshot.data!.isNotEmpty) {
+                            return _buildReviewList(reviewSnapshot.data!);
+                          } else {
+                            return const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text('No reviews found'),
+                            );
+                          }
+                        },
+                      ),
                   ],
                 );
               }
@@ -259,43 +262,125 @@ class ReaderHomeState extends State<ReaderHome> {
   }
 
   Widget _buildLibraryList(List<dynamic> jsonBooks) {
-    // Konversi JSON ke BookDisplayInfo
+    // Convert JSON ke BookDisplayInfo
     List<BookDisplayInfo> books = jsonBooks.map((jsonBook) {
       return BookDisplayInfo(
         title: jsonBook['title'],
-        // authors: jsonBook['authors'],
         thumbnail: jsonBook['thumbnail'],
       );
     }).toList();
 
-    // Tampilkan daftar buku
-    return ListView.builder(
+    // Display book list with centered title
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text("Your Library",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        ),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: 0.6,
+            crossAxisCount: 3,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
+          ),
+          itemCount: books.length,
+          itemBuilder: (context, index) {
+            var book = books[index];
+            return InkWell(
+              child: Card(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      child: book.thumbnail.isNotEmpty
+                          ? Image.network(
+                              book.thumbnail,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              color: Colors
+                                  .grey), // Placeholder jika tidak ada gambar
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        book.title,
+                        style: const TextStyle(fontSize: 16),
+                        overflow: TextOverflow.visible,
+                        maxLines: 3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReviewList(List<Review> reviews) {
+    return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: books.length,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(8),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0,
+        childAspectRatio: 1 / 0.6,
+      ),
+      itemCount: reviews.length,
       itemBuilder: (context, index) {
-        var book = books[index];
-        return ListTile(
-          title: Text(book.title),
-          // subtitle: Text(book.authors),
-          leading:
-              book.thumbnail.isNotEmpty ? Image.network(book.thumbnail) : null,
-        );
+        return _buildReviewCard(reviews[index]);
       },
     );
   }
 
-  /*
-  Widget _buildSearchResults(
-      BuildContext context, List<ReaderElement> readers) {
-    debugPrint(readers.toString());
-    return Column(
-      children: [
-        for (var reader in readers) _buildReaderCard(reader),
-      ],
+  Widget _buildReviewCard(Review review) {
+    return Card(
+      margin: const EdgeInsets.all(4),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                review.bookTitle,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
+            Text(
+              review.reviewText,
+              style: const TextStyle(fontSize: 14),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              '${review.starsRating} Stars',
+              style: const TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
+      ),
     );
   }
-  */
 
   Widget _buildSearchResults(
       BuildContext context, List<ReaderElement> readers) {
@@ -313,23 +398,6 @@ class ReaderHomeState extends State<ReaderHome> {
       ],
     );
   }
-
-  /*
-  Widget _buildReaderCard(ReaderElement reader) {
-    return Card(
-      margin: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: Text(reader.displayName),
-            subtitle: Text(reader.bio),
-          ),
-        ],
-      ),
-    );
-  }
-  */
 
   Widget _buildReaderCard(ReaderElement reader) {
     return Card(
