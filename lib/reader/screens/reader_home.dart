@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:letterbookd/authenticate/screens/login.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/reader/models/reader.dart';
 import 'package:letterbookd/reader/screens/reader_settings.dart';
@@ -123,6 +126,47 @@ class ReaderHomeState extends State<ReaderHome> {
       return jsonReviews.map((json) => Review.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load reviews');
+    }
+  }
+
+  Future<void> logout() async {
+    String? username = await _getSavedUsername();
+    if (username == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Kamu sudah logout atau belum masuk.'),
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+      return;
+    }
+
+    var url = Uri.parse('${app_data.baseUrl}/auth/logout/');
+    var response = await http.get(url, headers: {
+      "Content-Type": "application/json",
+    });
+
+    if (response.statusCode == 200) {
+      // Logout berhasil
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sampai jumpa, $username.'),
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    } else {
+      // Logout gagal
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Logout gagal. Silakan coba lagi.'),
+        ),
+      );
     }
   }
 
@@ -384,14 +428,14 @@ class ReaderHomeState extends State<ReaderHome> {
 
   Widget _buildSearchResults(
       BuildContext context, List<ReaderElement> readers) {
-    // Jika daftar readers kosong, tampilkan pesan "No readers found"
+    // Jika list readers kosong, tampilkan pesan "No readers found"
     if (readers.isEmpty && hasSearched) {
       return const Center(
         child: Text('No readers found'),
       );
     }
 
-    // Jika ada hasil, tampilkan kartu pembaca
+    // Jika tidak, tampilkan reader
     return Column(
       children: [
         for (var reader in readers) _buildReaderCard(reader),
@@ -405,7 +449,7 @@ class ReaderHomeState extends State<ReaderHome> {
       child: ListTile(
         leading: const CircleAvatar(
           backgroundImage:
-              AssetImage('assets/images/pfp_0.jpg'), // Gambar profil
+              AssetImage('assets/images/pfp_0.jpg'), // profile picture
         ),
         title: Text(reader.displayName),
         subtitle: Text(reader.bio),
@@ -434,6 +478,12 @@ class ReaderHomeState extends State<ReaderHome> {
               searchController.text = "";
               isSearchMode = true;
             });
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            logout();
           },
         ),
       ],
