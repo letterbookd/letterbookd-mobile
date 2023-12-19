@@ -6,8 +6,10 @@ import 'package:letterbookd/library/screens/library_home.dart';
 /// Grid tile for library homepage
 class LibraryGridTile extends StatelessWidget {
   final LibraryItem item;
+  final VoidCallback refreshLibrary;
 
-  const LibraryGridTile({super.key, required this.item});
+  const LibraryGridTile(
+      {super.key, required this.item, required this.refreshLibrary});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,16 @@ class LibraryGridTile extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => LibraryBookDetailPage(item: item),
             ),
-          );
+          ).then((value) {
+            print(value);
+            if (value == null) {
+              return;
+            }
+            if (value == true) {
+              // either deleted or edited
+              refreshLibrary;
+            }
+          });
         },
         child: Stack(
           alignment: AlignmentDirectional.center,
@@ -74,8 +85,10 @@ class LibraryGridTile extends StatelessWidget {
 // List tiel for library homepage
 class LibraryListTile extends StatelessWidget {
   final LibraryItem item;
+  final VoidCallback refreshLibrary;
 
-  const LibraryListTile({super.key, required this.item});
+  const LibraryListTile(
+      {super.key, required this.item, required this.refreshLibrary});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +99,16 @@ class LibraryListTile extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => LibraryBookDetailPage(item: item),
           ),
-        );
+        ).then((value) {
+          print(value);
+          if (value == null) {
+            return;
+          }
+          if (value == true) {
+            // either deleted or edited
+            refreshLibrary;
+          }
+        });
       },
       child: Card(
           child: Container(

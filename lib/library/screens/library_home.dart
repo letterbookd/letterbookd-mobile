@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/catalog/models/book.dart';
@@ -55,16 +53,30 @@ class LibraryHome extends StatefulWidget {
 class _LibraryHomeState extends State<LibraryHome> {
   late List<LibraryItem> _cachedLibraryItems;
   late List<LibraryItem> _sortedLibraryItems;
+  late List<Book> _cachedCatalogBooks;
 
   DisplayType _displayType = DisplayType.grid;
   SortBy _sortBy = SortBy.title;
   SortDirection _sortDirection = SortDirection.descending;
   FilterBy _filterBy = FilterBy.all;
 
-  void _addBookForm(BuildContext context) {
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LibraryAddForm()))
-        .then((value) => setState(() {}));
+  void _addBookForm(BuildContext context, CookieRequest request) async {
+    if (_cachedCatalogBooks.isEmpty) {
+      _cachedCatalogBooks = await _fetchBooks(request);
+    }
+    if (!context.mounted) return;
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => LibraryAddForm(
+                  books: _cachedCatalogBooks,
+                  libbook: _cachedLibraryItems,
+                ))).then((value) {
+      if (value == true) {
+        setState(() {});
+      }
+    });
   }
 
   void _openFilterModal(BuildContext context) {
@@ -112,6 +124,8 @@ class _LibraryHomeState extends State<LibraryHome> {
         newSortDir = SortDirection.ascending;
       } else if (value == "descending") {
         newSortDir = SortDirection.descending;
+      } else {
+        return;
       }
 
       setState(() {
@@ -132,7 +146,7 @@ class _LibraryHomeState extends State<LibraryHome> {
           content: Text('Refreshing library'),
         ),
       );
-    setState(() {});
+    setState(() {}); // refresh library
   }
 
   /// Getting all libraryBook in user
@@ -150,6 +164,22 @@ class _LibraryHomeState extends State<LibraryHome> {
     }
 
     return libraryItem;
+  }
+
+  /// Getting all books in catalog for adding to library
+  Future<List<Book>> _fetchBooks(
+    CookieRequest request,
+  ) async {
+    final response = await request.get('${app_data.baseUrl}/catalog/json/');
+
+    List<Book> books = [];
+    for (var d in response) {
+      if (d != null) {
+        books.add(Book.fromJson(d));
+      }
+    }
+
+    return books;
   }
 
   /// Apply sort and filter to library items
@@ -237,7 +267,7 @@ class _LibraryHomeState extends State<LibraryHome> {
                 tooltip: "Add book",
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  _addBookForm(context);
+                  _addBookForm(context, request);
                 }),
             IconButton(
                 style: style,
@@ -287,7 +317,7 @@ class _LibraryHomeState extends State<LibraryHome> {
                             ),
                             ElevatedButton(
                                 onPressed: () {
-                                  _addBookForm(context);
+                                  _addBookForm(context, request);
                                 },
                                 child: const Text("Add book")),
                           ],
@@ -295,6 +325,7 @@ class _LibraryHomeState extends State<LibraryHome> {
                       );
                     } else {
                       _cachedLibraryItems = snapshot.data;
+                      _cachedCatalogBooks = [];
                       _sortedLibraryItems = applySortAndFilters();
 
                       if (_sortedLibraryItems.isEmpty) {
@@ -334,6 +365,10 @@ class _LibraryHomeState extends State<LibraryHome> {
                             itemBuilder: (context, index) {
                               return LibraryListTile(
                                 item: _sortedLibraryItems[index],
+                                refreshLibrary: () {
+                                  print("#### pleae");
+                                  _refreshLibrary(context);
+                                },
                               );
                             });
                       }
@@ -352,6 +387,10 @@ class _LibraryHomeState extends State<LibraryHome> {
                             itemBuilder: (context, index) {
                               return LibraryGridTile(
                                 item: _sortedLibraryItems[index],
+                                refreshLibrary: () {
+                                  print("#### pleae");
+                                  _refreshLibrary(context);
+                                },
                               );
                             });
                       }

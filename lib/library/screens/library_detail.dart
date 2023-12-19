@@ -17,6 +17,7 @@ class LibraryBookDetailPage extends StatefulWidget {
 
 class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
   void _editStatus(BuildContext context) {
+    // TODO: turn this into radio buttons insted cuz fuck that
     var currencies = [
       "Food",
       "Transport",
@@ -27,7 +28,7 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
       "Movie",
       "Salary"
     ];
-    var _currentSelectedValue = '';
+    var _currentSelectedValue = currencies.first;
 
     showDialog(
       context: context,
@@ -103,18 +104,17 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
         ..showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text(response[
-                "message"]), // TODO: make it so the page refreshes or smthg
+            content: Text(response["message"]),
           ),
         );
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text("Error deleting book [${response.statusCode}]"),
+            content: Text("Error deleting book [${response["statusCode"]}]"),
           ),
         );
     }
