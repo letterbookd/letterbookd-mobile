@@ -80,6 +80,14 @@ class LibraryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LibraryBookDetailPage(item: item),
+          ),
+        );
+      },
       child: Card(
           child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
