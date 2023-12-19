@@ -361,7 +361,7 @@ class _LibraryHomeState extends State<LibraryHome> {
                         return ListView.builder(
                             padding: const EdgeInsets.only(
                                 top: 10, bottom: 10, left: 10, right: 10),
-                            itemCount: snapshot.data!.length,
+                            itemCount: _sortedLibraryItems.length,
                             itemBuilder: (context, index) {
                               return LibraryListTile(
                                 item: _sortedLibraryItems[index],

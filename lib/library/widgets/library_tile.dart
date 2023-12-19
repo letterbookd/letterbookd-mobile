@@ -94,12 +94,14 @@ class LibraryListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
+        Navigator.of(context)
+            .push(
           MaterialPageRoute(
             builder: (context) => LibraryBookDetailPage(item: item),
           ),
-        ).then((value) {
+        )
+            .then((value) {
+          print("#done");
           print(value);
           if (value == null) {
             return;
