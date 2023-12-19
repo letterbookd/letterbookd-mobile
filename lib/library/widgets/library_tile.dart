@@ -130,7 +130,7 @@ class LibraryListTile extends StatelessWidget {
                         color: Theme.of(context).colorScheme.primary,
                         borderRadius: BorderRadius.circular(5.0)),
                     child: Text(
-                      LibraryData().trackingStatusList[
+                      app_data.trackingStatusList[
                           item.libraryData.fields.trackingStatus],
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary,

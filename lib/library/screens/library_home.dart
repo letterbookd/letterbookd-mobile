@@ -38,17 +38,6 @@ enum FilterBy {
   reviewed,
 }
 
-class LibraryData {
-  final List<String> trackingStatusList = [
-    "Untracked",
-    "Finished Reading",
-    "Currently Reading",
-    "On Hold",
-    "Planning to Read",
-    "Dropped",
-  ];
-}
-
 class LibraryItem {
   final LibraryBook libraryData;
   final Book bookData;
