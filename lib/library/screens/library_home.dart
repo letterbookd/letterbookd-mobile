@@ -338,21 +338,15 @@ class _LibraryHomeState extends State<LibraryHome> {
 
                       // build tile view
                       if (_displayType == DisplayType.list) {
-                        return const Text("todo");
-                        // return ListView.builder(
-                        //     padding: const EdgeInsets.only(
-                        //         top: 10, bottom: 10, left: 10, right: 10),
-                        //     itemCount: snapshot.data!.length,
-                        //     itemBuilder: (_, index) => InkWell(
-                        //           onTap: () {
-                        //             Navigator.push(context,
-                        //                 MaterialPageRoute(builder: (context) {
-                        //               return DetailBookPage(
-                        //                   book: snapshot.data![index]);
-                        //             }));
-                        //           },
-                        //           child: BookTile(book: snapshot.data![index]),
-                        //         ));
+                        return ListView.builder(
+                            padding: const EdgeInsets.only(
+                                top: 10, bottom: 10, left: 10, right: 10),
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              return LibraryListTile(
+                                item: _sortedLibraryItems[index],
+                              );
+                            });
                       }
 
                       // build grid view
@@ -367,7 +361,7 @@ class _LibraryHomeState extends State<LibraryHome> {
                             ),
                             itemCount: _sortedLibraryItems.length,
                             itemBuilder: (context, index) {
-                              return LibraryTile(
+                              return LibraryGridTile(
                                 item: _sortedLibraryItems[index],
                               );
                             });
