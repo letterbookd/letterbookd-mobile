@@ -16,7 +16,7 @@ class _LibraryAddFormState extends State<LibraryAddForm> {
     // STEP 1: Validate Form
 
     // STEP 2: POST request
-    var response = await request.post('${app_data.baseUrl}/library/api/add  /',
+    var response = await request.post('${app_data.baseUrl}/library/api/add/',
         {'book_id': "-1"}); // TODO: replace with actual id from form
 
     // STEP 3: PROCESS response

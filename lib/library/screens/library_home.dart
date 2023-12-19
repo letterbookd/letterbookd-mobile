@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/catalog/models/book.dart';
@@ -77,7 +79,7 @@ class _LibraryHomeState extends State<LibraryHome> {
   }
 
   void _openFilterModal(BuildContext context) {
-    showModalBottomSheet<void>(
+    showModalBottomSheet(
       useRootNavigator: true,
       showDragHandle: true,
       enableDrag: true,
@@ -85,7 +87,51 @@ class _LibraryHomeState extends State<LibraryHome> {
       builder: (BuildContext context) {
         return const LibraryFilterModal();
       },
-    );
+    ).then((value) {
+      SortBy? newSort;
+      FilterBy? newFilterBy;
+      SortDirection? newSortDir;
+      DisplayType? newDisplayType;
+
+      if (value == "title") {
+        newSort = SortBy.title;
+      } else if (value == "recentlyAdded") {
+        newSort = SortBy.recentlyAdded;
+      } else if (value == "trackingStatus") {
+        newSort = SortBy.trackingStatus;
+      } else if (value == "all") {
+        newFilterBy = FilterBy.all;
+      } else if (value == "favorites") {
+        newFilterBy = FilterBy.favorites;
+      } else if (value == "finished") {
+        newFilterBy = FilterBy.finished;
+      } else if (value == "reading") {
+        newFilterBy = FilterBy.reading;
+      } else if (value == "onHold") {
+        newFilterBy = FilterBy.onHold;
+      } else if (value == "planned") {
+        newFilterBy = FilterBy.planned;
+      } else if (value == "dropped") {
+        newFilterBy = FilterBy.dropped;
+      } else if (value == "reviewed") {
+        newFilterBy = FilterBy.reviewed;
+      } else if (value == "list") {
+        newDisplayType = DisplayType.list;
+      } else if (value == "grid") {
+        newDisplayType = DisplayType.grid;
+      } else if (value == "ascending") {
+        newSortDir = SortDirection.ascending;
+      } else if (value == "descending") {
+        newSortDir = SortDirection.descending;
+      }
+
+      setState(() {
+        _sortBy = newSort ?? _sortBy;
+        _filterBy = newFilterBy ?? _filterBy;
+        _sortDirection = newSortDir ?? _sortDirection;
+        _displayType = newDisplayType ?? _displayType;
+      });
+    });
   }
 
   void _refreshLibrary(BuildContext context) async {
@@ -254,13 +300,41 @@ class _LibraryHomeState extends State<LibraryHome> {
                                 onPressed: () {
                                   _addBookForm(context);
                                 },
-                                child: Text("Add book")),
+                                child: const Text("Add book")),
                           ],
                         ),
                       );
                     } else {
                       _cachedLibraryItems = snapshot.data;
                       _sortedLibraryItems = applySortAndFilters();
+
+                      if (_sortedLibraryItems.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "No book matching your filters",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _openFilterModal(context);
+                                  },
+                                  child: const Text("Open sort and filters")),
+                            ],
+                          ),
+                        );
+                      }
 
                       // build tile view
                       if (_displayType == DisplayType.list) {

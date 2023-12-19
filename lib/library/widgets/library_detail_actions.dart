@@ -35,8 +35,11 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
 
       // STEP 2: sends POST request to toggle current item favorite
       final response = await request.post(
-        '${app_data.baseUrl}/library/api/update/${widget.item.libraryData.fields.book}',
-        {"isFavorited": _isFavorited.toString()},
+        '${app_data.baseUrl}/library/api/update/',
+        {
+          "book_id": widget.item.libraryData.fields.book.toString(),
+          "isFavorited": _isFavorited.toString()
+        },
       );
       if (!context.mounted) return;
 
