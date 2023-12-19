@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/library/screens/library_home.dart';
 import 'package:letterbookd/library/widgets/library_detail_actions.dart';
 import 'package:letterbookd/library/widgets/library_detail_header.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class LibraryBookDetailPage extends StatefulWidget {
   final LibraryItem item;
@@ -76,8 +79,7 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
     );
   }
 
-  // TODO: delete library book from library
-  void _deleteFromLibrary(BuildContext context) {
+  void _deleteFromLibrary(BuildContext context, CookieRequest request) async {
     // STEP 1: navigate back to previous, show snackbar as a progress start
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context)
@@ -90,12 +92,37 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
       );
 
     // STEP 2: send delete POST request
+    var response = await request.post('${app_data.baseUrl}/library/api/remove/',
+        {'book_id': widget.item.bookData.pk.toString()});
+    if (!context.mounted) return;
 
     // STEP 3: update with snackbar and refresh library
+    if (response["status"]) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text(response[
+                "message"]), // TODO: make it so the page refreshes or smthg
+          ),
+        );
+      Navigator.pop(context, true);
+    } else {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text("Error deleting book [${response.statusCode}]"),
+          ),
+        );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     final ButtonStyle style = TextButton.styleFrom(
       foregroundColor: Theme.of(context).colorScheme.onBackground,
     );
@@ -114,7 +141,7 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
               tooltip: "Remove",
               icon: const Icon(Icons.delete),
               onPressed: () {
-                _deleteFromLibrary(context);
+                _deleteFromLibrary(context, request);
               }),
         ],
       ),

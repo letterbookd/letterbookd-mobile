@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/catalog/models/book.dart';
+import 'package:letterbookd/library/screens/library_add.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/library/models/librarybook.dart';
@@ -69,7 +70,11 @@ class _LibraryHomeState extends State<LibraryHome> {
   SortDirection _sortDirection = SortDirection.descending;
   FilterBy _filterBy = FilterBy.all;
 
-  void _addBookForm(BuildContext context) {}
+  void _addBookForm(BuildContext context) {
+    Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LibraryAddForm()))
+        .then((value) => setState(() {}));
+  }
 
   void _openFilterModal(BuildContext context) {
     showModalBottomSheet<void>(
@@ -227,16 +232,31 @@ class _LibraryHomeState extends State<LibraryHome> {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    if (!snapshot.hasData) {
-                      return const Column(
-                        children: [
-                          Text(
-                            "Tidak ada data buku.",
-                            style: TextStyle(
-                                color: Color(0xff59A5D8), fontSize: 20),
-                          ),
-                          SizedBox(height: 8),
-                        ],
+                    if (!snapshot.hasData || snapshot.data.length == 0) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Your library is empty :(",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  _addBookForm(context);
+                                },
+                                child: Text("Add book")),
+                          ],
+                        ),
                       );
                     } else {
                       _cachedLibraryItems = snapshot.data;
