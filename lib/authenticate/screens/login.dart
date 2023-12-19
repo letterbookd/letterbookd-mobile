@@ -3,6 +3,7 @@
 import 'package:letterbookd/core/screens/homepage.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:flutter/material.dart';
+import 'package:letterbookd/reader/screens/reader_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,6 +70,8 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () async {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
+
+                currentUsername = username;
 
                 final response =
                     await request.login("${app_data.baseUrl}/auth/login/", {
