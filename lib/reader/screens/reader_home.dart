@@ -163,7 +163,7 @@ class ReaderHomeState extends State<ReaderHome> {
                       ),
                     ),
                     Text(
-                      '@${reader.displayName}',
+                      '@$_username',
                       style: const TextStyle(
                         fontSize: 18.0,
                         color: Colors.grey,
