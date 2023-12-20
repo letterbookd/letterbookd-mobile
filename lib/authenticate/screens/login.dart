@@ -1,10 +1,12 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
-
-import 'package:letterbookd/core/screens/homepage.dart';
-import 'package:letterbookd/main.dart';
 import 'package:flutter/material.dart';
+import 'package:letterbookd/core/screens/homepage.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:letterbookd/reader/screens/reader_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:letterbookd/core/screens/librarian_homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:letterbookd/authenticate/screens/register.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -16,7 +18,7 @@ class LoginApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
+      title: 'Sign in to Letterbookd',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -29,7 +31,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -40,25 +42,34 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
       body: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text(
+              'Sign in to letterbookd',
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24.0),
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.person),
                 labelText: 'Username',
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12.0),
             TextField(
               controller: _passwordController,
               decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.password),
                 labelText: 'Password',
+                border: OutlineInputBorder(),
               ),
               obscureText: true,
             ),
@@ -68,27 +79,42 @@ class _LoginPageState extends State<LoginPage> {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
 
-                final response = await request.login(AppData().url, {
+                currentUsername = username;
+
+                final response =
+                    await request.login("${app_data.baseUrl}/auth/login/", {
                   'username': username,
                   'password': password,
                 });
 
+                if (!context.mounted) return;
                 if (request.loggedIn) {
-                  String message = response['message'];
                   String uname = response['username'];
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                  bool librarian = response['librarian'];
+                  saveUserDataToSharedPreferences(username);
+
+                  if (librarian) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LibrarianHomePage()),
+                    );
+                  } else {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
+                  }
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(SnackBar(
-                        content: Text("$message Selamat datang, $uname.")));
+                        behavior: SnackBarBehavior.floating,
+                        content: Text("Welcome to letterbookd, $uname")));
                 } else {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('Login Gagal'),
+                      title: const Text('Sign in failed'),
                       content: Text(response['message']),
                       actions: [
                         TextButton(
@@ -102,11 +128,36 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 }
               },
-              child: const Text('Login'),
+              child: const Text('Sign in'),
+            ),
+            const SizedBox(height: 12.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Don\'t have an account?'),
+                const SizedBox(width: 8.0),
+                // Teks bukan tombol
+                ElevatedButton(
+                  onPressed: () async {
+                    // Navigate to Login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: const Text('Sign up'),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> saveUserDataToSharedPreferences(String username) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
   }
 }
