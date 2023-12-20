@@ -40,24 +40,28 @@ class _LoginPageState extends State<LoginPage> {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Sign in to Letterbookd'),
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.person),
                 labelText: 'Username',
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12.0),
             TextField(
               controller: _passwordController,
               decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.password),
                 labelText: 'Password',
+                border: OutlineInputBorder(),
               ),
               obscureText: true,
             ),
@@ -94,12 +98,13 @@ class _LoginPageState extends State<LoginPage> {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(SnackBar(
-                        content: Text("$message Selamat datang, $uname.")));
+                        behavior: SnackBarBehavior.floating,
+                        content: Text("Welcome to letterbookd, $uname")));
                 } else {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('Login Gagal'),
+                      title: const Text('Sign in failed'),
                       content: Text(response['message']),
                       actions: [
                         TextButton(
@@ -113,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 }
               },
-              child: const Text('Login'),
+              child: const Text('Sign in'),
             ),
           ],
         ),

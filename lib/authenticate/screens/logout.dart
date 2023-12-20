@@ -10,7 +10,7 @@ class Logout {
     if (!context.mounted) return;
 
     if (response["status"]) {
-      _showMessage(context, 'Sampai jumpa, $request["username"].');
+      _showMessage(context, 'Signed out of ${response["username"]}');
       _navigateToLogin(context);
     } else {
       _showMessage(context, 'Logout gagal. Silakan coba lagi.');
@@ -20,7 +20,8 @@ class Logout {
   static void _showMessage(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+      ..showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating, content: Text(message)));
   }
 
   static void _navigateToLogin(BuildContext context) {
