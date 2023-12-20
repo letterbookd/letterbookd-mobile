@@ -7,7 +7,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:letterbookd/review/models/review.dart';
 
 void showReviewsBottomSheet(BuildContext context, int bookId) {
-  TextEditingController reviewController = TextEditingController();  
+  TextEditingController reviewController = TextEditingController();
   double? selectedRating;
 
   showModalBottomSheet(
@@ -20,17 +20,24 @@ void showReviewsBottomSheet(BuildContext context, int bookId) {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
+            const Text(
               'Book Reviews',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Expanded(
-              child: SingleChildScrollView( 
+              child: SingleChildScrollView(
                 child: buildReviewList(context, bookId),
               ),
             ),
-            ReviewInput(reviewController: reviewController, selectedRating: selectedRating, bookId: bookId,),
+            ReviewInput(
+              reviewController: reviewController,
+              selectedRating: selectedRating,
+              bookId: bookId,
+            ),
           ],
         ),
       );
@@ -43,13 +50,14 @@ Widget buildReviewList(BuildContext context, int bookId) {
     future: fetchReviewsByBookId(bookId),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       } else if (snapshot.hasError) {
         return Center(child: Text('Error: ${snapshot.error}'));
       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-        return Center(child: Text('No reviews found for this book'));
+        return const Center(child: Text('No reviews found for this book'));
       } else {
-        return Column( // Replace ListView.builder with Column
+        return Column(
+          // Replace ListView.builder with Column
           children: snapshot.data!
               .map<Widget>((review) => _buildReviewCard(context, review))
               .toList(),
@@ -101,7 +109,7 @@ Widget _buildReviewCard(BuildContext context, Review review) {
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Row(
-        mainAxisSize: MainAxisSize.min, 
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _buildStarRating(rating),
         ],
@@ -109,7 +117,6 @@ Widget _buildReviewCard(BuildContext context, Review review) {
     ),
   );
 }
-
 
 Widget _buildStarRating(double rating) {
   return Row(
@@ -143,10 +150,12 @@ Future<List<Review>> fetchReviewsByBookId(int bookId) async {
 }
 
 Future<String> fetchUsernameForReview(int userId) async {
-  final url = Uri.parse('${app_data.baseUrl}/review/get_username_by_id/$userId/');
+  final url =
+      Uri.parse('${app_data.baseUrl}/review/get_username_by_id/$userId/');
 
   try {
-    final response = await http.get(url, headers: {"Content-Type": "application/json"});
+    final response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data['username'];
@@ -162,7 +171,7 @@ Future<String> fetchUsernameForReview(int userId) async {
 
 Future<bool> submitReview(int bookId, String reviewText, double rating) async {
   var url = Uri.parse('${app_data.baseUrl}/review/create_review_flutter/');
-  
+
   var response = await http.post(
     url,
     headers: {
@@ -187,13 +196,15 @@ Future<bool> submitReview(int bookId, String reviewText, double rating) async {
   }
 }
 
-
 class ReviewInput extends StatefulWidget {
   final TextEditingController reviewController;
   final int bookId;
   double? selectedRating;
 
-  ReviewInput({required this.reviewController, required this.bookId, this.selectedRating});
+  ReviewInput(
+      {required this.reviewController,
+      required this.bookId,
+      this.selectedRating});
 
   @override
   _ReviewInputState createState() => _ReviewInputState();
@@ -207,15 +218,15 @@ class _ReviewInputState extends State<ReviewInput> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           child: InputDecorator(
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
               suffixIcon: DropdownButtonHideUnderline(
                 child: DropdownButton<double>(
                   value: widget.selectedRating,
-                  icon: Icon(Icons.arrow_drop_up),
+                  icon: const Icon(Icons.arrow_drop_up),
                   onChanged: (newValue) {
                     setState(() {
                       widget.selectedRating = newValue;
@@ -229,11 +240,13 @@ class _ReviewInputState extends State<ReviewInput> {
                         children: List.generate(5, (starIndex) {
                           Icon icon;
                           if (starIndex < ratingValue.floor()) {
-                            icon = Icon(Icons.star, color: Colors.amber);
+                            icon = const Icon(Icons.star, color: Colors.amber);
                           } else if (starIndex < ratingValue.ceil()) {
-                            icon = Icon(Icons.star_half, color: Colors.amber);
+                            icon = const Icon(Icons.star_half,
+                                color: Colors.amber);
                           } else {
-                            icon = Icon(Icons.star_border, color: Colors.amber);
+                            icon = const Icon(Icons.star_border,
+                                color: Colors.amber);
                           }
                           return icon;
                         }),
@@ -243,26 +256,22 @@ class _ReviewInputState extends State<ReviewInput> {
                 ),
               ),
             ),
-            child: Text(widget.selectedRating != null ? '${widget.selectedRating} Stars' : 'Select Rating'),
+            child: Text(widget.selectedRating != null
+                ? '${widget.selectedRating} Stars'
+                : 'Select Rating'),
           ),
         ),
         TextField(
           controller: widget.reviewController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Add a review...',
-            hintStyle: TextStyle(color: Colors.white),
             border: OutlineInputBorder(),
           ),
-          style: TextStyle(color: Colors.white),
           minLines: 1,
           maxLines: 5,
         ),
-        SizedBox(height: 10), // Add some spacing
+        const SizedBox(height: 10), // Add some spacing
         ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white, // Button color
-            onPrimary: Colors.black, // Text color
-          ),
           onPressed: () async {
             setState(() {
               isLoading = true;
@@ -278,9 +287,9 @@ class _ReviewInputState extends State<ReviewInput> {
               setState(() {
                 widget.selectedRating = null;
               });
+
+              if (!context.mounted) return;
               Navigator.pop(context);
-            
-              
             } catch (e) {
               print('Error adding review: $e');
             } finally {
@@ -289,7 +298,7 @@ class _ReviewInputState extends State<ReviewInput> {
               });
             }
           },
-          child: Text('Add Review'),
+          child: const Text('Add Review'),
         ),
       ],
     );
