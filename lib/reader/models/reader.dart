@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:letterbookd/reader/models/readerpreferences.dart';
+import 'package:letterbookd/reader/models/reader_preferences.dart';
 
 Reader readerFromJson(String str) => Reader.fromJson(json.decode(str));
 

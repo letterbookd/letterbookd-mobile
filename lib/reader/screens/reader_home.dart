@@ -1,28 +1,24 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:letterbookd/authenticate/screens/login.dart';
-import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
-import 'package:letterbookd/reader/models/reader.dart';
-import 'package:letterbookd/reader/screens/reader_settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:letterbookd/reader/models/readerreviews.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:letterbookd/authenticate/screens/login.dart';
+import 'package:letterbookd/authenticate/screens/logout.dart';
+import 'package:letterbookd/reader/screens/reader_settings.dart';
+import 'package:letterbookd/reader/models/reader.dart';
+import 'package:letterbookd/reader/models/reader_books.dart';
+import 'package:letterbookd/reader/models/reader_reviews.dart';
+import 'package:letterbookd/reader/widgets/library_grid_view.dart';
+import 'package:letterbookd/reader/widgets/search_result_list.dart';
 
 class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
 
   @override
   ReaderHomeState createState() => ReaderHomeState();
-}
-
-class BookDisplayInfo {
-  final String title;
-  // final String authors;
-  final String thumbnail;
-
-  BookDisplayInfo({required this.title, required this.thumbnail});
 }
 
 class ReaderHomeState extends State<ReaderHome> {
@@ -129,47 +125,6 @@ class ReaderHomeState extends State<ReaderHome> {
     }
   }
 
-  Future<void> logout() async {
-    String? username = await _getSavedUsername();
-    if (username == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Kamu sudah logout atau belum masuk.'),
-        ),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-      return;
-    }
-
-    var url = Uri.parse('${app_data.baseUrl}/auth/logout/');
-    var response = await http.get(url, headers: {
-      "Content-Type": "application/json",
-    });
-
-    if (response.statusCode == 200) {
-      // Logout berhasil
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Sampai jumpa, $username.'),
-        ),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-    } else {
-      // Logout gagal
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Logout gagal. Silakan coba lagi.'),
-        ),
-      );
-    }
-  }
-
   Widget _buildBody(BuildContext context, List<ReaderElement> readers) {
     return ListView(
       children: [
@@ -256,7 +211,14 @@ class ReaderHomeState extends State<ReaderHome> {
                           } else if (librarySnapshot.hasError) {
                             return Text('Error: ${librarySnapshot.error}');
                           } else if (librarySnapshot.hasData) {
-                            return _buildLibraryList(librarySnapshot.data!);
+                            List<BookDisplayInfo> books =
+                                librarySnapshot.data!.map((jsonBook) {
+                              return BookDisplayInfo(
+                                title: jsonBook['title'],
+                                thumbnail: jsonBook['thumbnail'],
+                              );
+                            }).toList();
+                            return _buildLibraryList(books);
                           } else {
                             return const Text('No books found');
                           }
@@ -305,71 +267,8 @@ class ReaderHomeState extends State<ReaderHome> {
     );
   }
 
-  Widget _buildLibraryList(List<dynamic> jsonBooks) {
-    // Convert JSON ke BookDisplayInfo
-    List<BookDisplayInfo> books = jsonBooks.map((jsonBook) {
-      return BookDisplayInfo(
-        title: jsonBook['title'],
-        thumbnail: jsonBook['thumbnail'],
-      );
-    }).toList();
-
-    // Display book list with centered title
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text("Your Library",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        ),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 0.6,
-            crossAxisCount: 3,
-            crossAxisSpacing: 10.0,
-            mainAxisSpacing: 10.0,
-          ),
-          itemCount: books.length,
-          itemBuilder: (context, index) {
-            var book = books[index];
-            return InkWell(
-              child: Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Expanded(
-                      child: book.thumbnail.isNotEmpty
-                          ? Image.network(
-                              book.thumbnail,
-                              fit: BoxFit.cover,
-                            )
-                          : Container(
-                              color: Colors
-                                  .grey), // Placeholder jika tidak ada gambar
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        book.title,
-                        style: const TextStyle(fontSize: 16),
-                        overflow: TextOverflow.visible,
-                        maxLines: 3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
+  Widget _buildLibraryList(List<BookDisplayInfo> books) {
+    return LibraryGridView(books: books);
   }
 
   Widget _buildReviewList(List<Review> reviews) {
@@ -428,33 +327,12 @@ class ReaderHomeState extends State<ReaderHome> {
 
   Widget _buildSearchResults(
       BuildContext context, List<ReaderElement> readers) {
-    // Jika list readers kosong, tampilkan pesan "No readers found"
     if (readers.isEmpty && hasSearched) {
       return const Center(
         child: Text('No readers found'),
       );
     }
-
-    // Jika tidak, tampilkan reader
-    return Column(
-      children: [
-        for (var reader in readers) _buildReaderCard(reader),
-      ],
-    );
-  }
-
-  Widget _buildReaderCard(ReaderElement reader) {
-    return Card(
-      margin: const EdgeInsets.all(16.0),
-      child: ListTile(
-        leading: const CircleAvatar(
-          backgroundImage:
-              AssetImage('assets/images/pfp_0.jpg'), // profile picture
-        ),
-        title: Text(reader.displayName),
-        subtitle: Text(reader.bio),
-      ),
-    );
+    return SearchResultList(readers: readers);
   }
 
   @override
@@ -483,7 +361,8 @@ class ReaderHomeState extends State<ReaderHome> {
         IconButton(
           icon: const Icon(Icons.logout),
           onPressed: () {
-            logout();
+            // Directly call the performLogout method
+            Logout.performLogout(context);
           },
         ),
       ],
@@ -515,18 +394,6 @@ class ReaderHomeState extends State<ReaderHome> {
             });
           });
         },
-      ),
-    );
-  }
-
-  Widget _buildUserInfoCard(String title, String content) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(content),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       ),
     );
   }
