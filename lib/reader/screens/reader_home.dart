@@ -164,9 +164,9 @@ class ReaderHomeState extends State<ReaderHome> {
                     ),
                     Text(
                       '@$_username',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18.0,
-                        color: Colors.grey,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                     const SizedBox(height: 10),

@@ -21,7 +21,7 @@ class BookInfoCard extends StatelessWidget {
                       fit: BoxFit.cover,
                     )
                   : Container(
-                      color: Colors.grey,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
             ),
             Padding(
