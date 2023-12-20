@@ -6,6 +6,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/core/screens/librarian_homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:letterbookd/authenticate/screens/register.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -41,14 +42,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign in to Letterbookd'),
-      ),
       body: Container(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text(
+              'Sign in to letterbookd',
+              style: TextStyle(
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24.0),
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(
@@ -123,6 +129,26 @@ class _LoginPageState extends State<LoginPage> {
                 }
               },
               child: const Text('Sign in'),
+            ),
+            const SizedBox(height: 12.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Don\'t have an account?'),
+                const SizedBox(width: 8.0),
+                // Teks bukan tombol
+                ElevatedButton(
+                  onPressed: () async {
+                    // Navigate to Login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: const Text('Sign up'),
+                ),
+              ],
             ),
           ],
         ),
