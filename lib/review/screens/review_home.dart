@@ -1,15 +1,92 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:letterbookd/review/screens/review_add.dart';
+import 'package:http/http.dart' as http;
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:letterbookd/reader/screens/reader_home.dart';
+import 'package:letterbookd/review/screens/review_book.dart';
 import 'package:letterbookd/review/screens/review_edit.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:letterbookd/review/models/review.dart';
 
-class ReviewHome extends StatelessWidget {
+class ReviewHome extends StatefulWidget {
   const ReviewHome({super.key});
 
-  static const List<ReviewItem> items = [
-    ReviewItem("Lihat Review Saya", Icons.preview),
-    ReviewItem("Tambah Review", Icons.rate_review),
-    ReviewItem("Edit Review", Icons.edit_document),
-  ];
+  @override
+  _ReviewHomeState createState() => _ReviewHomeState();
+}
+
+class _ReviewHomeState extends State<ReviewHome> {
+  late Future<List<Review>> userReviewsFuture;
+  late Future<List<Review>> allReviewsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    userReviewsFuture = _fetchReviewsbyUser();
+    allReviewsFuture = _fetchAllReviews();
+  }
+
+  Future<List<Review>> _fetchReviewsbyUser() async {
+    var url = Uri.parse('${app_data.baseUrl}/review/show_review_flutter_by_user/');
+    var response = await http.get(url, headers: {"Content-Type": "application/json"});
+
+    if (response.statusCode == 200) {
+      List<dynamic> reviewsJson = jsonDecode(response.body);
+      return reviewsJson.map((json) => Review.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load reviews');
+    }
+  }
+
+   Future<List<Review>> _fetchAllReviews() async {
+    var url = Uri.parse('${app_data.baseUrl}/review/show_review_flutter/');
+    var response = await http.get(url, headers: {"Content-Type": "application/json"});
+
+    if (response.statusCode == 200) {
+      List<dynamic> reviewsJson = jsonDecode(response.body);
+      return reviewsJson.map((json) => Review.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load all reviews');
+    }
+  }
+
+  Future<String> fetchBookTitleById(int bookId) async {
+    final url = Uri.parse('${app_data.baseUrl}/review/get_book_title_by_id/$bookId/');
+    final response = await http.get(url, headers: {"Content-Type": "application/json"});
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['title'];
+    } else {
+      throw Exception('Failed to load book title for ID: $bookId');
+    }
+  }
+  Future<bool> deleteReview(int idReview, int idBuku) async {
+    var url = Uri.parse('${app_data.baseUrl}/review/delete_review_flutter/');
+
+    try {
+      var response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'book_id': idBuku,
+          'review_id': idReview,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to delete review: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error deleting review: $e');
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +98,7 @@ class ReviewHome extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              color: Colors.blue,
+              color: Colors.black87,
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
@@ -34,40 +111,219 @@ class ReviewHome extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: ReviewCard(items[0]),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Expanded(
-                        child: ReviewCard(items[1]),
-                      ),
-                    ],
+                  ReviewCard(
+                    title: "Lihat Review Saya",
+                    icon: Icons.preview,
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (BuildContext bc) {
+                          return Container(
+                            color: Colors.black87,
+                            padding: const EdgeInsets.all(16.0),
+                            child: FutureBuilder<List<Review>>(
+                              future: userReviewsFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Center(child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(child: Text('Error: ${snapshot.error}'));
+                                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                  return Center(child: Text('No reviews found'));
+                                } else {
+                                  return ListView(
+                                    children: snapshot.data!
+                                        .map((review) => _buildReviewCard(context, review))
+                                        .toList(),
+                                  );
+                                }
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  // Section for displaying all reviews
+                  FutureBuilder<List<Review>>(
+                    future: allReviewsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(child: Text('No reviews found'));
+                      } else {
+                        return Column(
+                          children: snapshot.data!
+                              .map((review) => _buildReviewCard(context, review))
+                              .toList(),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
             ),
-            // Removed GridView.builder section
           ],
         ),
       ),
     );
   }
-}
 
-class ReviewItem {
-  final String title;
-  final IconData icon;
+  Widget _buildReviewCard(BuildContext context, Review review) {
+    double rating = review.fields.starsRating.toDouble();
+    String timeAgoText = timeago.format(review.fields.datePosted);
 
-  const ReviewItem(this.title, this.icon);
+    return Card(
+      color: Colors.grey[850],
+      child: Column(
+        children: [
+          FutureBuilder<String>(
+            future: fetchUsernameForReview(review.fields.user),
+            builder: (context, snapshotUser) {
+              if (!snapshotUser.hasData) return CircularProgressIndicator();
+              String username = snapshotUser.data ?? 'Unknown User';
+              // Fetch the book title
+              return FutureBuilder<String>(
+                future: fetchBookTitleById(review.fields.book),
+                builder: (context, snapshotBook) {
+                  String bookTitle = snapshotBook.data ?? 'Unknown Book';
+                  return ListTile(
+                    title: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: username,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' · $timeAgoText',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Judul Buku: " + bookTitle, // Display the book title here
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        Text(
+                          review.fields.reviewText,
+                          style: TextStyle(color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    trailing: _buildStarRating(rating),
+                  );
+                },
+              );
+            },
+          ),
+          // Edit and delete buttons would be here if user review
+          _buildReviewActions(context, review),
+        ],
+      ),
+    );
+  }
+
+
+   Widget _buildEditAndDeleteButtons(BuildContext context, Review review) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          icon: Icon(Icons.edit, color: Colors.blue),
+          onPressed: () {
+            showEditReviewBottomSheet(context, review, () {
+              setState(() {
+                // Refresh data setelah review diperbarui
+                userReviewsFuture = _fetchReviewsbyUser();
+                allReviewsFuture = _fetchAllReviews();
+              });
+            });
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.delete, color: Colors.red),
+          onPressed: () async {
+            bool shouldDelete = await _showDeleteConfirmationDialog(context);
+            if (shouldDelete) {
+              var success = await deleteReview(review.pk, review.fields.book);
+              if (success) {
+                setState(() {
+                  userReviewsFuture = _fetchReviewsbyUser();
+                  allReviewsFuture = _fetchAllReviews();
+                });
+                Navigator.of(context).pop(true);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to delete review')),
+                );
+              }
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReviewActions(BuildContext context, Review review) {
+    return FutureBuilder<String>(
+      future: fetchUsernameForReview(review.fields.user),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return SizedBox.shrink();
+        bool isUserReview = currentUsername == snapshot.data;
+        return isUserReview ? _buildEditAndDeleteButtons(context, review) : SizedBox.shrink();
+      },
+    );
+  }
+
+
+
+  Widget _buildStarRating(double rating) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (index) {
+        Icon icon;
+        if (index < rating.floor()) {
+          icon = Icon(Icons.star, color: Colors.amber);
+        } else if (index < rating.ceil()) {
+          icon = Icon(Icons.star_half, color: Colors.amber);
+        } else {
+          icon = Icon(Icons.star_border, color: Colors.amber);
+        }
+        return icon;
+      }),
+    );
+  }
 }
 
 class ReviewCard extends StatelessWidget {
-  final ReviewItem item;
+  final String title;
+  final IconData icon;
+  final VoidCallback onTap;
 
-  const ReviewCard(this.item, {super.key});
+  const ReviewCard({
+    super.key, 
+    required this.title, 
+    required this.icon, 
+    required this.onTap
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,30 +333,15 @@ class ReviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
-        onTap: () {
-          // Handle item tap
-          if (item.title == "Tambah Review") {
-            // Redirect to AddFormPage
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddFormPage()),
-            );
-          } else if (item.title == "Edit Review") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const EditFormPage()),
-            );
-            // Handle other item taps
-          }
-        },
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              Icon(item.icon),
+              Icon(icon),
               const SizedBox(width: 4.0),
               Text(
-                item.title,
+                title,
                 style: const TextStyle(
                   color: Colors.black,
                 ),
@@ -113,171 +354,31 @@ class ReviewCard extends StatelessWidget {
   }
 }
 
+Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
+  return await showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Colors.black87,
+        title: Text('Delete Review', style: TextStyle(color: Colors.white)),
+        content: Text('Do you want to delete this review?', style: TextStyle(color: Colors.white)),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel', style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              Navigator.of(context).pop(false); // User chooses not to delete the review
+            },
+          ),
+          TextButton(
+            child: Text('Delete', style: TextStyle(color: Colors.red)),
+            onPressed: () {
+              Navigator.of(context).pop(true); // User confirms to delete the review
+            },
+          ),
+        ],
+      );
+    },
+  ) ?? false; // Returning false if dialog is dismissed
+}
 
 
-
-
-// import 'package:flutter/material.dart';
-// import 'package:percent_indicator/linear_percent_indicator.dart';
-// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-// class ReviewHome extends StatelessWidget {
-//   ReviewHome({Key? key}) : super(key: key);
-
-//   static const List<ReviewItem> items = [
-//     ReviewItem("Lihat Review Saya", Icons.preview),
-//     ReviewItem("Tambah Review", Icons.rate_review),
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         title: Text("Reviews"),
-//       ),
-//       body: Column(
-//         children: [
-//           Container(
-//             color: Colors.blue[50],
-//             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text.rich(
-//                       TextSpan(
-//                         children: [
-//                           TextSpan(
-//                             text: "4.5",
-//                             style: TextStyle(fontSize: 48.0),
-//                           ),
-//                           TextSpan(
-//                             text: "/5",
-//                             style: TextStyle(
-//                               fontSize: 24.0,
-//                               color: Colors.grey,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                     Container(
-//                       width: 150.0, // Set a fixed width for the RatingBar
-//                       child: RatingBar.builder(
-//                         initialRating: 4.5,
-//                         minRating: 1,
-//                         direction: Axis.horizontal,
-//                         allowHalfRating: true,
-//                         itemCount: 5,
-//                         itemSize: 28.0,
-//                         itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-//                         itemBuilder: (context, _) => Icon(
-//                           Icons.star,
-//                           color: Colors.orange,
-//                         ),
-//                         onRatingUpdate: (rating) {
-//                           // Handle rating update
-//                         },
-//                       ),
-//                     ),
-//                     SizedBox(height: 16.0),
-//                     Text(
-//                       "10 Reviews", // Replace with the actual number of reviews
-//                       style: TextStyle(
-//                         fontSize: 20.0,
-//                         color: Colors.grey,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//                 Container(
-//                   width: 200.0,
-//                   child: ListView.builder(
-//                     shrinkWrap: true,
-//                     reverse: true,
-//                     itemCount: 5,
-//                     itemBuilder: (context, index) {
-//                       return Row(
-//                         children: [
-//                           Text(
-//                             "${index + 1}",
-//                             style: TextStyle(fontSize: 18.0),
-//                           ),
-//                           SizedBox(width: 4.0),
-//                           Icon(Icons.star, color: Colors.orange),
-//                           SizedBox(width: 8.0),
-//                           LinearPercentIndicator(
-//                             lineHeight: 6.0,
-//                             width: MediaQuery.of(context).size.width / 2.8,
-//                             animation: true,
-//                             animationDuration: 2500,
-//                             percent:
-//                                 0.7, // Replace with the actual rating percentage
-//                             progressColor: Colors.orange,
-//                           ),
-//                         ],
-//                       );
-//                     },
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Expanded(
-//             child: ListView.separated(
-//               padding: EdgeInsets.only(bottom: 8.0, top: 8.0),
-//               itemCount: items.length,
-//               itemBuilder: (context, index) {
-//                 return InkWell(
-//                   onTap: () {
-//                     // Navigate to another page when ReviewItem is tapped
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                         builder: (context) => AnotherPage(),
-//                       ),
-//                     );
-//                   },
-//                   child: ListTile(
-//                     leading: Icon(items[index].icon),
-//                     title: Text(items[index].title),
-//                   ),
-//                 );
-//               },
-//               separatorBuilder: (context, index) {
-//                 return Divider(
-//                   thickness: 2.0,
-//                   color: Colors.blue[100],
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class ReviewItem {
-//   final String title;
-//   final IconData icon;
-
-//   const ReviewItem(this.title, this.icon);
-// }
-
-// class AnotherPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Another Page"),
-//       ),
-//       body: Center(
-//         child: Text("This is another page"),
-//       ),
-//     );
-//   }
-// }

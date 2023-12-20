@@ -120,8 +120,6 @@ class _AddFormPageState extends State<AddFormPage> {
                                   Text('Stars Rating: $_starsRating '),
                                   Text('Status on Review: $_statusOnReview'),
                                   Text('Review: $_reviewText'),
-
-                                  // TODO: Munculkan value-value lainnya
                                 ],
                               ),
                             ),

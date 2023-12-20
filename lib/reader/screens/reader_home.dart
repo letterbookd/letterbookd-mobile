@@ -14,6 +14,8 @@ import 'package:letterbookd/reader/models/reader_reviews.dart';
 import 'package:letterbookd/reader/widgets/library_grid_view.dart';
 import 'package:letterbookd/reader/widgets/search_result_list.dart';
 
+String currentUsername = "";
+
 class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
 
