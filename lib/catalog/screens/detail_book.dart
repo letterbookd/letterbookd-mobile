@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:letterbookd/review/screens/review_book.dart';
 
 class DetailBookPage extends StatelessWidget {
   final Book book;
@@ -82,6 +83,7 @@ class DetailBookPage extends StatelessWidget {
                               child: TextButton(
                                   onPressed: () {
                                     //TODO: add function
+                                    showReviewsBottomSheet(context, book.pk);
                                   },
                                   style: TextButton.styleFrom(
                                     side: const BorderSide(width: 1),

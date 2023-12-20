@@ -6,6 +6,8 @@ import 'package:letterbookd/reader/screens/reader_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+String currentUsername = "";
+
 class ReaderHome extends StatefulWidget {
   const ReaderHome({super.key});
 
