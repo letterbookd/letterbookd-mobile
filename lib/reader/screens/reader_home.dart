@@ -1,11 +1,10 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:letterbookd/authenticate/screens/login.dart';
 import 'package:letterbookd/authenticate/screens/logout.dart';
 import 'package:letterbookd/reader/screens/reader_settings.dart';
 import 'package:letterbookd/reader/models/reader.dart';
@@ -364,7 +363,8 @@ class ReaderHomeState extends State<ReaderHome> {
           icon: const Icon(Icons.logout),
           onPressed: () {
             // Directly call the performLogout method
-            Logout.performLogout(context);
+            final request = context.watch<CookieRequest>();
+            Logout.performLogout(context, request);
           },
         ),
       ],

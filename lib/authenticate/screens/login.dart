@@ -1,8 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, depend_on_referenced_packages
-
+import 'package:flutter/material.dart';
 import 'package:letterbookd/core/screens/homepage.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
-import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/core/screens/librarian_homepage.dart';
@@ -17,7 +15,7 @@ class LoginApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
+      title: 'Sign in to Letterbookd',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -30,7 +28,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -75,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   'password': password,
                 });
 
+                if (!context.mounted) return;
                 if (request.loggedIn) {
                   String message = response['message'];
                   String uname = response['username'];
