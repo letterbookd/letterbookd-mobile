@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_new, unnecessary_this, prefer_collection_literals
-
 class Threads {
   List<Thread>? threads;
   List<Thread>? threadsByLike;
@@ -15,7 +13,7 @@ class Threads {
     if (json['threads_by_like'] != null) {
       threadsByLike = <Thread>[];
       json['threads_by_like'].forEach((v) {
-        threadsByLike!.add(new Thread.fromJson(v));
+        threadsByLike!.add(Thread.fromJson(v));
       });
     }
   }
@@ -43,11 +41,11 @@ class Thread {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['model'] = this.model;
-    data['pk'] = this.pk;
-    if (this.fields != null) {
-      data['fields'] = this.fields!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['model'] = model;
+    data['pk'] = pk;
+    if (fields != null) {
+      data['fields'] = fields!.toJson();
     }
     return data;
   }
@@ -76,12 +74,12 @@ class Fields {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['content'] = this.content;
-    data['created_by'] = this.createdBy;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['content'] = content;
+    data['created_by'] = createdBy;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

@@ -1,13 +1,8 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
-
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:flutter/material.dart';
-//import 'package:letterbookd/forum/models/thread.dart';
-//import 'package:letterbookd/forum/screens/forum_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-//import 'package:http/http.dart' as http;
 
 class AddForumPage extends StatefulWidget {
   const AddForumPage(
@@ -32,7 +27,7 @@ class _AddForumPageState extends State<AddForumPage> {
   ) async {
     try {
       final response = await request.post(
-          'http://10.0.2.2:8000/forum/create-json/',
+          '${app_data.baseUrl}/forum/create-json/',
           jsonEncode(
             {
               'title': title,
@@ -40,7 +35,6 @@ class _AddForumPageState extends State<AddForumPage> {
             },
           ));
 
-      print(response);
       return response;
     } catch (e) {
       throw Exception('error : $e');
@@ -55,7 +49,7 @@ class _AddForumPageState extends State<AddForumPage> {
   ) async {
     try {
       final response = await request.post(
-          'http://10.0.2.2:8000/forum/edit-json/$pk/',
+          '${app_data.baseUrl}/forum/edit-json/$pk/',
           jsonEncode(
             {
               'title': title,
@@ -63,7 +57,6 @@ class _AddForumPageState extends State<AddForumPage> {
             },
           ));
 
-      print(response);
       return response;
     } catch (e) {
       throw Exception('error : $e');
@@ -172,7 +165,6 @@ class _AddForumPageState extends State<AddForumPage> {
                           }
 
                           if (widget.isEdit) {
-                            print("lg ngedit");
                             _editThread(request, _titleController.text,
                                 _contentController.text, widget.pk!);
                           }
