@@ -9,8 +9,10 @@ import 'package:provider/provider.dart';
 
 class LibraryDetailActions extends StatefulWidget {
   final LibraryItem item;
+  final Function callback;
 
-  const LibraryDetailActions({super.key, required this.item});
+  const LibraryDetailActions(
+      {super.key, required this.item, required this.callback});
 
   @override
   State<LibraryDetailActions> createState() => _LibraryDetailActionsState();
@@ -35,8 +37,11 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
 
       // STEP 2: sends POST request to toggle current item favorite
       final response = await request.post(
-        '${app_data.baseUrl}/library/api/update/${widget.item.libraryData.fields.book}',
-        {"isFavorited": _isFavorited.toString()},
+        '${app_data.baseUrl}/library/api/update/',
+        {
+          "book_id": widget.item.libraryData.fields.book.toString(),
+          "isFavorited": _isFavorited.toString()
+        },
       );
       if (!context.mounted) return;
 
@@ -56,13 +61,7 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
       }
 
       // STEP 3: listens to request and update UI accordingly
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text(_isFavorited ? 'Favorited!' : 'Removed from Favorites'),
-        ));
-
+      widget.callback;
       setState(() {
         _isFavoriteDisabled = false;
       });

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:letterbookd/library/screens/library_detail.dart';
+import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/library/screens/library_home.dart';
 
 /// Grid tile for library homepage
-class LibraryTile extends StatelessWidget {
+class LibraryGridTile extends StatelessWidget {
   final LibraryItem item;
+  final VoidCallback onTap;
 
-  const LibraryTile({super.key, required this.item});
+  const LibraryGridTile({super.key, required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,7 @@ class LibraryTile extends StatelessWidget {
         color: Theme.of(context).colorScheme.secondaryContainer,
       ),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LibraryBookDetailPage(item: item),
-            ),
-          );
-        },
+        onTap: onTap,
         child: Stack(
           alignment: AlignmentDirectional.center,
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -66,6 +60,76 @@ class LibraryTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// List tiel for library homepage
+class LibraryListTile extends StatelessWidget {
+  final LibraryItem item;
+  final VoidCallback onTap;
+
+  const LibraryListTile({super.key, required this.item, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+          child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 70,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(0),
+                    bottomLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(0)),
+                child: AspectRatio(
+                  aspectRatio: app_data.bookAspectRatio,
+                  child: Image.network(item.bookData.fields.thumbnail,
+                      fit: BoxFit.fitHeight),
+                ),
+              ),
+            ),
+            Flexible(
+                child: Container(
+              padding: const EdgeInsets.only(left: 12, right: 4),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.bookData.fields.title,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                  Text(
+                      "by ${item.bookData.fields.authors.split(';').map((author) => author).join(', ')}"),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(5.0)),
+                    child: Text(
+                      app_data.trackingStatusList[
+                          item.libraryData.fields.trackingStatus],
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ))
+          ],
+        ),
+      )),
     );
   }
 }

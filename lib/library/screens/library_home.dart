@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/catalog/models/book.dart';
+import 'package:letterbookd/library/screens/library_add.dart';
+import 'package:letterbookd/library/screens/library_detail.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/library/models/librarybook.dart';
@@ -35,17 +37,6 @@ enum FilterBy {
   reviewed,
 }
 
-class LibraryData {
-  final List<String> trackingStatusList = [
-    "Untracked",
-    "Finished Reading",
-    "Currently Reading",
-    "On Hold",
-    "Planning to Read",
-    "Dropped",
-  ];
-}
-
 class LibraryItem {
   final LibraryBook libraryData;
   final Book bookData;
@@ -63,16 +54,51 @@ class LibraryHome extends StatefulWidget {
 class _LibraryHomeState extends State<LibraryHome> {
   late List<LibraryItem> _cachedLibraryItems;
   late List<LibraryItem> _sortedLibraryItems;
+  late List<Book> _cachedCatalogBooks;
 
   DisplayType _displayType = DisplayType.grid;
   SortBy _sortBy = SortBy.title;
   SortDirection _sortDirection = SortDirection.descending;
   FilterBy _filterBy = FilterBy.all;
 
-  void _addBookForm(BuildContext context) {}
+  void _addBookForm(BuildContext context, CookieRequest request) async {
+    if (_cachedCatalogBooks.isEmpty) {
+      _cachedCatalogBooks = await _fetchBooks(request);
+    }
+    if (!context.mounted) return;
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => LibraryAddForm(
+                  books: _cachedCatalogBooks,
+                  libbook: _cachedLibraryItems,
+                ))).then((value) {
+      if (value == true) {
+        setState(() {});
+      }
+    });
+  }
+
+  void _openDetailAndRefresh(LibraryItem item) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LibraryBookDetailPage(item: item),
+      ),
+    ).then((value) {
+      if (value == null) {
+        return;
+      }
+      if (value == true) {
+        // either deleted or edited
+        setState(() {});
+      }
+    });
+  }
 
   void _openFilterModal(BuildContext context) {
-    showModalBottomSheet<void>(
+    showModalBottomSheet(
       useRootNavigator: true,
       showDragHandle: true,
       enableDrag: true,
@@ -80,7 +106,53 @@ class _LibraryHomeState extends State<LibraryHome> {
       builder: (BuildContext context) {
         return const LibraryFilterModal();
       },
-    );
+    ).then((value) {
+      SortBy? newSort;
+      FilterBy? newFilterBy;
+      SortDirection? newSortDir;
+      DisplayType? newDisplayType;
+
+      if (value == "title") {
+        newSort = SortBy.title;
+      } else if (value == "recentlyAdded") {
+        newSort = SortBy.recentlyAdded;
+      } else if (value == "trackingStatus") {
+        newSort = SortBy.trackingStatus;
+      } else if (value == "all") {
+        newFilterBy = FilterBy.all;
+      } else if (value == "favorites") {
+        newFilterBy = FilterBy.favorites;
+      } else if (value == "finished") {
+        newFilterBy = FilterBy.finished;
+      } else if (value == "reading") {
+        newFilterBy = FilterBy.reading;
+      } else if (value == "onHold") {
+        newFilterBy = FilterBy.onHold;
+      } else if (value == "planned") {
+        newFilterBy = FilterBy.planned;
+      } else if (value == "dropped") {
+        newFilterBy = FilterBy.dropped;
+      } else if (value == "reviewed") {
+        newFilterBy = FilterBy.reviewed;
+      } else if (value == "list") {
+        newDisplayType = DisplayType.list;
+      } else if (value == "grid") {
+        newDisplayType = DisplayType.grid;
+      } else if (value == "ascending") {
+        newSortDir = SortDirection.ascending;
+      } else if (value == "descending") {
+        newSortDir = SortDirection.descending;
+      } else {
+        return;
+      }
+
+      setState(() {
+        _sortBy = newSort ?? _sortBy;
+        _filterBy = newFilterBy ?? _filterBy;
+        _sortDirection = newSortDir ?? _sortDirection;
+        _displayType = newDisplayType ?? _displayType;
+      });
+    });
   }
 
   void _refreshLibrary(BuildContext context) async {
@@ -92,7 +164,7 @@ class _LibraryHomeState extends State<LibraryHome> {
           content: Text('Refreshing library'),
         ),
       );
-    setState(() {});
+    setState(() {}); // refresh library
   }
 
   /// Getting all libraryBook in user
@@ -110,6 +182,22 @@ class _LibraryHomeState extends State<LibraryHome> {
     }
 
     return libraryItem;
+  }
+
+  /// Getting all books in catalog for adding to library
+  Future<List<Book>> _fetchBooks(
+    CookieRequest request,
+  ) async {
+    final response = await request.get('${app_data.baseUrl}/catalog/json/');
+
+    List<Book> books = [];
+    for (var d in response) {
+      if (d != null) {
+        books.add(Book.fromJson(d));
+      }
+    }
+
+    return books;
   }
 
   /// Apply sort and filter to library items
@@ -197,7 +285,7 @@ class _LibraryHomeState extends State<LibraryHome> {
                 tooltip: "Add book",
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  _addBookForm(context);
+                  _addBookForm(context, request);
                 }),
             IconButton(
                 style: style,
@@ -227,38 +315,80 @@ class _LibraryHomeState extends State<LibraryHome> {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    if (!snapshot.hasData) {
-                      return const Column(
-                        children: [
-                          Text(
-                            "Tidak ada data buku.",
-                            style: TextStyle(
-                                color: Color(0xff59A5D8), fontSize: 20),
-                          ),
-                          SizedBox(height: 8),
-                        ],
+                    if (!snapshot.hasData || snapshot.data.length == 0) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Your library is empty :(",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  _addBookForm(context, request);
+                                },
+                                child: const Text("Add book")),
+                          ],
+                        ),
                       );
                     } else {
                       _cachedLibraryItems = snapshot.data;
+                      _cachedCatalogBooks = [];
                       _sortedLibraryItems = applySortAndFilters();
+
+                      if (_sortedLibraryItems.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "No book matching your filters",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _openFilterModal(context);
+                                  },
+                                  child: const Text("Open sort and filters")),
+                            ],
+                          ),
+                        );
+                      }
 
                       // build tile view
                       if (_displayType == DisplayType.list) {
-                        return const Text("todo");
-                        // return ListView.builder(
-                        //     padding: const EdgeInsets.only(
-                        //         top: 10, bottom: 10, left: 10, right: 10),
-                        //     itemCount: snapshot.data!.length,
-                        //     itemBuilder: (_, index) => InkWell(
-                        //           onTap: () {
-                        //             Navigator.push(context,
-                        //                 MaterialPageRoute(builder: (context) {
-                        //               return DetailBookPage(
-                        //                   book: snapshot.data![index]);
-                        //             }));
-                        //           },
-                        //           child: BookTile(book: snapshot.data![index]),
-                        //         ));
+                        return ListView.builder(
+                            padding: const EdgeInsets.only(
+                                top: 10, bottom: 10, left: 10, right: 10),
+                            itemCount: _sortedLibraryItems.length,
+                            itemBuilder: (context, index) {
+                              return LibraryListTile(
+                                item: _sortedLibraryItems[index],
+                                onTap: () {
+                                  _openDetailAndRefresh(
+                                      _sortedLibraryItems[index]);
+                                },
+                              );
+                            });
                       }
 
                       // build grid view
@@ -273,8 +403,12 @@ class _LibraryHomeState extends State<LibraryHome> {
                             ),
                             itemCount: _sortedLibraryItems.length,
                             itemBuilder: (context, index) {
-                              return LibraryTile(
+                              return LibraryGridTile(
                                 item: _sortedLibraryItems[index],
+                                onTap: () {
+                                  _openDetailAndRefresh(
+                                      _sortedLibraryItems[index]);
+                                },
                               );
                             });
                       }
