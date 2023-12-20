@@ -158,9 +158,9 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                             // Close the dialog without deleting the comment
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text('Cancel',
-                                              style: TextStyle(
-                                                  color: Colors.blue)),
+                                          child: const Text(
+                                            'Cancel',
+                                          ),
                                         ),
                                       ],
                                     );
@@ -174,7 +174,6 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                   value: choice,
                                   child: Text(
                                     choice,
-                                    style: const TextStyle(color: Colors.black),
                                   ),
                                 );
                               }).toList();
@@ -194,8 +193,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                       ),
                       Text(
                         snapshot.data!.threadContent ?? "",
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.black),
+                        style: const TextStyle(fontSize: 16),
                         textAlign: TextAlign.justify,
                       ),
                       const SizedBox(
@@ -225,7 +223,11 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                               },
                               icon: Icon(
                                 Icons.favorite,
-                                color: isLiked ? Colors.red : Colors.grey,
+                                color: isLiked
+                                    ? Colors.red
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onBackground,
                               )),
                           Text("${snapshot.data!.likes!.length}")
                         ],
@@ -283,15 +285,11 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       ),
       Center(
         child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.indigo),
-          ),
           onPressed: () {
             _postReply(request, widget.pk, _replyController.text);
           },
           child: const Text(
             "Submit",
-            style: TextStyle(color: Colors.white),
           ),
         ),
       ),

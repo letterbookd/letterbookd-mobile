@@ -115,10 +115,6 @@ class _AddForumPageState extends State<AddForumPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.indigo),
-                      ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _postThread(request, _titleController.text,
@@ -134,7 +130,6 @@ class _AddForumPageState extends State<AddForumPage> {
                       },
                       child: const Text(
                         "Submit",
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
