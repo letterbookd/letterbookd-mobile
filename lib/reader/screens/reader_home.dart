@@ -338,13 +338,15 @@ class ReaderHomeState extends State<ReaderHome> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
-      appBar: isSearchMode ? _buildSearchAppBar() : _buildRegularAppBar(),
+      appBar:
+          isSearchMode ? _buildSearchAppBar() : _buildRegularAppBar(request),
       body: _buildBody(context, listReaders),
     );
   }
 
-  AppBar _buildRegularAppBar() {
+  AppBar _buildRegularAppBar(CookieRequest request) {
     return AppBar(
       title: const Text('Reader'),
       actions: <Widget>[
@@ -363,7 +365,6 @@ class ReaderHomeState extends State<ReaderHome> {
           icon: const Icon(Icons.logout),
           onPressed: () {
             // Directly call the performLogout method
-            final request = context.watch<CookieRequest>();
             Logout.performLogout(context, request);
           },
         ),
