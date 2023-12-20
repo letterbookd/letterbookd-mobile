@@ -12,7 +12,7 @@ class ReviewHome extends StatefulWidget {
   const ReviewHome({super.key});
 
   @override
-  _ReviewHomeState createState() => _ReviewHomeState();
+  State<ReviewHome> createState() => _ReviewHomeState();
 }
 
 class _ReviewHomeState extends State<ReviewHome> {
@@ -27,8 +27,10 @@ class _ReviewHomeState extends State<ReviewHome> {
   }
 
   Future<List<Review>> _fetchReviewsbyUser() async {
-    var url = Uri.parse('${app_data.baseUrl}/review/show_review_flutter_by_user/');
-    var response = await http.get(url, headers: {"Content-Type": "application/json"});
+    var url =
+        Uri.parse('${app_data.baseUrl}/review/show_review_flutter_by_user/');
+    var response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
 
     if (response.statusCode == 200) {
       List<dynamic> reviewsJson = jsonDecode(response.body);
@@ -38,9 +40,10 @@ class _ReviewHomeState extends State<ReviewHome> {
     }
   }
 
-   Future<List<Review>> _fetchAllReviews() async {
+  Future<List<Review>> _fetchAllReviews() async {
     var url = Uri.parse('${app_data.baseUrl}/review/show_review_flutter/');
-    var response = await http.get(url, headers: {"Content-Type": "application/json"});
+    var response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
 
     if (response.statusCode == 200) {
       List<dynamic> reviewsJson = jsonDecode(response.body);
@@ -51,8 +54,10 @@ class _ReviewHomeState extends State<ReviewHome> {
   }
 
   Future<String> fetchBookTitleById(int bookId) async {
-    final url = Uri.parse('${app_data.baseUrl}/review/get_book_title_by_id/$bookId/');
-    final response = await http.get(url, headers: {"Content-Type": "application/json"});
+    final url =
+        Uri.parse('${app_data.baseUrl}/review/get_book_title_by_id/$bookId/');
+    final response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -61,6 +66,7 @@ class _ReviewHomeState extends State<ReviewHome> {
       throw Exception('Failed to load book title for ID: $bookId');
     }
   }
+
   Future<bool> deleteReview(int idReview, int idBuku) async {
     var url = Uri.parse('${app_data.baseUrl}/review/delete_review_flutter/');
 
@@ -79,11 +85,9 @@ class _ReviewHomeState extends State<ReviewHome> {
       if (response.statusCode == 200) {
         return true;
       } else {
-        print('Failed to delete review: ${response.body}');
         return false;
       }
     } catch (e) {
-      print('Error deleting review: $e');
       return false;
     }
   }
@@ -125,16 +129,22 @@ class _ReviewHomeState extends State<ReviewHome> {
                             child: FutureBuilder<List<Review>>(
                               future: userReviewsFuture,
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Center(child: CircularProgressIndicator());
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
                                 } else if (snapshot.hasError) {
-                                  return Center(child: Text('Error: ${snapshot.error}'));
-                                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                  return Center(child: Text('No reviews found'));
+                                  return Center(
+                                      child: Text('Error: ${snapshot.error}'));
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return const Center(
+                                      child: Text('No reviews found'));
                                 } else {
                                   return ListView(
                                     children: snapshot.data!
-                                        .map((review) => _buildReviewCard(context, review))
+                                        .map((review) =>
+                                            _buildReviewCard(context, review))
                                         .toList(),
                                   );
                                 }
@@ -150,15 +160,16 @@ class _ReviewHomeState extends State<ReviewHome> {
                     future: allReviewsFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text('No reviews found'));
+                        return const Center(child: Text('No reviews found'));
                       } else {
                         return Column(
                           children: snapshot.data!
-                              .map((review) => _buildReviewCard(context, review))
+                              .map(
+                                  (review) => _buildReviewCard(context, review))
                               .toList(),
                         );
                       }
@@ -184,7 +195,9 @@ class _ReviewHomeState extends State<ReviewHome> {
           FutureBuilder<String>(
             future: fetchUsernameForReview(review.fields.user),
             builder: (context, snapshotUser) {
-              if (!snapshotUser.hasData) return CircularProgressIndicator();
+              if (!snapshotUser.hasData) {
+                return const CircularProgressIndicator();
+              }
               String username = snapshotUser.data ?? 'Unknown User';
               // Fetch the book title
               return FutureBuilder<String>(
@@ -197,17 +210,15 @@ class _ReviewHomeState extends State<ReviewHome> {
                         children: [
                           TextSpan(
                             text: username,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
                               fontSize: 16,
                             ),
                           ),
                           TextSpan(
                             text: ' · $timeAgoText',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w300,
-                              color: Colors.white70,
                               fontSize: 14,
                             ),
                           ),
@@ -218,12 +229,11 @@ class _ReviewHomeState extends State<ReviewHome> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Judul Buku: " + bookTitle, // Display the book title here
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+                          "Judul Buku: $bookTitle", // Display the book title here
+                          style: const TextStyle(fontSize: 14),
                         ),
                         Text(
                           review.fields.reviewText,
-                          style: TextStyle(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -241,13 +251,13 @@ class _ReviewHomeState extends State<ReviewHome> {
     );
   }
 
-
-   Widget _buildEditAndDeleteButtons(BuildContext context, Review review) {
+  Widget _buildEditAndDeleteButtons(BuildContext context, Review review) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-          icon: Icon(Icons.edit, color: Colors.blue),
+          icon:
+              Icon(Icons.edit, color: Theme.of(context).colorScheme.secondary),
           onPressed: () {
             showEditReviewBottomSheet(context, review, () {
               setState(() {
@@ -259,11 +269,13 @@ class _ReviewHomeState extends State<ReviewHome> {
           },
         ),
         IconButton(
-          icon: Icon(Icons.delete, color: Colors.red),
+          icon: const Icon(Icons.delete, color: Colors.red),
           onPressed: () async {
             bool shouldDelete = await _showDeleteConfirmationDialog(context);
             if (shouldDelete) {
               var success = await deleteReview(review.pk, review.fields.book);
+
+              if (!context.mounted) return;
               if (success) {
                 setState(() {
                   userReviewsFuture = _fetchReviewsbyUser();
@@ -272,7 +284,7 @@ class _ReviewHomeState extends State<ReviewHome> {
                 Navigator.of(context).pop(true);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to delete review')),
+                  const SnackBar(content: Text('Failed to delete review')),
                 );
               }
             }
@@ -286,14 +298,14 @@ class _ReviewHomeState extends State<ReviewHome> {
     return FutureBuilder<String>(
       future: fetchUsernameForReview(review.fields.user),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return SizedBox.shrink();
+        if (!snapshot.hasData) return const SizedBox.shrink();
         bool isUserReview = currentUsername == snapshot.data;
-        return isUserReview ? _buildEditAndDeleteButtons(context, review) : SizedBox.shrink();
+        return isUserReview
+            ? _buildEditAndDeleteButtons(context, review)
+            : const SizedBox.shrink();
       },
     );
   }
-
-
 
   Widget _buildStarRating(double rating) {
     return Row(
@@ -301,11 +313,11 @@ class _ReviewHomeState extends State<ReviewHome> {
       children: List.generate(5, (index) {
         Icon icon;
         if (index < rating.floor()) {
-          icon = Icon(Icons.star, color: Colors.amber);
+          icon = const Icon(Icons.star, color: Colors.amber);
         } else if (index < rating.ceil()) {
-          icon = Icon(Icons.star_half, color: Colors.amber);
+          icon = const Icon(Icons.star_half, color: Colors.amber);
         } else {
-          icon = Icon(Icons.star_border, color: Colors.amber);
+          icon = const Icon(Icons.star_border, color: Colors.amber);
         }
         return icon;
       }),
@@ -318,12 +330,11 @@ class ReviewCard extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const ReviewCard({
-    super.key, 
-    required this.title, 
-    required this.icon, 
-    required this.onTap
-  });
+  const ReviewCard(
+      {super.key,
+      required this.title,
+      required this.icon,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -356,29 +367,33 @@ class ReviewCard extends StatelessWidget {
 
 Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
   return await showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        backgroundColor: Colors.black87,
-        title: Text('Delete Review', style: TextStyle(color: Colors.white)),
-        content: Text('Do you want to delete this review?', style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Cancel', style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              Navigator.of(context).pop(false); // User chooses not to delete the review
-            },
-          ),
-          TextButton(
-            child: Text('Delete', style: TextStyle(color: Colors.red)),
-            onPressed: () {
-              Navigator.of(context).pop(true); // User confirms to delete the review
-            },
-          ),
-        ],
-      );
-    },
-  ) ?? false; // Returning false if dialog is dismissed
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.black87,
+            title: const Text('Delete Review'),
+            content: const Text(
+              'Do you want to delete this review?',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(false); // User chooses not to delete the review
+                },
+              ),
+              TextButton(
+                child:
+                    const Text('Delete', style: TextStyle(color: Colors.red)),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(true); // User confirms to delete the review
+                },
+              ),
+            ],
+          );
+        },
+      ) ??
+      false; // Returning false if dialog is dismissed
 }
-
-

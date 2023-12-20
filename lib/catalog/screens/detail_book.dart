@@ -3,14 +3,13 @@ import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/review/screens/review_book.dart';
 
-class DetailBookPage extends StatefulWidget{
+class DetailBookPage extends StatefulWidget {
   final Book book;
 
   const DetailBookPage({super.key, required this.book});
 
   @override
   State<DetailBookPage> createState() => _DetailBookPageState();
-
 }
 
 class _DetailBookPageState extends State<DetailBookPage> {
@@ -19,7 +18,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize with the provided book data
     book = widget.book;
   }
@@ -98,7 +97,6 @@ class _DetailBookPageState extends State<DetailBookPage> {
                               height: 38,
                               child: TextButton(
                                   onPressed: () {
-                                    //TODO: add function
                                     showReviewsBottomSheet(context, book.pk);
                                   },
                                   style: TextButton.styleFrom(
