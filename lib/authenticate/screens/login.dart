@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/core/screens/homepage.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
+import 'package:letterbookd/reader/screens/reader_home.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/core/screens/librarian_homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -71,6 +73,8 @@ class _LoginPageState extends State<LoginPage> {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
 
+                currentUsername = username;
+
                 final response =
                     await request.login("${app_data.baseUrl}/auth/login/", {
                   'username': username,
@@ -81,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                 if (request.loggedIn) {
                   String uname = response['username'];
                   bool librarian = response['librarian'];
+                  saveUserDataToSharedPreferences(username);
 
                   if (librarian) {
                     Navigator.pushReplacement(
@@ -123,5 +128,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> saveUserDataToSharedPreferences(String username) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
   }
 }
