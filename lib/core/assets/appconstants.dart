@@ -1,6 +1,6 @@
 // constants for the whole app
 
-const String baseUrl = "http://10.0.2.2:8000";
+const String baseUrl = "https://letterbookd-a09-tk.pbp.cs.ui.ac.id/";
 const double bookAspectRatio = 181 / 291;
 const List<String> trackingStatusList = [
   "Untracked",
