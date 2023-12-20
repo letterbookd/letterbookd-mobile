@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:letterbookd/reader/screens/reader_home.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:letterbookd/review/models/review.dart';
@@ -83,19 +82,17 @@ Widget _buildReviewCard(BuildContext context, Review review) {
               children: [
                 TextSpan(
                   text: username,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 TextSpan(
                   text: ' · $timeAgoText',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(fontWeight: FontWeight.w300, fontSize: 14),
                 ),
               ],
             ),
@@ -105,7 +102,6 @@ Widget _buildReviewCard(BuildContext context, Review review) {
       ),
       subtitle: Text(
         review.fields.reviewText,
-        style: TextStyle(color: Colors.white),
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Row(
@@ -124,11 +120,11 @@ Widget _buildStarRating(double rating) {
     children: List.generate(5, (index) {
       Icon icon;
       if (index < rating.floor()) {
-        icon = Icon(Icons.star, color: Colors.amber);
+        icon = const Icon(Icons.star, color: Colors.amber);
       } else if (index < rating.ceil()) {
-        icon = Icon(Icons.star_half, color: Colors.amber);
+        icon = const Icon(Icons.star_half, color: Colors.amber);
       } else {
-        icon = Icon(Icons.star_border, color: Colors.amber);
+        icon = const Icon(Icons.star_border, color: Colors.amber);
       }
       return icon;
     }),
@@ -160,11 +156,9 @@ Future<String> fetchUsernameForReview(int userId) async {
       final data = jsonDecode(response.body);
       return data['username'];
     } else {
-      print('Error: ${response.statusCode}');
       return 'Unknown User';
     }
   } catch (e) {
-    print('Error fetching username: $e');
     return 'Unknown User';
   }
 }
@@ -199,19 +193,21 @@ Future<bool> submitReview(int bookId, String reviewText, double rating) async {
 class ReviewInput extends StatefulWidget {
   final TextEditingController reviewController;
   final int bookId;
-  double? selectedRating;
+  final double? selectedRating;
 
-  ReviewInput(
-      {required this.reviewController,
+  const ReviewInput(
+      {super.key,
+      required this.reviewController,
       required this.bookId,
       this.selectedRating});
 
   @override
-  _ReviewInputState createState() => _ReviewInputState();
+  State<ReviewInput> createState() => _ReviewInputState();
 }
 
 class _ReviewInputState extends State<ReviewInput> {
   bool isLoading = false;
+  double? selectedRating = 0.00;
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +225,7 @@ class _ReviewInputState extends State<ReviewInput> {
                   icon: const Icon(Icons.arrow_drop_up),
                   onChanged: (newValue) {
                     setState(() {
-                      widget.selectedRating = newValue;
+                      selectedRating = newValue;
                     });
                   },
                   items: List.generate(10, (index) {
@@ -277,21 +273,18 @@ class _ReviewInputState extends State<ReviewInput> {
               isLoading = true;
             });
             try {
-              final success = await submitReview(
+              await submitReview(
                 widget.bookId,
                 widget.reviewController.text,
                 widget.selectedRating ?? 0,
               );
-              print('Review added');
               widget.reviewController.clear();
               setState(() {
-                widget.selectedRating = null;
+                selectedRating = null;
               });
 
               if (!context.mounted) return;
               Navigator.pop(context);
-            } catch (e) {
-              print('Error adding review: $e');
             } finally {
               setState(() {
                 isLoading = false;

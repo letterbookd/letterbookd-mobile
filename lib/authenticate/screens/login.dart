@@ -79,7 +79,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 if (!context.mounted) return;
                 if (request.loggedIn) {
-                  String message = response['message'];
                   String uname = response['username'];
                   bool librarian = response['librarian'];
 
