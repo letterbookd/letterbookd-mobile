@@ -144,9 +144,8 @@ class ReaderHomeState extends State<ReaderHome> {
               } else if (!snapshot.hasData || snapshot.data == null) {
                 return const Center(child: Text("Tidak ada data pembaca."));
               } else {
-                _shareLibrary =
-                    snapshot.data!.preferences.shareLibrary ?? false;
-                _shareReview = snapshot.data!.preferences.shareReviews ?? false;
+                _shareLibrary = snapshot.data!.preferences.shareLibrary;
+                _shareReview = snapshot.data!.preferences.shareReviews;
                 final reader = snapshot.data!;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,

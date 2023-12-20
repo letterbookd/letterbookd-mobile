@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:letterbookd/reader/models/reader.dart';
@@ -90,10 +88,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         var readerData = ReaderElement.fromJson(jsonData);
         debugPrint(readerData.preferences.shareLibrary.toString());
         setState(() {
-          nameController.text = readerData.displayName ?? '';
-          bioController.text = readerData.bio ?? '';
-          shareLibrary = readerData.preferences.shareLibrary ?? false;
-          shareReviews = readerData.preferences.shareReviews ?? false;
+          nameController.text = readerData.displayName;
+          bioController.text = readerData.bio;
+          shareLibrary = readerData.preferences.shareLibrary;
+          shareReviews = readerData.preferences.shareReviews;
         });
       } else {
         throw Exception('Failed to load reader');

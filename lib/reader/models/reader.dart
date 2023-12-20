@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:letterbookd/reader/models/reader_preferences.dart';
 
 Reader readerFromJson(String str) => Reader.fromJson(json.decode(str));
@@ -36,8 +35,7 @@ class ReaderElement {
       profilePicture: json["profile_picture"] ?? 0,
       personalLibraryId: json["personal_library_id"] ?? 0,
       preferencesId: json["preferences_id"] ?? 0,
-      preferences: Preferences.fromJson(json["preferences"]) ??
-          Preferences(shareReviews: false, shareLibrary: false),
+      preferences: Preferences.fromJson(json["preferences"]),
     );
   }
 
