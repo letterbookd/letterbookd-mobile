@@ -16,19 +16,9 @@ class LibraryBookDetailPage extends StatefulWidget {
 }
 
 class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
-  void _editStatus(BuildContext context) {
-    // TODO: turn this into radio buttons insted cuz fuck that
-    var currencies = [
-      "Food",
-      "Transport",
-      "Personal",
-      "Shopping",
-      "Medical",
-      "Rent",
-      "Movie",
-      "Salary"
-    ];
-    var _currentSelectedValue = currencies.first;
+  bool _changed = false;
+  void _editStatus(BuildContext context, CookieRequest request) {
+    var trackingStatus = widget.item.libraryData.fields.trackingStatus;
 
     showDialog(
       context: context,
@@ -36,41 +26,68 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
         return AlertDialog(
           title: const Text('Update Tracking Status'),
           content: SingleChildScrollView(
-              child: FormField<String>(builder: (FormFieldState<String> state) {
-            return InputDecorator(
-              isEmpty: _currentSelectedValue == '',
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 15.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
+            child: FormField<String>(builder: (FormFieldState<String> state) {
+              return InputDecorator(
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 18.0, vertical: 8.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  labelText: 'Tracking Status',
                 ),
-                labelText: 'Tracking status',
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _currentSelectedValue,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _currentSelectedValue = newValue.toString();
-                      state.didChange(newValue);
-                    });
-                  },
-                  items: currencies.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    isExpanded: true,
+                    autofocus: true,
+                    value: trackingStatus,
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        trackingStatus = newValue!;
+                        state.didChange(newValue.toString());
+                      });
+                    },
+                    items: List.generate(
+                        app_data.trackingStatusList.length,
+                        (i) => DropdownMenuItem<int>(
+                              value: i,
+                              child: Text(app_data.trackingStatusList[i]),
+                            )),
+                  ),
                 ),
-              ),
-            );
-          })),
+              );
+            }),
+          ),
           actions: <Widget>[
             TextButton(
               child: const Text('Update'),
-              onPressed: () {
-                // TODO: update the tracking status
+              onPressed: () async {
+                // STEP 2: sends POST request to toggle current item favorite
+                final response = await request.post(
+                  '${app_data.baseUrl}/library/api/update/',
+                  {
+                    "book_id": widget.item.libraryData.fields.book.toString(),
+                    "trackingStatus": trackingStatus.toString()
+                  },
+                );
+                if (!context.mounted) return;
+
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                if (response['status'] != true) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      content: Text(response['message']),
+                    ));
+                  return;
+                }
+
+                setState(() {
+                  widget.item.libraryData.fields.trackingStatus =
+                      trackingStatus;
+                  _changed = true;
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -107,6 +124,9 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
             content: Text(response["message"]),
           ),
         );
+      setState(() {
+        _changed = true;
+      });
       Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context)
@@ -135,7 +155,7 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
               tooltip: "Change Status",
               icon: const Icon(Icons.edit),
               onPressed: () {
-                _editStatus(context);
+                _editStatus(context, request);
               }),
           IconButton(
               tooltip: "Remove",
@@ -144,6 +164,9 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
                 _deleteFromLibrary(context, request);
               }),
         ],
+        leading: BackButton(
+          onPressed: () => Navigator.pop(context, _changed),
+        ),
       ),
       body: Container(
         margin: const EdgeInsets.only(top: 16),
@@ -155,7 +178,14 @@ class _LibraryBookDetailPageState extends State<LibraryBookDetailPage> {
             LibraryDetailHeader(item: widget.item),
 
             // ACTIONS: Favorite, Open in catalog, See reviews
-            LibraryDetailActions(item: widget.item),
+            LibraryDetailActions(
+              item: widget.item,
+              callback: () {
+                setState(() {
+                  _changed = true;
+                });
+              },
+            ),
 
             // BODY: description
             Column(

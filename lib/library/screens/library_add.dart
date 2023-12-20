@@ -32,19 +32,21 @@ class _LibraryAddFormState extends State<LibraryAddForm> {
     if (!context.mounted) return;
 
     if (!response["status"]) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text('Book is already in Library'),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text(response["message"]),
+          ),
+        );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         behavior: SnackBarBehavior.floating,
-        content: Text('Added ${_selectedBook.fields.title} to library!'),
+        content: Text('Added!'),
       ),
     );
     Navigator.of(context).pop(true);
@@ -135,7 +137,7 @@ class _LibraryAddFormState extends State<LibraryAddForm> {
                                                 borderRadius:
                                                     BorderRadius.circular(4.0),
                                               ),
-                                              labelText: 'Tracking Status',
+                                              labelText: 'Book Title',
                                             ),
                                             child: DropdownButtonHideUnderline(
                                               child: DropdownButton<Book>(

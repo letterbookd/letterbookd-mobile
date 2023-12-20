@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
-import 'package:letterbookd/library/screens/library_detail.dart';
 import 'package:letterbookd/library/screens/library_home.dart';
 
 /// Grid tile for library homepage
 class LibraryGridTile extends StatelessWidget {
   final LibraryItem item;
-  final VoidCallback refreshLibrary;
+  final VoidCallback onTap;
 
-  const LibraryGridTile(
-      {super.key, required this.item, required this.refreshLibrary});
+  const LibraryGridTile({super.key, required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,23 +19,7 @@ class LibraryGridTile extends StatelessWidget {
         color: Theme.of(context).colorScheme.secondaryContainer,
       ),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LibraryBookDetailPage(item: item),
-            ),
-          ).then((value) {
-            print(value);
-            if (value == null) {
-              return;
-            }
-            if (value == true) {
-              // either deleted or edited
-              refreshLibrary;
-            }
-          });
-        },
+        onTap: onTap,
         child: Stack(
           alignment: AlignmentDirectional.center,
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -85,33 +67,14 @@ class LibraryGridTile extends StatelessWidget {
 // List tiel for library homepage
 class LibraryListTile extends StatelessWidget {
   final LibraryItem item;
-  final VoidCallback refreshLibrary;
+  final VoidCallback onTap;
 
-  const LibraryListTile(
-      {super.key, required this.item, required this.refreshLibrary});
+  const LibraryListTile({super.key, required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.of(context)
-            .push(
-          MaterialPageRoute(
-            builder: (context) => LibraryBookDetailPage(item: item),
-          ),
-        )
-            .then((value) {
-          print("#done");
-          print(value);
-          if (value == null) {
-            return;
-          }
-          if (value == true) {
-            // either deleted or edited
-            refreshLibrary;
-          }
-        });
-      },
+      onTap: onTap,
       child: Card(
           child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),

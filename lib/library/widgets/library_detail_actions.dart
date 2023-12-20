@@ -9,8 +9,10 @@ import 'package:provider/provider.dart';
 
 class LibraryDetailActions extends StatefulWidget {
   final LibraryItem item;
+  final Function callback;
 
-  const LibraryDetailActions({super.key, required this.item});
+  const LibraryDetailActions(
+      {super.key, required this.item, required this.callback});
 
   @override
   State<LibraryDetailActions> createState() => _LibraryDetailActionsState();
@@ -59,13 +61,7 @@ class _LibraryDetailActionsState extends State<LibraryDetailActions> {
       }
 
       // STEP 3: listens to request and update UI accordingly
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text(_isFavorited ? 'Favorited!' : 'Removed from Favorites'),
-        ));
-
+      widget.callback;
       setState(() {
         _isFavoriteDisabled = false;
       });

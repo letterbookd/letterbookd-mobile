@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:letterbookd/catalog/models/book.dart';
 import 'package:letterbookd/library/screens/library_add.dart';
+import 'package:letterbookd/library/screens/library_detail.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/library/models/librarybook.dart';
@@ -74,6 +75,23 @@ class _LibraryHomeState extends State<LibraryHome> {
                   libbook: _cachedLibraryItems,
                 ))).then((value) {
       if (value == true) {
+        setState(() {});
+      }
+    });
+  }
+
+  void _openDetailAndRefresh(LibraryItem item) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LibraryBookDetailPage(item: item),
+      ),
+    ).then((value) {
+      if (value == null) {
+        return;
+      }
+      if (value == true) {
+        // either deleted or edited
         setState(() {});
       }
     });
@@ -365,9 +383,9 @@ class _LibraryHomeState extends State<LibraryHome> {
                             itemBuilder: (context, index) {
                               return LibraryListTile(
                                 item: _sortedLibraryItems[index],
-                                refreshLibrary: () {
-                                  print("#### pleae");
-                                  _refreshLibrary(context);
+                                onTap: () {
+                                  _openDetailAndRefresh(
+                                      _sortedLibraryItems[index]);
                                 },
                               );
                             });
@@ -387,9 +405,9 @@ class _LibraryHomeState extends State<LibraryHome> {
                             itemBuilder: (context, index) {
                               return LibraryGridTile(
                                 item: _sortedLibraryItems[index],
-                                refreshLibrary: () {
-                                  print("#### pleae");
-                                  _refreshLibrary(context);
+                                onTap: () {
+                                  _openDetailAndRefresh(
+                                      _sortedLibraryItems[index]);
                                 },
                               );
                             });
