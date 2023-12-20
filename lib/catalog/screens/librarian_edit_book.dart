@@ -299,10 +299,6 @@ class _EditBookPageState extends State<EditBookPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.indigo),
-                      ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final response = await _editBook(request);
@@ -327,7 +323,6 @@ class _EditBookPageState extends State<EditBookPage> {
                       },
                       child: const Text(
                         "Edit Book",
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

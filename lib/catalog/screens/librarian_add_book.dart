@@ -270,10 +270,6 @@ class _AddBookPageState extends State<AddBookPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.indigo),
-                      ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final response = await _addBook(request);
@@ -295,7 +291,6 @@ class _AddBookPageState extends State<AddBookPage> {
                       },
                       child: const Text(
                         "Add Book",
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
