@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:letterbookd/reader/models/reader.dart';
