@@ -4,6 +4,7 @@ import 'package:letterbookd/core/assets/appconstants.dart' as app_data;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:letterbookd/core/screens/librarian_homepage.dart';
+import 'package:letterbookd/authenticate/screens/register.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -118,6 +119,32 @@ class _LoginPageState extends State<LoginPage> {
                 }
               },
               child: const Text('Sign in'),
+            ),
+            const SizedBox(height: 12.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Don\'t have an account?'),
+                const SizedBox(width: 8.0),
+                // Teks bukan tombol
+                InkWell(
+                  onTap: () {
+                    // Navigate to Login
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: Text(
+                    'Register',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
